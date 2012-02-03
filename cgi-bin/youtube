@@ -3,6 +3,7 @@ export DISPLAY=:0
 echo Content-type: text/html
 echo ""
 
+./clean
 ./unblank
 
 #!/bin/sh
