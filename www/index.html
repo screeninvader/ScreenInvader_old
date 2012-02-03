@@ -3,7 +3,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
-		<title>amp controller 2.0</title>
+		<title>lounge controller 2.0</title>
 		<script type="text/javascript" src="_inc/js/jquery.min.js"></script>
 		<script type="text/javascript" src="_inc/js/jquery.amp.js"></script>
 		<link rel="stylesheet" type="text/css" href="_inc/css/style.css">
@@ -13,12 +13,12 @@
 		<div id="wrapper">
 			<div id="header">
 				<div id="branding">
-					<div id="logo">Amp Controller 2.0</div>
+					<div id="logo">Lounge Controller 2.0</div>
 					<div id="slogan">wireless magic</div>
 				</div>
 				<div id="on-off">
-					<div id="on-btn" class="hidden on-off-btn" onclick="$.get('/cgi-bin/on')">ON</div>
-					<div id="off-btn" class="hidden on-off-btn" onclick="$.get('/cgi-bin/off')">OFF</div>
+					<div id="on" class="hidden on-off-btn">ON</div>
+					<div id="off" class="hidden on-off-btn">OFF</div>
 					<p id="on-off-info">Loading Data, patience pl0x :p</p>
 				</div>
 			</div>
@@ -28,51 +28,47 @@
 						<h1 id="input-selection-title">Select Input</h1>
 						<ul id="input-selection-list-usual">
 							<li>Inputs:</li>
-							<li><input type="radio" onclick="$.get('/cgi-bin/switch?AUDIO1');" name="switch" value="AUDIO1">Music Player Daemon</li>
-							<li><input type="radio" onclick="$.get('/cgi-bin/switch?AUDIO2');" name="switch" value="AUDIO2">Dock</li>
-							<li><input type="radio" onclick="$.get('/cgi-bin/switch?AV5');" name="switch" value="AV5">WII</li>
-							<li><input type="radio" onclick="$.get('/cgi-bin/switch?AV6');" name="switch" value="AV6">PS3</li>
-							<li><input type="radio" onclick="$.get('/cgi-bin/switch?AUDIO3');" name="switch" value="AUDIO3">AUDIO3</li>
-							<li><input type="radio" onclick="$.get('/cgi-bin/switch?AUDIO4');" name="switch" value="AUDIO4">AUDIO4</li>
-							<li><input type="radio" onclick="$.get('/cgi-bin/switch?Bluetooth');" name="switch" value="Bluetooth">Bluetooth</li>
-							<li><input type="radio" onclick="$.get('/cgi-bin/switch?DOCK');" name="switch" value="DOCK">DOCK</li>
-							<li><input type="radio" onclick="$.get('/cgi-bin/switch?PC');" name="switch" value="PC">PC</li>
-							<li><input type="radio" onclick="$.get('/cgi-bin/switch?PHONO');" name="switch" value="PHONO">PHONO</li>
-							<li><input type="radio" onclick="$.get('/cgi-bin/switch?TUNER');" name="switch" value="TUNER">TUNER</li>
-							<li><input type="radio" onclick="$.get('/cgi-bin/switch?USB');" name="switch" value="USB">USB</li>
-							<li><input type="radio" onclick="$.get('/cgi-bin/switch?V-AUX');" name="switch" value="V-AUX">V-AUX</li>
+							<li><input class="input-select" type="radio" name="switch" value="AUDIO1">Music Player Daemon</li>
+							<li><input class="input-select" type="radio" name="switch" value="AUDIO2">Dock</li>
+							<li><input class="input-select" type="radio" name="switch" value="AV5">WII</li>
+							<li><input class="input-select" type="radio" name="switch" value="AV6">PS3</li>
+							<li><input class="input-select" type="radio" name="switch" value="AUDIO3">AUDIO3</li>
+							<li><input class="input-select" type="radio" name="switch" value="AUDIO4">AUDIO4</li>
+							<li><input class="input-select" type="radio" name="switch" value="Bluetooth">Bluetooth</li>
+							<li><input class="input-select" type="radio" name="switch" value="DOCK">DOCK</li>
+							<li><input class="input-select" type="radio" name="switch" value="PC">PC</li>
+							<li><input class="input-select" type="radio" name="switch" value="PHONO">PHONO</li>
+							<li><input class="input-select" type="radio" name="switch" value="TUNER">TUNER</li>
+							<li><input class="input-select" type="radio" name="switch" value="USB">USB</li>
+							<li><input class="input-select" type="radio" name="switch" value="V-AUX">V-AUX</li>
 						</ul>
 						<ul id="input-selection-list-av">
 							<li> AV input</li>
-							<li><input type="radio" onclick="$.get('/cgi-bin/switch?AV1');" name="switch" value="AV1">AV1</li>
-							<li><input type="radio" onclick="$.get('/cgi-bin/switch?AV2');" name="switch" value="AV2">AV2</li>
-							<li><input type="radio" onclick="$.get('/cgi-bin/switch?AV3');" name="switch" value="AV3">AV3</li>
-							<li><input type="radio" onclick="$.get('/cgi-bin/switch?AV4');" name="switch" value="AV4">AV4</li>
-							<li><input type="radio" onclick="$.get('/cgi-bin/switch?AV7');" name="switch" value="AV7">AV7</li>
+							<li><input class="input-select" type="radio" name="switch" value="AV1">AV1</li>
+							<li><input class="input-select" type="radio" name="switch" value="AV2">AV2</li>
+							<li><input class="input-select" type="radio" name="switch" value="AV3">AV3</li>
+							<li><input class="input-select" type="radio" name="switch" value="AV4">AV4</li>
+							<li><input class="input-select" type="radio" name="switch" value="AV7">AV7</li>
 						</ul>
 						<ul id="input-selection-list-hdmi">
 							<li>HDMI input</li>
-							<li><input type="radio" onclick="$.get('/cgi-bin/switch?HDMI1');" name="switch" value="HDMI1">HDMI1</li>
-							<li><input type="radio" onclick="$.get('/cgi-bin/switch?HDMI2');" name="switch" value="HDMI2">HDMI2</li>
-							<li><input type="radio" onclick="$.get('/cgi-bin/switch?HDMI3');" name="switch" value="HDMI3">HDMI3</li>
-							<li><input type="radio" onclick="$.get('/cgi-bin/switch?HDMI4');" name="switch" value="HDMI4">HDMI4</li>
-							<li><input type="radio" onclick="$.get('/cgi-bin/switch?HDMI5');" name="switch" value="HDMI5">HDMI5</li>
-							<li><input type="radio" onclick="$.get('/cgi-bin/switch?HDMI6');" name="switch" value="HDMI6">HDMI6</li>
-							<li><input type="radio" onclick="$.get('/cgi-bin/switch?HDMI7');" name="switch" value="HDMI7">HDMI7</li>					
+							<li><input class="input-select" type="radio" name="switch" value="HDMI1">HDMI1</li>
+							<li><input class="input-select" type="radio" name="switch" value="HDMI2">HDMI2</li>
+							<li><input class="input-select" type="radio" name="switch" value="HDMI3">HDMI3</li>
+							<li><input class="input-select" type="radio" name="switch" value="HDMI4">HDMI4</li>
+							<li><input class="input-select" type="radio" name="switch" value="HDMI5">HDMI5</li>
+							<li><input class="input-select" type="radio" name="switch" value="HDMI6">HDMI6</li>
+							<li><input class="input-select" type="radio" name="switch" value="HDMI7">HDMI7</li>					
 						</ul>
-					<br/>
-                                </div>
-                                </div>
-					<div nowrap>
-					Lounge Screen
-                                        <button onclick="$.get('/cgi-bin/unblank');" style="display: inline; width: 70px; height: 70px;  background-color: #0f0;">
-                                          Unblank
-                                        </button>
-	                               <button onclick="$.get('/cgi-bin/blank');" style="display: inline; width: 70px; height: 70px;  background-color: #f00;">
-                                          Blank
-					</button>
-                                        </div>
+						<br/>
+					</div>
+				</div>
 				<div id="right-column">
+					<div>
+						Lounge Screen	
+						<div id="unblank-button" class="blank-unblank-button"><a id="unblank" class="blank-unblank-a" href="#">Unblank</a></div>
+						<div id="blank-button" class="blank-unblank-button"><a id="blank" class="blank-unblank-a" href="#">Blank</a></div>
+					</div>
 					<div id="current-input">
 						<div id="input-title">Selected Input:</div>
 						<div id="input-name">No Input Selected</div>
@@ -89,8 +85,7 @@
 						<div id="bass-control-title">Bass:</div>
 						<span id="bass-minus" class="volume-control-button">-</span>
 						<div id="bass-value"><span id="bass-val">0</span><span>dB</span></div>
-						<span id="bass-plus" class="volume-control-button">+</span>
-						
+						<span id="bass-plus" class="volume-control-button">+</span>	
 					</div>
 					
 					<div id="treble-control" class="vol-cont">
@@ -98,10 +93,13 @@
 						<span id="treble-minus" class="volume-control-button">-</span>
 						<div id="treble-value"><span id="treble-val">0</span><span>dB</span></div>
 						<span id="treble-plus" class="volume-control-button">+</span>
-						
 					</div>
 				</div>
-			</div>
+				<div id="browser">
+					<span>Browse:</span>
+					<input type="text" id="url-to-load"><input id="browse-button" type="submit" value="browse">
+				</div>
+			</div><!-- end of #content-->
 		</div>
 	</body>
 </html>
