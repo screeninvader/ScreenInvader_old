@@ -14,4 +14,7 @@ echo ""
 #
 
 COOKIE_FILE=/var/tmp/youtube-dl-cookies.txt
-mplayer -af volume=15.0:15.0 -fs -cookies -cookies-file ${COOKIE_FILE} $(youtube-dl -g --cookies ${COOKIE_FILE} $*)
+set $QUERY_STRING
+mplayer -ao alsa -cache 16384 -nocorrect-pts -framedrop -vfm ffmpeg -lavdopts lowres=0:fast:skiploopfilter=all -vo xv -fs -cookies -cookies-file ${COOKIE_FILE} $(youtube-dl -g -f18 --cookies ${COOKIE_FILE} $*) &> /dev/null&
+
+disown
