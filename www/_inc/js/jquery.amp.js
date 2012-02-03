@@ -1,12 +1,14 @@
-var xml_get_status_url = "http://10.20.30.51../cgi-bin/getstatus";
-var xml_get_input_url = "http://10.20.30.51../cgi-bin/getinput";
+var xml_get_status_url = "http://10.20.30.51/cgi-bin/getstatus";
+var xml_get_input_url = "http://10.20.30.51/cgi-bin/getinput";
 
 
 var local = false;
+var urlprefix = '/';
 
 var host = document.location.href;
 if ( host.indexOf("localhost") != -1 || host.indexOf("file://") != -1 ) {
 	local = true;
+	urlprefix = '../';
 }
 
 $(document).ready( function ($) {
@@ -76,35 +78,35 @@ function renderXML (xml, t ) {
 	});
 	
 	$('.input-select').live ('click', function() {
-		$.get( '../cgi-bin/switch?'+$(this).val() );
+		$.get( urlprefix+'cgi-bin/switch?'+$(this).val() );
 		
 	});
 	
 	$('.blank-unblank-a').live('click',function(){
-		$.get( '../cgi-bin/'+$(this).attr('id') );
+		$.get( urlprefix+'cgi-bin/'+$(this).attr('id') );
 		return false;
 	});
 	
 	t.is_muted = false;
 	$('#volume-mute').live( 'click', function() {
 		if ( !t.is_muted ) {
-			$.get('../cgi-bin/muteon');
+			$.get(urlprefix+'cgi-bin/muteon');
 			t.is_muted = true;
 		}else{
-			$.get('../cgi-bin/muteoff');
+			$.get(urlprefix+'cgi-bin/muteoff');
 			t.is_muted = false;
 		}
 	});
 	
 	$('#off').live('click', function() {
-		$.get ( '../cgi-bin/off' );
+		$.get ( urlprefix+'cgi-bin/off' );
 		$(this).hide();
 		$('#on').show();
 	});
 	
 	
 	$('#on').live('click', function() {
-		$.get ( '../cgi-bin/on' );
+		$.get ( urlprefix+'cgi-bin/on' );
 		$(this).hide();
 		$('#off').show();
 	});
@@ -114,28 +116,28 @@ function renderXML (xml, t ) {
 		t.current_volume = new_vol;
 		
 		$('#volume-val').html( t.current_volume );
-		$.get('../cgi-bin/vol?'+ new_vol);
+		$.get(urlprefix+'cgi-bin/vol?'+ new_vol);
 	});
 	
 	$('#volume-plus').live ('click', function(){
 		var new_vol = parseInt( $('#volume-val').html() ) + 5;
 		t.current_volume = new_vol;
 		$('#volume-val').html( t.current_volume );
-		$.get('../cgi-bin/vol?'+ new_vol);
+		$.get(urlprefix+'cgi-bin/vol?'+ new_vol);
 	});
 	
 	$('#bass-minus').live ('click', function(){
 		var new_vol = parseInt( $('#bass-val').html() ) - 5;
 		t.current_bass = new_vol;
 		$('#bass-val').html( t.current_bass );
-		$.get('../cgi-bin/bass?'+ new_vol);
+		$.get(urlprefix+'cgi-bin/bass?'+ new_vol);
 	});
 	
 	$('#bass-plus').live ('click', function(){
 		var new_vol = parseInt( $('#bass-val').html() ) + 5;
 		t.current_bass = new_vol;
 		$('#bass-val').html( t.current_bass );
-		$.get('../cgi-bin/bass?'+ new_vol);
+		$.get(urlprefix+'cgi-bin/bass?'+ new_vol);
 	});
 	
 	
@@ -143,14 +145,23 @@ function renderXML (xml, t ) {
 		var new_vol = parseInt( $('#treble-val').html() ) - 5;
 		t.current_treble = new_vol;
 		$('#treble-val').html( t.current_treble );
-		$.get('../cgi-bin/treble?'+ new_vol);
+		$.get(urlprefix+'cgi-bin/treble?'+ new_vol);
 	});
 	
 	$('#treble-plus').live ('click', function(){
 		var new_vol = parseInt( $('#treble-val').html() ) + 5;
 		t.current_treble = new_vol;
 		$('#treble-val').html( t.current_treble );
-		$.get('../cgi-bin/treble?'+ new_vol);
+		$.get(urlprefix+'cgi-bin/treble?'+ new_vol);
+	});
+	
+	$('#browse-button').live ( 'click', function(){
+		var target = $('#url-to-load').val();
+		var cgi_target = 'browse';
+		if ( target.indexOf('youtube') ) {
+			cgi_target = 'youtube';
+		} 
+		$.get(urlprefix+'cgi-bin/'+cgi_target+'?'+target );
 	});
 }
 

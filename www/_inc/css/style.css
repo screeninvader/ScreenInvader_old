@@ -138,3 +138,8 @@ a {
 	background-color: #f00;
 }
 
+#browser {
+	clear: left;
+	padding: 50px 0 0;
+}
+
