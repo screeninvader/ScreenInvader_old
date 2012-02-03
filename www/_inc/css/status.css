@@ -23,7 +23,7 @@ td {
 	height: 42px;
 	width: 189px;
 	text-indent: -9999px;
-	margin: 30px;
+	margin: 10px;
 }
 
 #slogan {
@@ -40,8 +40,9 @@ td {
 }
 
 #header {
-        background-color: #000;	
+    background-color: #000;	
 	margin: 20px;
+	float: left;
 }
 
 #branding {
@@ -50,9 +51,12 @@ td {
 }
 
 #content {
-	background-color: #000
-	margin: 120px 20px 0;
+	background-color: #000;
+	float: left;
+	margin: 18px 0 0;
 }
+
+
 
 a {
 	text-decoration: none;
@@ -137,9 +141,9 @@ a {
 }
 
 .vol-cont {
-	margin: 10px 0;
-        background-color: #000;
-
+	margin: 0 28px 0;
+	background-color: #000;
+	float: left;
 }
 
 #current-input {

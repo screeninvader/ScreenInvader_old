@@ -39,52 +39,38 @@ window.onload=beginrefresh
 //-->
 </script>
 		<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
-		<title>amp controller 2.0</title>
+		<title>lounge controller 2.0</title>
 		<script type="text/javascript" src="_inc/js/jquery.min.js"></script>
 		<script type="text/javascript" src="_inc/js/jquery.amp.js"></script>
 		<link rel="stylesheet" type="text/css" href="_inc/css/status.css">
 	</head>
 	<body id="status">
 		<div id="wrapper">
-			<table cellpadding="20"><tr><td>
 			<div id="header" style="display: inline">
 				<div id="branding">
-					<div id="logo">Amp Controller 2.0</div>
-				</div><br/>
-                                <div id="current-input">
-                                        <div id="input-name">Loading</div>
-                                </div>
-
+					<div id="logo">Lounge Controller 2.0</div>
+				</div>
+                <div id="current-input">
+					<div id="input-name">Loading</div>
+				</div>
 			</div>
-			</td>
-			<td><br/>
 			<div id="content" style="display: inline">
 				<div id="volume-control" class="vol-cont">
 					<div id="volume-control-title">Volume:</div>
-					<span id="volume-minus" class="volume-control-button">-</span>
-					<div id="volume-value"><span id="volume-val">0</span><span>dB</span></div>
-					<span id="volume-plus" class="volume-control-button">+</span>
-					<div id="volume-mute">Mute</div>
+					<div id="volume-value"><span id="volume-val">0</span></div>
+					<div id="dezibel-value"><span>== </span><span id="db-val">0</span><span>dB</span></div>
 				</div>
 				
 				<div id="bass-control" class="vol-cont">
 					<div id="bass-control-title">Bass:</div>
-					<span id="bass-minus" class="volume-control-button">-</span>
 					<div id="bass-value"><span id="bass-val">0</span><span>dB</span></div>
-					<span id="bass-plus" class="volume-control-button">+</span>
-					
 				</div>
 					
 				<div id="treble-control" class="vol-cont">
 					<div id="treble-control-title">Treble:</div>
-					<span id="treble-minus" class="volume-control-button">-</span>
 					<div id="treble-value"><span id="treble-val">0</span><span>dB</span></div>
-					<span id="treble-plus" class="volume-control-button">+</span>	
 				</div>
 			</div>
-			</td>
-			</tr>
-			</table>
 		</div>
 	</body>
 </html>
