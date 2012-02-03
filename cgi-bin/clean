@@ -1,0 +1,5 @@
+#!/bin/bash
+
+killall -9 mplayer
+killall -9 /usr/lib/iceweasel/firefox-bin
+
