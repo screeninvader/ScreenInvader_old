@@ -1,11 +1,12 @@
-var xml_get_status_url = "/cgi-bin/getstatus";
-var xm_get_input_url = "/cgi-bin/getinput";
+var xml_get_status_url = "http://10.20.30.51../cgi-bin/getstatus";
+var xml_get_input_url = "http://10.20.30.51../cgi-bin/getinput";
 
-var debug = false;
 
-if ( debug ) {
-	xml_get_status_url = '_inc/xml-fake/getstatus.xml';
-	xml_get_input_url = "_inc/xml-fake/getinput.xml";
+var local = false;
+
+var host = document.location.href;
+if ( host.indexOf("localhost") != -1 || host.indexOf("file://") != -1 ) {
+	local = true;
 }
 
 $(document).ready( function ($) {
@@ -13,34 +14,36 @@ $(document).ready( function ($) {
 	
 	t.xml;
 	t.current_volume = 0;
-	
-	$.ajax({
-		type: "GET",
-		url: xml_get_status_url,
-		dataType: "xml",
-		success: function(xml) {
-			renderXML ( xml );
-			this.xml = xml;
-			
-			$(xml).find('Volume').each(function(){
-				t.current_volume = $(this).find ( 'Val' ).text();
+	if ( !local ) {
+		$.ajax({
+			type: "GET",
+			url: xml_get_status_url,
+			dataType: "xml",
+			success: function(xml) {
+				renderXML ( xml, t );
+				this.xml = xml;
 				
-			});
-		}
-	});
-	
+				$(xml).find('Volume').each(function(){
+					t.current_volume = $(this).find ( 'Val' ).text();
+					
+				});
+			}
+		});
+	}else {
+			renderXML(xmlstats, t);		
+	}
 });
 
-function renderXML (xml ) {
+function renderXML (xml, t ) {
 
 	var power = $(xml).find( "Power" );
 
 	if ( power.text() == "On" ) {
-		$('#off-btn').show();
-		$('#on-btn').hide();
-	} else if ( power.text() == "Off" ) {
-		$('#on-btn').show();
-		$('#off-btn').hide();
+		$('#off').show();
+		$('#on').hide();
+	} else /*if ( power.text() == "Standby" )*/ {
+		$('#on').show();
+		$('#off').hide();
 	}
 	$('#on-off-info').empty();
 	
@@ -52,15 +55,13 @@ function renderXML (xml ) {
 	$(xml).find('Volume').each(function(){
 		var volume = $(this).find ( 'Val' );
 		$('#volume-val').html(volume.text());
-	
+		t.current_volume = volume.text();
 		var muted = $(this).find ( 'Mute' );
 		if ( muted == 'On' ) {
 			$('#volume-mute').html('UnMute');
 		} else if ( muted == 'Off' ) {
 			$('#volume-mute').html('Mute');
 		}
-
-		
 	});
 	
 	$(xml).find('Tone').each(function(){
@@ -74,41 +75,86 @@ function renderXML (xml ) {
 		});
 	});
 	
+	$('.input-select').live ('click', function() {
+		$.get( '../cgi-bin/switch?'+$(this).val() );
+		
+	});
 	
+	$('.blank-unblank-a').live('click',function(){
+		$.get( '../cgi-bin/'+$(this).attr('id') );
+		return false;
+	});
+	
+	t.is_muted = false;
 	$('#volume-mute').live( 'click', function() {
-		window.location.href = '/cgi-bin/vol?-805';
+		if ( !t.is_muted ) {
+			$.get('../cgi-bin/muteon');
+			t.is_muted = true;
+		}else{
+			$.get('../cgi-bin/muteoff');
+			t.is_muted = false;
+		}
+	});
+	
+	$('#off').live('click', function() {
+		$.get ( '../cgi-bin/off' );
+		$(this).hide();
+		$('#on').show();
+	});
+	
+	
+	$('#on').live('click', function() {
+		$.get ( '../cgi-bin/on' );
+		$(this).hide();
+		$('#off').show();
 	});
 	
 	$('#volume-minus').live ('click', function(){
 		var new_vol = parseInt( $('#volume-val').html() ) - 5;
-		window.location.href = '/cgi-bin/vol?'+ new_vol;
+		t.current_volume = new_vol;
+		
+		$('#volume-val').html( t.current_volume );
+		$.get('../cgi-bin/vol?'+ new_vol);
 	});
 	
 	$('#volume-plus').live ('click', function(){
 		var new_vol = parseInt( $('#volume-val').html() ) + 5;
-		window.location.href = '/cgi-bin/vol?'+ new_vol;
+		t.current_volume = new_vol;
+		$('#volume-val').html( t.current_volume );
+		$.get('../cgi-bin/vol?'+ new_vol);
 	});
 	
 	$('#bass-minus').live ('click', function(){
 		var new_vol = parseInt( $('#bass-val').html() ) - 5;
-		window.location.href = '/cgi-bin/bass?'+ new_vol;
+		t.current_bass = new_vol;
+		$('#bass-val').html( t.current_bass );
+		$.get('../cgi-bin/bass?'+ new_vol);
 	});
 	
 	$('#bass-plus').live ('click', function(){
 		var new_vol = parseInt( $('#bass-val').html() ) + 5;
-		window.location.href = '/cgi-bin/bass?'+ new_vol;
+		t.current_bass = new_vol;
+		$('#bass-val').html( t.current_bass );
+		$.get('../cgi-bin/bass?'+ new_vol);
 	});
 	
 	
 	$('#treble-minus').live ('click', function(){
 		var new_vol = parseInt( $('#treble-val').html() ) - 5;
-		window.location.href = '/cgi-bin/treble?'+ new_vol;
+		t.current_treble = new_vol;
+		$('#treble-val').html( t.current_treble );
+		$.get('../cgi-bin/treble?'+ new_vol);
 	});
 	
 	$('#treble-plus').live ('click', function(){
 		var new_vol = parseInt( $('#treble-val').html() ) + 5;
-		window.location.href = '/cgi-bin/treble?'+ new_vol;
+		t.current_treble = new_vol;
+		$('#treble-val').html( t.current_treble );
+		$.get('../cgi-bin/treble?'+ new_vol);
 	});
 }
 
 /* -805 +165  dezibel range */
+
+
+var xmlstats = '<YAMAHA_AV rsp="GET" RC="0"><Main_Zone><Basic_Status><Power_Control><Power>On</Power><Sleep>Off</Sleep></Power_Control><Volume><Lvl><Val>-185</Val><Exp>1</Exp><Unit>dB</Unit></Lvl><Mute>Off</Mute></Volume><Input><Input_Sel>AUDIO3</Input_Sel><Input_Sel_Item_Info><Param>AUDIO1</Param><RW>RW</RW><Title>AUDIO1</Title><Icon><On>/YamahaRemoteControl/Icons/icon002.png</On><Off></Off></Icon><Src_Name></Src_Name><Src_Number>1</Src_Number></Input_Sel_Item_Info></Input><Surround><Program_Sel><Current><Straight>Off</Straight><Enhancer>On</Enhancer><Sound_Program>7ch Stereo</Sound_Program></Current></Program_Sel><_3D_Cinema_DSP>Auto</_3D_Cinema_DSP><Dialogue_Lift>0</Dialogue_Lift></Surround><Pure_Direct><Mode>Off</Mode></Pure_Direct><Sound_Video><Tone><Bass><Val>50</Val><Exp>1</Exp><Unit>dB</Unit></Bass><Treble><Val>-50</Val><Exp>1</Exp><Unit>dB</Unit></Treble></Tone><Adaptive_DRC>Off</Adaptive_DRC></Sound_Video></Basic_Status></Main_Zone></YAMAHA_AV>';

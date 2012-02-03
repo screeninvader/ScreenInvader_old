@@ -8,10 +8,12 @@ html{color:#000;background:#FFF}body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre
 
 #logo {
 	background: url(../img/logo.png);
-	height: 50px;
-	width: 200px;
+	height: 42px;
+	width: 189px;
 	text-indent: -9999px;
+	margin: 0 0 10px 10px;
 }
+
 
 #slogan {
 	margin: 0 0 0 10px;
@@ -63,12 +65,12 @@ a {
 	float: right;
 }
 
-#off-btn {
+#off {
 	background: url( ../img/power_button_on.png );
 	text-indent: -9999px;
 }
 
-#on-btn {
+#on {
 	background: url( ../img/power_button_off.png );
 	text-indent: -9999px;
 }
@@ -124,5 +126,15 @@ a {
 
 .chosen-input {
 	font-weight: bold;
+}
+
+.blank-unblank-button {
+	width: 70px; 
+	height: 70px;  
+	background-color: #0f0;
+}
+
+#blank-button {
+	background-color: #f00;
 }
 

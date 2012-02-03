@@ -17,11 +17,13 @@ td {
   vertical-align: top;
   padding: 0px 10px 0 10px;
 }
+
 #logo {
-	background: url(../img/logo.png);
-	height: 50px;
-	width: 200px;
+	background: url(../img/statuslogo.png);
+	height: 42px;
+	width: 189px;
 	text-indent: -9999px;
+	margin: 30px;
 }
 
 #slogan {
@@ -43,7 +45,6 @@ td {
 }
 
 #branding {
-	background-color: #666;
 	float: center;
 	width: 220px;
 }
@@ -141,6 +142,7 @@ a {
 
 }
 
-.chosen-input {
+#current-input {
 	font-weight: bold;
+	margin: 0 30px;
 }
