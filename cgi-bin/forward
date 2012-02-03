@@ -1,0 +1,10 @@
+echo Content-type: text/html
+echo ""
+
+echo "<html>"
+echo "<head>"
+echo "<meta http-equiv=\"refresh\" content=\"0; URL=/index.html?$QUERY_STRING\">"
+echo "</head>"
+echo "</html>"
+
+

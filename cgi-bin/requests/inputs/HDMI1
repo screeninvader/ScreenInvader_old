@@ -1,0 +1,3 @@
+#!/bin/bash
+cat requests/HDMI1 | netcat 10.20.30.50 80
+

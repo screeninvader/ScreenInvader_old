@@ -1,0 +1,10 @@
+#!/bin/bash
+export DISPLAY=:0
+echo Content-type: text/html
+echo ""
+
+
+xset s reset
+xset dpms force on
+xset s 30
+xset dpms 30 30 0
