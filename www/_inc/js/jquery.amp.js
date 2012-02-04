@@ -18,6 +18,7 @@ $(document).ready( function ($) {
 	
 	t.xml;
 	t.current_volume = 0;
+	t.current_db_volume = 0;
 	if ( !local ) {
 		$.ajax({
 			type: "GET",
@@ -59,7 +60,8 @@ function renderXML (xml, t ) {
 	$(xml).find('Volume').each(function(){
 		var volume = $(this).find ( 'Val' );
 		$('#volume-val').html( parseInt ( volume.text() ) + get_to_zero_volume);
-		$('#db-val').html ( volume.text() );
+		$('#db-val').html ( parseInt ( volume.text() ) * 0.1 );
+		t.current_db_volume = volume.text();
 		
 		t.current_volume = volume.text();
 		var muted = $(this).find ( 'Mute' );
@@ -117,20 +119,25 @@ function renderXML (xml, t ) {
 	
 	$('#volume-minus').live ('click', function(){
 		var new_vol = parseInt( $('#volume-val').html() ) - 5;
-		var new_db = parseInt ( $('#db-val').html() ) - 5;
+		var new_db = parseInt( t.current_db_volume ) - 5;
+		$('#volume-val').html( new_vol );
+		$('#db-val').html ( new_db * 0.1 );
+		
 		t.current_volume = new_vol;
-		$('#volume-val').html( t.current_volume );
-		$('#db-val').html ( new_db );
+		t.current_db_volume = new_db;
+		
 		$.get(urlprefix+'cgi-bin/vol?'+ new_db);
 	});
 	
 	$('#volume-plus').live ('click', function(){
 		var new_vol = parseInt( $('#volume-val').html() ) + 5;
-		var new_db = parseInt ( $('#db-val').html() ) + 5;
+		var new_db = parseInt( t.current_db_volume ) + 5;
+		
+		$('#volume-val').html( new_vol );
+		$('#db-val').html ( new_db * 0.1 );
 		
 		t.current_volume = new_vol;
-		$('#volume-val').html( t.current_volume );
-		$('#db-val').html ( new_db );
+		t.current_db_volume = new_db;
 		
 		$.get(urlprefix+'cgi-bin/vol?'+ new_db);
 	});
@@ -177,7 +184,7 @@ function renderXML (xml, t ) {
 			cgi_target = 'youtube';
 		} 
 		var realtarget = urlprefix+'cgi-bin/'+cgi_target+'?'+target;
-		alert(realtarget);
+
 		$.get( realtarget );
 	});
 }
