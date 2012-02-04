@@ -1,0 +1,4 @@
+#!/bin/bash
+export DISPLAY=:0
+
+killall -0 midori || midori -name Midori -e Fullscreen

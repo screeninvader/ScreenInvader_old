@@ -4,4 +4,9 @@ echo Content-type: text/html
 echo ""
 
 ./unblank
-firefox $QUERY_STRING
+
+./startmidori
+
+midori -e TabCloseOther
+midori $QUERY_STRING & disown
+midori -e TabCloseOther

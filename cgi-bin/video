@@ -1,0 +1,11 @@
+#!/bin/bash
+
+#echo Content-type: text/html
+#echo ""
+
+./clean
+./unblank
+
+
+export DISPLAY=:0
+cat | sed '1,4d' |  mplayer -cache 8192 -ao alsa -nocorrect-pts -framedrop -vfm ffmpeg -lavdopts lowres=0:fast:skiploopfilter=all -vo xv -fs - &> tmp/mplayer.log
