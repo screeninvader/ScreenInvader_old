@@ -3,10 +3,11 @@ export DISPLAY=:0
 echo Content-type: text/html
 echo ""
 
+killall -9 mplayer
 ./unblank
 
 ./startmidori
 
-midori -e TabCloseOther
-midori $QUERY_STRING & disown
-midori -e TabCloseOther
+midori --class="Browser" --name="Browser" -e TabCloseOther
+midori --class="Browser" --name="Browser" $QUERY_STRING & disown
+midori --class="Browser" --name="Browser" -e TabCloseOther
