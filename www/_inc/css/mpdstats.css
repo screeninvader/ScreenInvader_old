@@ -1,0 +1,38 @@
+
+body {
+  background-color: #000;
+  color: #fff;
+  font-size: 130%;
+}
+
+td {
+  vertical-align: top;
+  padding: 0px 10px 0 10px;
+}
+
+.left {
+border: 1px dashed #888;
+white-space:nowrap;
+background-color:#222;
+}
+
+.right {
+text-overflow:clip;
+border: 1px dashed #888;
+white-space:nowrap;
+background-color:#333;
+width: 100%;
+}
+
+li {
+text-overflow:clip;
+font-size: 70%;
+}
+#logo {
+	background: url(../img/mpd_logo.png);
+	height: 180px;
+	width: 180px;
+	text-indent: -9999px;
+	margin: 10px;
+}
+
