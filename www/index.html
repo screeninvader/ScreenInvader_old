@@ -3,23 +3,24 @@
 <html>
 	<head>
 		<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
-		<title>lounge controller 2.0</title>
+		<title>lounge control 2.0</title>
 		<script type="text/javascript" src="_inc/js/jquery.min.js"></script>
 		<script type="text/javascript" src="_inc/js/jquery.amp.js"></script>
-		<link rel="stylesheet" type="text/css" href="_inc/css/style.css">
+		<link rel="stylesheet" type="text/css" href="_inc/css/index.css">
 	</head>
 
 	<body>
 		<div id="wrapper">
 			<div id="header">
 				<div id="branding">
-					<div id="logo">Lounge Controller 2.0</div>
-					<div id="slogan">wireless magic</div>
+					<div id="meta-logo">metalab</div>
+					<div id="slogan"><span id="title">Lounge Control</span><span id="version">2.0</span><div class="subtitle">wireless magic</div></div>
+					
 				</div>
 				<div id="on-off">
-					<div id="on" class="hidden on-off-btn">ON</div>
-					<div id="off" class="hidden on-off-btn">OFF</div>
-					<p id="on-off-info">Loading Data, patience pl0x :p</p>
+					<div id="on" class="hidden on-off-btn"><a title="Turn Amplifier ON">ON</a><div class="on-off-caption">Click Button <br />==<br />Amplifier ON</div></div>
+					<div id="off" class="hidden on-off-btn"><a title="Turn Amplifier OFF">OFF</a><div class="on-off-caption">Click Button <br />== <br />Amplifier OFF</div></div>
+					<p id="on-off-info">Loading Data, <br />cough cough</p>
 				</div>
 			</div>
 			<div id="content">
@@ -58,16 +59,30 @@
 							<li><input class="input-select" type="radio" name="switch" value="HDMI4">HDMI4</li>
 							<li><input class="input-select" type="radio" name="switch" value="HDMI5">HDMI5</li>
 							<li><input class="input-select" type="radio" name="switch" value="HDMI6">HDMI6</li>
-							<li><input class="input-select" type="radio" name="switch" value="HDMI7">HDMI7</li>					
+							<li><input class="input-select" type="radio" name="switch" value="HDMI7">HDMI7</li>
 						</ul>
 						<br/>
 					</div>
+
+					<div id="browser">
+						<span>Browse:</span>
+						<input type="text" id="url-to-load"><input id="browse-button" type="submit" value="browse">
+					</div>
+					
+					<form id="life-stream-uploader" action="cgi-bin/video" method="post" enctype="multipart/form-data">
+
+						<p>Life Stream Upload</p>
+						<input name="Datei" type="file" size="50" accept="video/*"><input name="Submit" type="submit">
+						  
+					</form>
+					
+					
 				</div>
 				<div id="right-column">
 					<div>
-						Lounge Screen	
-						<div id="unblank-button" class="blank-unblank-button"><a id="unblank" class="blank-unblank-a" href="#">Unblank</a></div>
-						<div id="blank-button" class="blank-unblank-button"><a id="blank" class="blank-unblank-a" href="#">Blank</a></div>
+						<h1>Lounge Screen</h1>
+						<div id="unblank-button" class="blank-unblank-button"><a id="unblank" class="blank-unblank-a" href="#">Screen ON</a></div>
+						<div id="blank-button" class="blank-unblank-button"><a id="blank" class="blank-unblank-a" href="#">Screen OFF</a></div>
 					</div>
 					<div id="current-input">
 						<div id="input-title">Selected Input:</div>
@@ -96,16 +111,16 @@
 						<span id="treble-plus" class="volume-control-button">+</span>
 					</div>
 				</div>
-				<div id="browser">
-					<span>Browse:</span>
-					<input type="text" id="url-to-load"><input id="browse-button" type="submit" value="browse">
-				</div>
-				<form id="life-stream-uploader" action="cgi-bin/video" method="post" enctype="multipart/form-data">
-
-					<p>Life Stream Upload</p>
-					<input name="Datei" type="file" size="50" accept="video/*"><input name="Submit" type="submit">
-					  
-				</form>
+				
+				<div class="clearboth">clearboth</div>
+				
+				<div id="clean"><a href="#" class="clean-link" >clean the screen, remove all evil</a></div>
+				
+				<div id="github"><a href="https://github.com/kallaballa/LoungeControl">this project is hosted on github</a></div>
+				
+				<div id="logo">logo</div>
+				<div id="all-rites-reversed">All Rites Reversed</div>
+				<div class="clearboth">clearboth</div>
 			</div><!-- end of #content-->
 		</div>
 	</body>

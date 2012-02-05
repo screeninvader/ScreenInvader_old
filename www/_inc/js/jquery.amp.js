@@ -1,9 +1,16 @@
-var xml_get_status_url = "http://10.20.30.51/cgi-bin/getstatus";
-var xml_get_input_url = "http://10.20.30.51/cgi-bin/getinput";
+/***************************
+ * 
+ * jQuery.amp.js - controller application for the metalablounge
+ * 
+ * part of github: https://github.com/kallaballa/LoungeControl
+ * 
+ * */
 
 
+// the zero volume value is -805. so adding 805 to the volume makes it start by 0
 var get_to_zero_volume = 805;
 
+// checking if we are local or deployed
 var local = false;
 var urlprefix = '/';
 
@@ -13,6 +20,14 @@ if ( host.indexOf("localhost") != -1 || host.indexOf("file://") != -1 ) {
 	urlprefix = '../';
 }
 
+// xml urls to get the data from
+var xml_get_status_url = "http://10.20.30.51/cgi-bin/getstatus";
+var xml_get_input_url = "http://10.20.30.51/cgi-bin/getinput";
+
+// default xml string to test locally
+var xmlstats = '<YAMAHA_AV rsp="GET" RC="0"><Main_Zone><Basic_Status><Power_Control><Power>On</Power><Sleep>Off</Sleep></Power_Control><Volume><Lvl><Val>-185</Val><Exp>1</Exp><Unit>dB</Unit></Lvl><Mute>Off</Mute></Volume><Input><Input_Sel>AUDIO3</Input_Sel><Input_Sel_Item_Info><Param>AUDIO1</Param><RW>RW</RW><Title>AUDIO1</Title><Icon><On>/YamahaRemoteControl/Icons/icon002.png</On><Off></Off></Icon><Src_Name></Src_Name><Src_Number>1</Src_Number></Input_Sel_Item_Info></Input><Surround><Program_Sel><Current><Straight>Off</Straight><Enhancer>On</Enhancer><Sound_Program>7ch Stereo</Sound_Program></Current></Program_Sel><_3D_Cinema_DSP>Auto</_3D_Cinema_DSP><Dialogue_Lift>0</Dialogue_Lift></Surround><Pure_Direct><Mode>Off</Mode></Pure_Direct><Sound_Video><Tone><Bass><Val>50</Val><Exp>1</Exp><Unit>dB</Unit></Bass><Treble><Val>-50</Val><Exp>1</Exp><Unit>dB</Unit></Treble></Tone><Adaptive_DRC>Off</Adaptive_DRC></Sound_Video></Basic_Status></Main_Zone></YAMAHA_AV>';
+
+/******************************************* DOCUMENT.READY **********************************************/
 $(document).ready( function ($) {
 	var t = this;
 	
@@ -39,10 +54,17 @@ $(document).ready( function ($) {
 	}
 });
 
-function renderXML (xml, t ) {
 
+/************************ END OF DOCUMENT.READY *****************************************/
+
+
+/*********************** RENDER XML ****************************************************/
+function renderXML (xml, t ) {
+	
+	// determine if the amp is powered on
 	var power = $(xml).find( "Power" );
 
+	//show the button according to the settings
 	if ( power.text() == "On" ) {
 		$('#off').show();
 		$('#on').hide();
@@ -50,13 +72,16 @@ function renderXML (xml, t ) {
 		$('#on').show();
 		$('#off').hide();
 	}
+	// hide the "loading" message
 	$('#on-off-info').empty();
 	
+	
+	/************* populating default html values ***********/
 	var input = $(xml).find( 'Input_Sel' ).text();
 	$('#input-name').html(input);
 	$('[value="'+input+'"]').attr( 'checked', 'checked' ).addClass('chosen-input');
 	
-	
+	/************ current volume ************************/
 	$(xml).find('Volume').each(function(){
 		var volume = $(this).find ( 'Val' );
 		$('#volume-val').html( parseInt ( volume.text() ) + get_to_zero_volume);
@@ -72,6 +97,8 @@ function renderXML (xml, t ) {
 		}
 	});
 	
+	
+	/*************** get bass and treble ********************/
 	$(xml).find('Tone').each(function(){
 		$(this).find('Bass').each(function(){
 			var bass = $(this).find('Val').text();
@@ -88,11 +115,34 @@ function renderXML (xml, t ) {
 		
 	});
 	
+	
+	//blank or unblank the screen
 	$('.blank-unblank-a').live('click',function(){
 		$.get( urlprefix+'cgi-bin/'+$(this).attr('id') );
 		return false;
 	});
 	
+	
+	
+	//turns the amplifier off
+	$('#off').live('click', function() {
+		$.get ( urlprefix+'cgi-bin/off' );
+		$(this).hide();
+		$('#on').show();
+	});
+	
+	//turn the amplifier on
+	$('#on').live('click', function() {
+		$.get ( urlprefix+'cgi-bin/on' );
+		$(this).hide();
+		$('#off').show();
+	});
+	
+	
+	
+	/***************************** START OF VOLUME ************************************/
+	
+	// mute on/off btn
 	t.is_muted = false;
 	$('#volume-mute').live( 'click', function() {
 		if ( !t.is_muted ) {
@@ -104,19 +154,7 @@ function renderXML (xml, t ) {
 		}
 	});
 	
-	$('#off').live('click', function() {
-		$.get ( urlprefix+'cgi-bin/off' );
-		$(this).hide();
-		$('#on').show();
-	});
-	
-	
-	$('#on').live('click', function() {
-		$.get ( urlprefix+'cgi-bin/on' );
-		$(this).hide();
-		$('#off').show();
-	});
-	
+	//SHHHHH ;)
 	$('#volume-minus').live ('click', function(){
 		var new_vol = parseInt( $('#volume-val').html() ) - 5;
 		var new_db = parseInt( t.current_db_volume ) - 5;
@@ -129,6 +167,7 @@ function renderXML (xml, t ) {
 		$.get(urlprefix+'cgi-bin/vol?'+ new_db);
 	});
 	
+	//LOOOUDER ;)
 	$('#volume-plus').live ('click', function(){
 		var new_vol = parseInt( $('#volume-val').html() ) + 5;
 		var new_db = parseInt( t.current_db_volume ) + 5;
@@ -142,6 +181,12 @@ function renderXML (xml, t ) {
 		$.get(urlprefix+'cgi-bin/vol?'+ new_db);
 	});
 	
+	/***************************** END OF VOLUME ************************************/
+	
+	
+	/***************************** START OF BASS ************************************/
+	
+	//adjusts bass minus
 	$('#bass-minus').live ('click', function(){
 		var new_vol = parseInt( $('#bass-val').html() ) - 5;
 		t.current_bass = new_vol;
@@ -149,6 +194,7 @@ function renderXML (xml, t ) {
 		$.get(urlprefix+'cgi-bin/bass?'+ new_vol);
 	});
 	
+	//adjusts bass plus
 	$('#bass-plus').live ('click', function(){
 		var new_vol = parseInt( $('#bass-val').html() ) + 5;
 		t.current_bass = new_vol;
@@ -157,20 +203,32 @@ function renderXML (xml, t ) {
 	});
 	
 	
+	function apply_bass ( new_vol ) {
+		
+	}
+	
+	/***************************** END OF BASS ************************************/
+	
+	//adjusts treble minus
 	$('#treble-minus').live ('click', function(){
 		var new_vol = parseInt( $('#treble-val').html() ) - 5;
-		t.current_treble = new_vol;
-		$('#treble-val').html( t.current_treble );
-		$.get(urlprefix+'cgi-bin/treble?'+ new_vol);
+		apply_treble ( new_vol );
 	});
 	
+	//adjusts treble plus
 	$('#treble-plus').live ('click', function(){
 		var new_vol = parseInt( $('#treble-val').html() ) + 5;
+		apply_treble( new_vol );
+	});
+	
+	function apply_treble ( new_vol ) {
 		t.current_treble = new_vol;
 		$('#treble-val').html( t.current_treble );
 		$.get(urlprefix+'cgi-bin/treble?'+ new_vol);
-	});
+	}
 	
+	
+	// loads a url in the screen, distinguishes between youtube and the rest of the web atm
 	$('#browse-button').live ( 'click', function(){
 		
 		var target = $('#url-to-load').val();
@@ -187,9 +245,11 @@ function renderXML (xml, t ) {
 
 		$.get( realtarget );
 	});
+	
+	$('#clean').live('click', function() {
+		$.get( '../cgi-bin/clean' );
+	});
+	
+	
 }
-
-/* -805 +165  dezibel range */
-
-
-var xmlstats = '<YAMAHA_AV rsp="GET" RC="0"><Main_Zone><Basic_Status><Power_Control><Power>On</Power><Sleep>Off</Sleep></Power_Control><Volume><Lvl><Val>-185</Val><Exp>1</Exp><Unit>dB</Unit></Lvl><Mute>Off</Mute></Volume><Input><Input_Sel>AUDIO3</Input_Sel><Input_Sel_Item_Info><Param>AUDIO1</Param><RW>RW</RW><Title>AUDIO1</Title><Icon><On>/YamahaRemoteControl/Icons/icon002.png</On><Off></Off></Icon><Src_Name></Src_Name><Src_Number>1</Src_Number></Input_Sel_Item_Info></Input><Surround><Program_Sel><Current><Straight>Off</Straight><Enhancer>On</Enhancer><Sound_Program>7ch Stereo</Sound_Program></Current></Program_Sel><_3D_Cinema_DSP>Auto</_3D_Cinema_DSP><Dialogue_Lift>0</Dialogue_Lift></Surround><Pure_Direct><Mode>Off</Mode></Pure_Direct><Sound_Video><Tone><Bass><Val>50</Val><Exp>1</Exp><Unit>dB</Unit></Bass><Treble><Val>-50</Val><Exp>1</Exp><Unit>dB</Unit></Treble></Tone><Adaptive_DRC>Off</Adaptive_DRC></Sound_Video></Basic_Status></Main_Zone></YAMAHA_AV>';
+/********************************** END OF RENDERXML ******************************************/
