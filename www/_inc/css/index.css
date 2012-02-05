@@ -6,38 +6,74 @@ http://yuilibrary.com/license/
 */
 html{color:#000;background:#FFF}body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,textarea,p,blockquote,th,td{margin:0;padding:0}table{border-collapse:collapse;border-spacing:0}fieldset,img{border:0}address,caption,cite,code,dfn,em,strong,th,var{font-style:normal;font-weight:normal}ol,ul{list-style:none}caption,th{text-align:left}h1,h2,h3,h4,h5,h6{font-size:100%;font-weight:normal}q:before,q:after{content:''}abbr,acronym{border:0;font-variant:normal}sup{vertical-align:text-top}sub{vertical-align:text-bottom}input,textarea,select{font-family:inherit;font-size:inherit;font-weight:inherit}input,textarea,select{*font-size:100%}legend{color:#000}
 
-#logo {
-	background: url(../img/logo.png);
-	height: 42px;
-	width: 189px;
-	text-indent: -9999px;
-	margin: 0 0 10px 10px;
-}
-
-
-#slogan {
-	margin: 0 0 0 10px;
+html,body {
+	background: #075586;
+	font-family: arial, sans-serif;
+	font-size: 14px;
 }
 
 #wrapper {
 	width: 650px;
-	position: absolute;
-	left: 0;
-	top: 0;
-	height: 100%;
+	position: relative;
+	left: 50%;
+	margin: 20px 0 20px -325px;
+	background: white;
+	box-shadow: 0 0 13px 7px #333;
+	display: block;
+	border-radius: 50px 25px 50px 0;
 }
 
-#header {
-	margin: 20px;
-}
 
 #branding {
 	float: left;
 	width: 450px;
 }
 
+#logo {
+	background: url(../img/logo.png);
+	height: 100px;
+	width: 100px;
+	text-indent: -9999px;
+	margin: 56px 0 0;
+	float: right;
+}
+
+#meta-logo {
+	background: url(../img/logo.png);
+	height: 100px;
+	width: 100px;
+	background-position: -100px 0;
+	text-indent: -9999px;
+	float: left;
+	border-radius: 50px;
+	box-shadow: 0px 0px 10px 1px #f00;
+
+}
+
+#slogan {
+	margin: 35px 0 0 10px;
+	width: 146px;
+	float: left;
+}
+
+#title {
+	font-size: 18px;
+}
+#version {
+	color: red;
+	-webkit-transform: rotate(20deg);
+	-moz-transform: rotate(-90deg);
+	display: block;
+	height: 15px;
+	width: 20px;
+	float: right;
+}
+
+
+
+
 #content {
-	margin: 120px 20px 0;
+	margin: 30px 0 0;
 }
 
 a {
@@ -46,16 +82,30 @@ a {
 
 #left-column {
 	float: left;
+	margin: 0 0 0 20px;
 }
 
 #right-column {
 	float: right;
+	text-align: center;
+	line-height: 18px;
+	margin: 0 20px 0 0;
 }
 
 #on-off {
 	height: 50px;
 	width: 150px;
+	float: right;
+}
+.on-off-caption {
+	text-indent: 0;
 	float: left;
+	margin: -4px 0 0 58px;
+	width: 95px;
+	background: white;
+	padding: 5px;
+	border-radius: 10px;
+	box-shadow: 4px 0 13px 4px #333;
 }
 
 .on-off-btn {
@@ -129,9 +179,13 @@ a {
 }
 
 .blank-unblank-button {
-	width: 70px; 
-	height: 70px;  
-	background-color: #0f0;
+	background-color: lime;
+	padding: 4px;
+	width: 50px;
+	text-align: center;
+	font-size: 12px;
+	float: left;
+	margin: 5px 10px;
 }
 
 #blank-button {
@@ -145,4 +199,55 @@ a {
 
 #life-stream-uploader {
 	margin: 20px 0 0;
+}
+
+#github {
+	margin: 45px 0 0;
+	float: left;
+}
+
+#github a, #github a:visited {
+	background: url(../img/logo.png);
+	width: 190px;
+	height: 100px;
+	background-position: -200px 0;
+	display: block;
+	text-indent: -9999px;
+}
+
+#github a:hover {
+	color: #000;
+}
+
+#right-column a, #right-column a:visited {
+	color: #000;
+}
+
+
+.clearboth {
+	clear: both;
+	line-height: 0;
+	height: 0;
+	text-indent: -9999px;
+	font-size: 0;
+}
+
+#clean {
+	margin: 20px;
+}
+
+#clean a {
+	font-size: 16px;
+	font-weight: bold;
+	text-decoration: underline;
+	color: #000;
+}
+#clean a:hover {
+	color: #c00;
+}
+
+#all-rites-reversed {
+	float: right;
+	margin: 140px 0 0;
+	width: 116px;
 }
