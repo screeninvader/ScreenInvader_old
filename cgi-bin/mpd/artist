@@ -1,0 +1,6 @@
+#!/bin/bash
+echo Content-type: text/html
+echo ""
+
+nice -n19 mpc -f "%artist%" | sed '2,3d'  | cut -c1-32
+

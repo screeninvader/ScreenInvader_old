@@ -1,0 +1,10 @@
+#!/bin/bash
+echo Content-type: text/html
+echo ""
+
+CURRENT=`mpc current`
+TRACK=`./track | sed '1,/^$/d'`
+mpc playlist | sed "1,/$CURRENT/d" | head -n10 | cut -c1-80 | while read line; do
+  echo "<li class='playlistitem'>$line</li>";
+done
+

@@ -1,0 +1,57 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+   "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+		<title>lounge controller 2.0</title>
+		<script type="text/javascript" src="_inc/js/jquery.min.js"></script>
+		<script type="text/javascript" src="_inc/js/jquery.amp.js"></script>
+		<script type="text/javascript" src="_inc/js/jquery.amp.mpdstats.js"></script>
+		<link rel="stylesheet" type="text/css" href="_inc/css/mpdstats.css">
+	</head>
+	<body style="padding: 0; margin: 0; background-color: #000;">
+	  <table style="width: 400px; margin-left: auto; margin-right: auto; margin-top: 10px;  border: 1px solid #fff">
+	    <tr>
+              <td>
+		<table style="width:100%; margin-left: auto; margin-right: auto;"><tr>
+		   <td style="vertical-align: middle; width: 180px;">
+		     <div id="logo" style="float: left;">Lounge MPD Status</div>
+		   </td>
+		
+		   <td style="width: 100%; vertical-align:middle; padding: 10px; margin-left: auto; margin-right: auto;">
+		     <table align=center style="border: 1px solid #fff; height: 0%; width: 100%; margin-left: auto; margin-right: auto;">
+			<tr>
+			<td class="left" >Title:</td>
+			<td class="right" id="title"></td>
+			</tr>
+			<tr>
+                        <td class="left" >Artist:</td>
+			<td class="right" id="artist"></td>
+			</tr>
+			<tr>
+			<td class="left">Album:</td>
+			<td class="right" id="album"></td>
+			</tr>
+			<tr>
+			<td class="left">Length:</td>
+			<td class="right" id="time"></td>
+			</tr>
+	              </table>
+		    </td>
+		</tr>
+		<tr>
+                    <table style="border: 1px solid #fff; height: 0%; width: 100%; margin-left: auto; margin-right: auto; margin-top: 10px; margin-bottom: 10px;">
+                        <tr>
+                          <td style="font-size: 70%; background-color: #222;">Next:</td>
+                        </tr>
+                        <tr>
+                        <td class="right" style="background-color: #444;" id="playlist"></td>
+                        </tr>
+                      </table>
+		</tr>
+		</table>
+		  </td>
+		</tr>
+	     </table>
+	</body>
+</html>

@@ -4,6 +4,6 @@ export DISPLAY=:0
 ./unblank
 
 if killall -0 midori; then 
-  midori -e ScrollDown &
+  midori --class="Browser" --name="Browser"  -e ScrollDown &
   disown
 fi
