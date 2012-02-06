@@ -69,20 +69,74 @@
 						<input type="text" id="url-to-load"><input id="browse-button" type="submit" value="browse">
 					</div>
 					
-					<form id="life-stream-uploader" action="cgi-bin/video" method="post" enctype="multipart/form-data">
+					<div id="video-player">
+						<div><a id="show-video-player-button">Show Videoplayer</a></div>
+						<div id="video-player-gui" class="hidden">
+							<div id="play-from-link">
+								<span>Search and Play Movie:</span>
+								<input type="text" id="vid-load-text"><input id="vid-load-button" type="submit" value="Search">
+							</div>
+							
+							<form id="life-stream-uploader" action="cgi-bin/video" method="post" enctype="multipart/form-data">
 
-						<p>Life Stream Upload</p>
-						<input name="Datei" type="file" size="50" accept="video/*"><input name="Submit" type="submit">
-						  
-					</form>
-					
-					
+								<p>Life Stream Upload</p>
+								<input name="Datei" type="file" size="50" accept="video/*"><input id="start-video-stream" name="Submit" type="submit">
+							</form>
+							<div id="video-control-holder">
+								<a id="show-video-controls"></a>
+								
+								<div id="video-controls">
+									<div class="arrow-container">
+										<div id="rewindmore" class="video-control-button">
+											<div class="triple-arrow-left arrow"></div>
+											<div class="triple-arrow-left arrow"></div>
+											<div class="triple-arrow-left arrow"></div>
+										</div>
+									</div>
+									<div class="arrow-container">
+										<div id="rewind" class="video-control-button">
+										<div class="double-arrow-left arrow"></div>
+										<div class="double-arrow-left arrow"></div>
+										</div>
+									</div>
+									<div class="arrow-container">
+										<div id="pause" class="pause-btn">
+											<div id="video-pause-button">
+												<div id="pausebar" class="floatleft">|</div>
+												<div id="pausebar" class="floatleft">|</div>
+											</div>
+											<div id="video-play-button" class="floatleft hidden">
+												<div id="playbar" class="floatleft">|></div>
+											</div>
+										</div>
+									</div>
+									<div class="arrow-container">
+										<div id="forward" class="video-control-button">
+											<div class="double-arrow-right arrow"></div>
+											<div class="double-arrow-right arrow"></div>
+										</div>
+									</div>
+									<div class="arrow-container">
+										<div id="forwardmore" class="video-control-button">
+											<div class="triple-arrow-right arrow"></div>
+											<div class="triple-arrow-right arrow"></div>
+											<div class="triple-arrow-right arrow"></div>
+										</div>
+									</div>
+									<div class="clearboth">clearboth</div>
+								</div>
+							</div>
+							<div id="video-control-info">If you close the Screen the stream will close too</div>
+						</div>
+					</div>
 				</div>
+				
+				
 				<div id="right-column">
 					<div>
 						<h1>Lounge Screen</h1>
-						<div id="unblank-button" class="blank-unblank-button"><a id="unblank" class="blank-unblank-a" href="#">Screen ON</a></div>
-						<div id="blank-button" class="blank-unblank-button"><a id="blank" class="blank-unblank-a" href="#">Screen OFF</a></div>
+						<div id="unblank-button" class="blank-unblank-button"><a id="unblank" class="blank-unblank-a">Screen ON</a></div>
+						<div id="blank-button" class="blank-unblank-button"><a id="blank" class="blank-unblank-a">Screen OFF</a></div>
 					</div>
 					<div id="current-input">
 						<div id="input-title">Selected Input:</div>
@@ -114,7 +168,7 @@
 				
 				<div class="clearboth">clearboth</div>
 				
-				<div id="clean"><a href="#" class="clean-link" >clean the screen, remove all evil</a></div>
+				<div id="clean"><a class="clean-link" >clean the screen, remove all evil</a></div>
 				
 				<div id="github"><a href="https://github.com/kallaballa/LoungeControl">this project is hosted on github</a></div>
 				

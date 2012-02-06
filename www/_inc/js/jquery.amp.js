@@ -31,9 +31,14 @@ var xmlstats = '<YAMAHA_AV rsp="GET" RC="0"><Main_Zone><Basic_Status><Power_Cont
 $(document).ready( function ($) {
 	var t = this;
 	
+	// creating default variables for later
 	t.xml;
 	t.current_volume = 0;
 	t.current_db_volume = 0;
+	t.volume_to_set = 0;
+	t.max_bass = 50;
+	t.max_treble = 50;
+	
 	if ( !local ) {
 		$.ajax({
 			type: "GET",
@@ -158,13 +163,8 @@ function renderXML (xml, t ) {
 	$('#volume-minus').live ('click', function(){
 		var new_vol = parseInt( $('#volume-val').html() ) - 5;
 		var new_db = parseInt( t.current_db_volume ) - 5;
-		$('#volume-val').html( new_vol );
-		$('#db-val').html ( new_db * 0.1 );
 		
-		t.current_volume = new_vol;
-		t.current_db_volume = new_db;
-		
-		$.get(urlprefix+'cgi-bin/vol?'+ new_db);
+		apply_volume ( new_vol, new_db );
 	});
 	
 	//LOOOUDER ;)
@@ -172,14 +172,26 @@ function renderXML (xml, t ) {
 		var new_vol = parseInt( $('#volume-val').html() ) + 5;
 		var new_db = parseInt( t.current_db_volume ) + 5;
 		
+		apply_volume ( new_vol, new_db );
+	});
+	
+	function apply_volume ( new_vol, new_db ) {
+		
 		$('#volume-val').html( new_vol );
 		$('#db-val').html ( new_db * 0.1 );
 		
 		t.current_volume = new_vol;
 		t.current_db_volume = new_db;
 		
-		$.get(urlprefix+'cgi-bin/vol?'+ new_db);
-	});
+		setTimeout( function(){post_volume( new_db )}, 500);
+		
+	}
+	
+	function post_volume ( new_db ) {
+		if ( t.current_db_volume == new_db ) {
+			$.get( urlprefix + 'cgi-bin/vol?' + new_db);
+		}
+	}
 	
 	/***************************** END OF VOLUME ************************************/
 	
@@ -189,42 +201,75 @@ function renderXML (xml, t ) {
 	//adjusts bass minus
 	$('#bass-minus').live ('click', function(){
 		var new_vol = parseInt( $('#bass-val').html() ) - 5;
-		t.current_bass = new_vol;
-		$('#bass-val').html( t.current_bass );
-		$.get(urlprefix+'cgi-bin/bass?'+ new_vol);
+		
+		if ( new_vol < -t.max_bass ) {
+			new_vol = -t.max_bass;
+			return;
+		}
+		
+		apply_bass( new_vol );
 	});
 	
 	//adjusts bass plus
 	$('#bass-plus').live ('click', function(){
 		var new_vol = parseInt( $('#bass-val').html() ) + 5;
-		t.current_bass = new_vol;
-		$('#bass-val').html( t.current_bass );
-		$.get(urlprefix+'cgi-bin/bass?'+ new_vol);
+		
+		if ( new_vol > t.max_bass ) {
+			new_vol = t.max_bass;
+			return;
+		}
+		
+		apply_bass( new_vol );
 	});
 	
-	
 	function apply_bass ( new_vol ) {
+		t.current_bass = new_vol;
+		$('#bass-val').html( t.current_bass );
 		
+		setTimeout( function(){post_bass( new_vol )}, 500);
 	}
+	
+	
+	function post_bass ( new_vol ) {
+		if ( t.current_bass == new_vol ) {
+			$.get( urlprefix + 'cgi-bin/bass?' + new_vol);
+		}
+	}
+	
 	
 	/***************************** END OF BASS ************************************/
 	
 	//adjusts treble minus
 	$('#treble-minus').live ('click', function(){
 		var new_vol = parseInt( $('#treble-val').html() ) - 5;
+		if ( new_vol < -t.max_treble ) {
+			new_vol = -t.max_treble;
+			return;
+		}
 		apply_treble ( new_vol );
 	});
 	
 	//adjusts treble plus
 	$('#treble-plus').live ('click', function(){
 		var new_vol = parseInt( $('#treble-val').html() ) + 5;
+		if ( new_vol > t.max_treble ) {
+			new_vol = t.max_treble;
+			return;
+		}
 		apply_treble( new_vol );
 	});
 	
 	function apply_treble ( new_vol ) {
 		t.current_treble = new_vol;
 		$('#treble-val').html( t.current_treble );
-		$.get(urlprefix+'cgi-bin/treble?'+ new_vol);
+		
+		setTimeout( function(){post_treble( new_vol )}, 500);
+	}
+	
+	function post_treble ( new_vol ){
+		if ( t.current_treble == new_vol ) {
+			$.get( urlprefix + 'cgi-bin/treble?' + new_vol);
+		}
 	}
 	
 	
@@ -238,7 +283,7 @@ function renderXML (xml, t ) {
 		}
 		var cgi_target = 'browse';
 		
-		if ( target.indexOf('youtube') != -1 ) {
+		if ( target.indexOf('youtube.com/watch') != -1 || target.indexOf('youtu.be/watch') != -1 ) {
 			cgi_target = 'youtube';
 		} 
 		var realtarget = urlprefix+'cgi-bin/'+cgi_target+'?'+target;
@@ -247,9 +292,53 @@ function renderXML (xml, t ) {
 	});
 	
 	$('#clean').live('click', function() {
-		$.get( '../cgi-bin/clean' );
+		$.get( urlprefix + 'cgi-bin/clean' );
 	});
 	
+	/*************** Show/Hide advanced video controls *****************/
+	t.video_player_shown = false;
+	t.video_is_paused = false;
+	
+	$('#show-video-player-button').live ('click', function(){
+		var gui = $('#video-player-gui');
+		gui.animate({
+				height: 'toggle'
+			}, 100 );
+			
+		if ( t.video_player_shown == false ) {
+			
+			$(this).html('Hide Videoplayer');
+			t.video_player_shown = true;
+		}else{
+			$(this).html('Show Videoplayer');
+			t.video_player_shown = false;
+		}
+	});
+	
+	$('#video-pause-button').live ('click', function() {
+		if ( t.video_is_paused ) {
+			t.video_is_paused = false;
+			$(this).html('||');
+		}else {
+			t.video_is_paused = true;
+			$(this).html('|>');
+		}
+		$.get( urlprefix+'cgi-bin/pause');
+	});
+	
+	$('.video-control-button').live ( 'click', function () {
+		var cgi_target = $(this).attr('id');
+		$.get( urlprefix+'cgi-bin/mplayer/'+cgi_target );
+	});
+	
+	$('#start-video-stream').live ('click', function () {
+		$('#video-controls').show();
+	});
+	
+	$('#vid-load-button').live ('click', function(){
+		var search_term = $('#vid-load-text').html();
+		$.get( urlprefix+'cgi-bin/search?'+search_term );
+	});
 	
 }
 /********************************** END OF RENDERXML ******************************************/

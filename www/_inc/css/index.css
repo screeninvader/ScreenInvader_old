@@ -6,6 +6,15 @@ http://yuilibrary.com/license/
 */
 html{color:#000;background:#FFF}body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,textarea,p,blockquote,th,td{margin:0;padding:0}table{border-collapse:collapse;border-spacing:0}fieldset,img{border:0}address,caption,cite,code,dfn,em,strong,th,var{font-style:normal;font-weight:normal}ol,ul{list-style:none}caption,th{text-align:left}h1,h2,h3,h4,h5,h6{font-size:100%;font-weight:normal}q:before,q:after{content:''}abbr,acronym{border:0;font-variant:normal}sup{vertical-align:text-top}sub{vertical-align:text-bottom}input,textarea,select{font-family:inherit;font-size:inherit;font-weight:inherit}input,textarea,select{*font-size:100%}legend{color:#000}
 
+a {
+	cursor: pointer;
+}
+
+a:hover {
+	color: #c00;
+}
+
+
 html,body {
 	background: #075586;
 	font-family: arial, sans-serif;
@@ -34,6 +43,7 @@ html,body {
 	height: 100px;
 	width: 100px;
 	text-indent: -9999px;
+	margin: 56px 0 0;
 	margin: 56px 0 0;
 	float: right;
 }
@@ -90,6 +100,7 @@ a {
 	text-align: center;
 	line-height: 18px;
 	margin: 0 20px 0 0;
+	width: 156px;
 }
 
 #on-off {
@@ -199,6 +210,7 @@ a {
 
 #life-stream-uploader {
 	margin: 20px 0 0;
+	width: 420px;
 }
 
 #github {
@@ -250,4 +262,77 @@ a {
 	float: right;
 	margin: 140px 0 0;
 	width: 116px;
+}
+
+/******************************* VIDEO PLAYER STYLES **************************************************/
+
+#video-player {
+	margin: 30px 00;
+	border: 1px solid #000;
+	border-radius: 5px;
+}
+
+#video-controls {
+	border: 1px solid #000;
+	border-radius: 2px;
+	margin: 20px 0 0;
+}
+
+
+.arrow-container {
+	margin: 7px 3px;
+	height: 15px;
+	width: 15px;
+	float: left;
+	cursor: pointer;
+	opacity: 0.6;
+}
+.arrow-container:hover {
+	opacity: 1;
+}
+
+.video-control-button {
+	float: left;
+	margin: 4px 0 0;
+}
+
+
+.arrow {
+	float: left;
+	width: 0;
+	height: 0;
+}
+
+.double-arrow-right {
+	border-top: 4px solid transparent;
+	border-bottom: 4px solid transparent;
+	border-left: 4px solid green;
+}
+
+
+.triple-arrow-right {
+	border-top: 3px solid transparent;
+	border-bottom: 3px solid transparent;
+	border-left: 3px solid green;
+	margin: 1px 0 0;
+}
+
+
+.double-arrow-left {
+	border-top: 5px solid transparent;
+	border-bottom: 5px solid transparent;
+	border-right: 5px solid green;
+}
+
+
+.triple-arrow-left {
+	border-top: 4px solid transparent;
+	border-bottom: 4px solid transparent;
+	border-right: 4px solid green;
+	margin: 1px 0 0;
+}
+
+
+.floatleft {
+	float: left;
 }
