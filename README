@@ -1,13 +1,13 @@
-## Lounge Control 2.0
+## Lounge Control 2.0 ##
 
 [this_file](https://github.com/kallaballa/LoungeControl/edit/master/README)
 
 [project_url](https://github.com/kallaballa/LoungeControl/)
 
 
-#### Features
+#### Features ####
   
-  ##### General:
+  ##### General: #####
     Amplifier on/off button
 
     Screen blank/unblank button
@@ -17,7 +17,7 @@
     volume, bass, treble control
 
 
-  ##### Movie Controls:
+  ##### Movie Controls: #####
     play any youtube video by inputting it's url into a textfield
   
     live stream any movie or audio file from your harddisc to the amplifier or the screen 
@@ -27,18 +27,18 @@
 
     css only movie player buttons ;)
 
-  ##### Sanity Pills:
+  ##### Sanity Pills: #####
     clean the screen, remove all evil button, immediately stops all playing videos
 
 
-  ##### usability:
+  ##### usability: #####
     once a video starts, the music pauses and after the movie ends it automagically restarts at the same position
     
   
 
         
 
-#### Inputs:
+#### Inputs: ####
   Music Player Daemon
   Dock  
   WII
@@ -53,14 +53,14 @@
   USB
   V-AUX
 
-##### AV inputs ( needs cable )
+##### AV inputs ( needs cable ) #####
   AV1
   AV2
   AV3
   AV4
   AV7
 
-##### HDMI inputs ( needs cable )
+##### HDMI inputs ( needs cable ) #####
   HDMI1
   HDMI2
   HDMI3
