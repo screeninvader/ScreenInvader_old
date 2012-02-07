@@ -39,6 +39,9 @@ $(document).ready( function ($) {
 	t.max_bass = 50;
 	t.max_treble = 50;
 	
+	t.search_and_play_visible = false;
+	t.upload_stream_visible = false;
+	
 	if ( !local ) {
 		$.ajax({
 			type: "GET",
@@ -122,7 +125,7 @@ function renderXML (xml, t ) {
 	
 	
 	//blank or unblank the screen
-	$('.blank-unblank-a').live('click',function(){
+	$('.blank-unblank-button').live('click',function(){
 		$.get( urlprefix+'cgi-bin/'+$(this).attr('id') );
 		return false;
 	});
@@ -315,15 +318,18 @@ function renderXML (xml, t ) {
 		}
 	});
 	
-	$('#video-pause-button').live ('click', function() {
+	$('.video-pause-play-button').live ('click', function() {
 		if ( t.video_is_paused ) {
 			t.video_is_paused = false;
-			$(this).html('||');
+			$('#video-pause-button').show();
+			$('#video-play-button').hide();
 		}else {
 			t.video_is_paused = true;
-			$(this).html('|>');
+			$('#video-pause-button').hide();
+			$('#video-play-button').show();
+			$('#video-play-button').html('');
 		}
-		$.get( urlprefix+'cgi-bin/pause');
+		$.get( urlprefix+'cgi-bin/mplayer/pause');
 	});
 	
 	$('.video-control-button').live ( 'click', function () {
@@ -338,6 +344,36 @@ function renderXML (xml, t ) {
 	$('#vid-load-button').live ('click', function(){
 		var search_term = $('#vid-load-text').html();
 		$.get( urlprefix+'cgi-bin/search?'+search_term );
+	});
+	
+	
+	
+	$('#life-stream-upload-button').live ( 'click', function () {
+		if ( t.upload_stream_visible ) {
+			$('#life-stream-container').hide();
+			t.upload_stream_visible = false;
+		} else {
+			if ( t.search_and_play_visible ){
+				$('#search-and-play-container').hide();
+				t.search_and_play_visible = false;
+			} 
+			$('#life-stream-container').show();
+			t.upload_stream_visible = true;
+		}
+	});
+	
+	$('#search-and-play-button').live('click', function () {
+		if ( t.search_and_play_visible ) {
+			$('#search-and-play-container').hide();
+			t.search_and_play_visible = false;
+		} else {
+			if ( t.upload_stream_visible ){
+				$('#life-stream-container').hide();
+				t.upload_stream_visible = false;
+			} 
+			$('#search-and-play-container').show();
+			t.search_and_play_visible = true;
+		}
 	});
 	
 }

@@ -72,16 +72,25 @@
 					<div id="video-player">
 						<div><a id="show-video-player-button">Show Videoplayer</a></div>
 						<div id="video-player-gui" class="hidden">
-							<div id="play-from-link">
-								<span>Search and Play Movie:</span>
-								<input type="text" id="vid-load-text"><input id="vid-load-button" type="submit" value="Search">
+							<div id="play-from-selection">
+								<a id="life-stream-upload-button" class="life-stream">Life Stream Upload</a>
+								<span>|</span>
+								<a id="search-and-play-button" class="search-and-play">Search and Play Movie:</a>
+							</div>
+							<div id="life-stream-container" class="hidden">
+								<form id="life-stream-uploader" action="cgi-bin/video" method="post" enctype="multipart/form-data">
+									<input name="Datei" type="file" size="50" accept="video/*"><input id="start-video-stream" name="Submit" type="submit">
+								</form>
+								<div class="player-info">This will stream the file from your computer to the Server.</div>
 							</div>
 							
-							<form id="life-stream-uploader" action="cgi-bin/video" method="post" enctype="multipart/form-data">
-
-								<p>Life Stream Upload</p>
-								<input name="Datei" type="file" size="50" accept="video/*"><input id="start-video-stream" name="Submit" type="submit">
-							</form>
+							<div id="search-and-play-container" class="hidden">
+								<form id="search-and-play" action="cgi-bin/search" method="post">
+									<input type="text" id="vid-load-text"><input id="vid-load-button" type="submit" value="Search">
+								</form>
+								<div class="player-info">This will search the moviedatabase on the mediaserver. If the searchstring is part of a movie name this movie will start to play.<br /> if you close this fenster the movie will stop too.</div>
+							</div>
+							
 							<div id="video-control-holder">
 								<a id="show-video-controls"></a>
 								
@@ -101,11 +110,11 @@
 									</div>
 									<div class="arrow-container">
 										<div id="pause" class="pause-btn">
-											<div id="video-pause-button">
+											<div id="video-pause-button" class="video-pause-play-button">
 												<div id="pausebar" class="floatleft">|</div>
 												<div id="pausebar" class="floatleft">|</div>
 											</div>
-											<div id="video-play-button" class="floatleft hidden">
+											<div id="video-play-button" class="floatleft hidden video-pause-play-button">
 												<div id="playbar" class="floatleft">|></div>
 											</div>
 										</div>
@@ -126,7 +135,6 @@
 									<div class="clearboth">clearboth</div>
 								</div>
 							</div>
-							<div id="video-control-info">If you close the Screen the stream will close too</div>
 						</div>
 					</div>
 				</div>
@@ -135,8 +143,8 @@
 				<div id="right-column">
 					<div>
 						<h1>Lounge Screen</h1>
-						<div id="unblank-button" class="blank-unblank-button"><a id="unblank" class="blank-unblank-a">Screen ON</a></div>
-						<div id="blank-button" class="blank-unblank-button"><a id="blank" class="blank-unblank-a">Screen OFF</a></div>
+						<div id="unblank" class="blank-unblank-button">Screen ON</div>
+						<div id="blank" class="blank-unblank-button">Screen OFF</div>
 					</div>
 					<div id="current-input">
 						<div id="input-title">Selected Input:</div>
@@ -172,8 +180,13 @@
 				
 				<div id="github"><a href="https://github.com/kallaballa/LoungeControl">this project is hosted on github</a></div>
 				
-				<div id="logo">logo</div>
-				<div id="all-rites-reversed">All Rites Reversed</div>
+				<!--<div id="logo">logo</div>-->
+				<div id="all-rites-reversed" class="box-of-spandora">
+					<!--<div id='warped'>
+						<span class='w0'>A</span><span class='w1'>l</span><span class='w2'>l</span><span class='w3'> </span><span class='w4'>R</span><span class='w5'>i</span><span class='w6'>t</span><span class='w7'>e</span><span class='w8'>s</span><span class='w9'> </span><span class='w10'>R</span><span class='w11'>e</span><span class='w12'>v</span><span class='w13'>e</span><span class='w14'>r</span><span class='w15'>s</span><span class='w16'>e</span><span class='w17'>d</span>
+					</div>-->
+					All Rites Reversed
+				</div>
 				<div class="clearboth">clearboth</div>
 			</div><!-- end of #content-->
 		</div>

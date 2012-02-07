@@ -29,7 +29,7 @@ html,body {
 	background: white;
 	box-shadow: 0 0 13px 7px #333;
 	display: block;
-	border-radius: 50px 25px 50px 0;
+	border-radius: 50px 25px 0 50px;
 }
 
 
@@ -197,9 +197,11 @@ a {
 	font-size: 12px;
 	float: left;
 	margin: 5px 10px;
+	cursor: pointer;
 }
 
-#blank-button {
+
+#blank {
 	background-color: #f00;
 }
 
@@ -215,7 +217,7 @@ a {
 
 #github {
 	margin: 45px 0 0;
-	float: left;
+	float: right;
 }
 
 #github a, #github a:visited {
@@ -258,12 +260,6 @@ a {
 	color: #c00;
 }
 
-#all-rites-reversed {
-	float: right;
-	margin: 140px 0 0;
-	width: 116px;
-}
-
 /******************************* VIDEO PLAYER STYLES **************************************************/
 
 #video-player {
@@ -303,6 +299,12 @@ a {
 	height: 0;
 }
 
+#video-play-button {
+	border-top: 8px solid transparent;
+	border-bottom: 8px solid transparent;
+	border-left: 8px solid green;
+}
+
 .double-arrow-right {
 	border-top: 4px solid transparent;
 	border-bottom: 4px solid transparent;
@@ -335,4 +337,23 @@ a {
 
 .floatleft {
 	float: left;
+}
+
+#play-from-selection {
+	margin: 10px 0;
+}
+
+#play-from-selection a {
+	padding: 0 5px 0 0;
+}
+
+.player-info {
+	width: 370px;
+}
+/****************** all rites reversed style ******************************/
+
+#all-rites-reversed {
+	float: left;
+	margin: 90px 0 0 17px;
+	width: 116px;
 }
