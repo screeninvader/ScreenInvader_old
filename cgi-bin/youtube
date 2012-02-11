@@ -7,6 +7,6 @@
 
 COOKIE_FILE=/var/tmp/youtube-dl-cookies.txt
 mpc pause
-`mplayer -af volnorm -softvol -softvol-max 200 -volstep 5 -ao alsa -nocorrect-pts -framedrop -vfm ffmpeg -lavdopts lowres=0:fast:skiploopfilter=all -vo xv -fs -cookies -cookies-file ${COOKIE_FILE} $(youtube-dl -g -f18 --cookies ${COOKIE_FILE} "$QUERY_STRING"); mpc play` &> /dev/null &
+`mplayer -fs -cookies -cookies-file ${COOKIE_FILE} $(youtube-dl -g -f18 --cookies ${COOKIE_FILE} "$QUERY_STRING"); mpc play` &> /dev/null &
 
 disown

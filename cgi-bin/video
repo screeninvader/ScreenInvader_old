@@ -6,5 +6,5 @@
 
 
 mpc pause
-cat | sed '1,4d' | mplayer -af volnorm -cache 8192 -softvol -softvol-max 200 -volstep 5 -ao alsa -nocorrect-pts -framedrop -vfm ffmpeg -lavdopts lowres=0:fast:skiploopfilter=all -vo xv -fs -vo xv -fs - &> /dev/null
+cat | sed '1,4d' | mplayer -fs - &> /dev/null
 mpc play
