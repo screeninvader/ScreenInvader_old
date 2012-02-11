@@ -1,13 +1,11 @@
 #!/bin/bash
-export DISPLAY=:0
-echo Content-type: text/html
-echo ""
+. ./initrequest "text/html"
 
-killall -9 mplayer
+./clean
 ./unblank
 
-./startmidori
-
-midori --class="Browser" --name="Browser" -e TabCloseOther
-midori --class="Browser" --name="Browser" $QUERY_STRING & disown
-midori --class="Browser" --name="Browser" -e TabCloseOther
+pid=`ps -ef | grep "midori.*class=Browser" | fgrep -v grep | tr -s " " | cut -d" " -f2`
+if [ -n "$pid" ]; then 
+	midori --class="Browser" --name="Browser" -e TabCloseOther 
+fi
+midori --class="Browser" --name="Browser" $QUERY_STRING &> /dev/null

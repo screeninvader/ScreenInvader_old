@@ -1,7 +1,7 @@
 #!/bin/bash
 
 killall -9 mplayer
-
+killall -9 feh
 pid=`ps -ef | grep "midori.*class=Browser" | fgrep -v grep | tr -s " " | cut -d" " -f2`
 [ -n "$pid" ] && kill -9 $pid
 

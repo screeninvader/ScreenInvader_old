@@ -1,0 +1,14 @@
+#!/bin/bash
+. ./initrequest "text/html"
+
+./clean
+./unblank
+
+
+mpc pause
+TERMS=`echo $1 | tr -s " " "*"`
+FILE="`find /link/Media/Series/ /link/Media/Film -type f -iname "*.avi" -o -iname "*.mov" -o -iname "*.mpg"  -o -iname "*.mpeg"  -o -iname "*.mkv" -o -iname "*.flv" | shuf | sed '1q'`"
+
+`mplayer -fs "$FILE" &> /dev/null; mpc play` &> /dev/null &
+
+disown

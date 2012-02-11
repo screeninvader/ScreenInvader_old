@@ -1,0 +1,12 @@
+#!/bin/bash
+
+. ./initrequest "text/html"
+
+export HOME=/home/lounge
+
+./clean
+./unblank
+
+feh --image-bg black -g1920x1200 --auto-zoom --scale-down "$QUERY_STRING" &> /dev/null &
+disown &> /dev/null
+exit 0

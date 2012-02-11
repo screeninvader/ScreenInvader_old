@@ -1,8 +1,4 @@
 #!/bin/bash
-export DISPLAY=:0
-echo Content-type: text/html
-echo ""
-
 
 xset s reset
 xset dpms force on

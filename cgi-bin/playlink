@@ -1,0 +1,14 @@
+#!/bin/bash
+. ./initrequest "text/html"
+
+./clean
+./unblank
+
+mpc -q pause &> /dev/null
+QUERY_STRING="$1"
+TERMS=`echo $QUERY_STRING | tr -s " " "*"`
+FILE="`find /link/Media/Series/ /link/Media/Film -type f -iname "*$TERMS*.avi" -o -iname "*$TERMS*.mov" -o -iname "*$TERMS*.mpg"  -o -iname "*$TERMS*.mpeg"  -o -iname "*$TERMS*.mkv" -o -iname "*$TERMS*.flv" | sed '1q'`"
+
+bash -c "mplayer -fs \"$FILE\" &> /dev/null; mpc play &> /dev/null" &> /dev/null &
+disown
+
