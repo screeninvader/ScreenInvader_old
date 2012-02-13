@@ -127,12 +127,34 @@ function renderXML (xml, t ) {
 	});
 	
 	
+	blank=true
 	//blank or unblank the screen
-	$('.blank-unblank-button').live('click',function(){
-		$.get( urlprefix+'cgi-bin/'+$(this).attr('id') );
+	$('#screentoggle').live('click',function(){	
+  	 	if(blank) {
+                  $('#screentoggle').text("OFF").removeClass("green").addClass("red");
+		  $.get( urlprefix+'cgi-bin/blank');
+		} else {
+                  $('#screentoggle').text("ON").removeClass("red").addClass("green");
+		  $.get( urlprefix+'cgi-bin/unblank');
+		}
+		blank=!blank;
 		return false;
 	});
 	
+	beamer=false
+        $('#beamertoggle').live('click',function(){
+		beamer=!beamer
+		if(beamer) {
+                  $('#beamertoggle').text("ON");
+		  $.get( urlprefix+'cgi-bin/beamermode?on' );
+		} else {
+                  $('#beamertoggle').text("OFF");
+                $.get( urlprefix+'cgi-bin/beamermode?off' );
+		}
+                return false;
+        });
+
+
 	
 	
 	//turns the amplifier off

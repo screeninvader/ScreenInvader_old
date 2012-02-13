@@ -87,9 +87,7 @@
 							</div>
 							
 							<div id="search-and-play-container" class="hidden">
-								<form id="search-and-play" action="cgi-bin/search" method="post">
 									<input type="text" id="vid-load-text"><input id="vid-load-button" type="submit" value="Search">
-								</form>
 								<div class="player-info">This will search the moviedatabase on the mediaserver. If the searchstring is part of a movie name this movie will start to play.<br /> if you close this fenster the movie will stop too.</div>
 							</div>
 							
@@ -144,9 +142,10 @@
 				
 				<div id="right-column">
 					<div>
-						<h1>Lounge Screen</h1>
-						<div id="unblank" class="blank-unblank-button">Screen ON</div>
-						<div id="blank" class="blank-unblank-button">Screen OFF</div>
+						<h1>On Screen Display</h1>
+						<div id="screentoggle" class="green">ON</div>
+                                                <h1>Beamer Mode</h1>
+                                                <div id="beamertoggle" class="red">OFF</div>
 					</div>
 					<div id="current-input">
 						<div id="input-title">Selected Input:</div>

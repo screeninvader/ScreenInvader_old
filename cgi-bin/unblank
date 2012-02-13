@@ -1,6 +1,8 @@
 #!/bin/bash
 
+blank=`cat /var/www/cgi-bin/conf/blank`
+
 xset s reset
 xset dpms force on
-xset s 90
-xset dpms 90 90 0
+xset s $blank
+xset dpms $blank $blank 0

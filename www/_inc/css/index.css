@@ -25,6 +25,20 @@ html,body {
 	font-size: 14px;
 }
 
+.green {
+ text-align: center;
+ vertical-align: middle;
+ padding: 5px;
+ background-color: #0f0;
+}
+
+.red {
+  text-align: center;
+  vertical-align: middle;
+  padding: 5px;
+  background-color: #f00;
+}
+
 #wrapper {
 	width: 650px;
 	position: relative;
