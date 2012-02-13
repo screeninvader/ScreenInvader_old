@@ -1,0 +1,21 @@
+#!/bin/bash
+
+. ./initrequest "text/html"
+
+#mplayerproc=`ps -ef | grep mplayer | tr -s " " | cut -d" " -f8-`
+
+QUERY_STRING=$1
+if [ "$QUERY_STRING" != "OFF" -a "$QUERY_STRING" != "off" ]; then
+  xrandr --auto --output VGA-0 --rate 60 --mode 1024x768
+  echo 1024x768 > conf/resolution
+  echo 10800 > conf/blank
+  ./off; ./on
+else
+  echo 1920x1200 > conf/resolution
+  echo 90 > conf/blank
+  xrandr --auto --output VGA-0 --mode custom
+fi
+
+#[ -n "$mplayerproc" ] && `killall mplayer; $mplayerproc`;
+./unblank
+
