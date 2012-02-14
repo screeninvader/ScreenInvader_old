@@ -1,4 +1,17 @@
 
+function checkRunning() {
+  $.get("cgi-bin/mpd/isRunning", function(data){
+    if(data == "true") {
+	$("#currentsong").show();
+	$("#nextsongs").show();
+        $("#stopped").hide();
+    } else if(data == "false") {
+      $("#currentsong").hide();
+      $("#nextsongs").hide();
+      $("#stopped").show();
+    }
+  });
+}
 
 function updateTitle() {
   $.get("cgi-bin/mpd/title", function(data){
@@ -37,6 +50,7 @@ function updatePlaylist() {
 }
 
 $(document).ready( function ($) {
+  $("#stopped").hide();
   updateTitle();
   updateTrack();
   updateTime();
@@ -44,6 +58,7 @@ $(document).ready( function ($) {
   updateAlbum();
   updatePlaylist();
 
+  setInterval("checkRunning()", 3000);
   setInterval("updateTitle()", 3000);	
   setInterval("updateTrack()", 3000);
   setInterval("updateTime()", 3000);
