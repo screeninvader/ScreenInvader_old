@@ -49,16 +49,15 @@ function updateTrack() {
   });
 }
 
-function updatePlaylist() {
-  $.get("cgi-bin/mpd/playlist", function(data){
-    $("#playlist").html(data);
+function updateLyrics() {
+  $.get("cgi-bin/mpd/lyrics", function(data){
+    $("#viewer").html(data);
   });
 }
 
 $(document).ready( function ($) {
-  $("#stopped").hide();
-  checkRunning();
-  setInterval("checkRunning()", 3000);
+  updateLyrics();
+  setInterval("updateLyrics()", 3000);
 });
 
 
