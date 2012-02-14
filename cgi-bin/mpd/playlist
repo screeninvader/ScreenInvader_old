@@ -3,7 +3,7 @@ echo Content-type: text/html
 echo ""
 
 ID=`./id | sed "1,2d"`
-mpc playlist | sed "1,$[ ID + 1]d" | head -n10 | cut -c1-80 | while read line; do
+mpc playlist | sed "1,$[ ID + 1]d" | head -n10 | cut -c1-62 | while read line; do
   echo "<li class='playlistitem'>$line</li>";
 done
 
