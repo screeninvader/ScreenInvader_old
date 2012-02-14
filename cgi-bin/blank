@@ -1,6 +1,5 @@
 #!/bin/bash
-export DISPLAY=:0
-echo Content-type: text/html
-echo ""
+
+. ./initrequest "text/html"
 
 xset dpms force standby
