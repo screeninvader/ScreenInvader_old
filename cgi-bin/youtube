@@ -3,10 +3,8 @@
 . ./initrequest "text/html"
 
 ./unblank
-./clean
 
 COOKIE_FILE=/var/tmp/youtube-dl-cookies.txt
-mpc pause
-`mplayer -fs -cookies -cookies-file ${COOKIE_FILE} $(youtube-dl -g -f18 --cookies ${COOKIE_FILE} "$QUERY_STRING"); mpc play` &> /dev/null &
-
+mplayer -fs -cookies -cookies-file "${COOKIE_FILE}" "$(youtube-dl -g -f18 --cookies ${COOKIE_FILE} "$QUERY_STRING")" &> /dev/null &
 disown
+

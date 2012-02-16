@@ -3,7 +3,9 @@ function checkRunning() {
   $.get("cgi-bin/mpd/isRunning", function(data){
     if(data == "true") {
 	$("#currentsong").show();
-	$("#nextsongs").show();
+	if ($('#chattable').attr('_hidden') == "true") {
+	  $("#nextsongs").show();
+        }
         $("#stopped").hide();
 	updateTitle();
 	updateArtist();
@@ -16,6 +18,29 @@ function checkRunning() {
 	$("#nextsongs").hide();
 	$("#stopped").show();
     }
+
+    $('#chat').css('height', (screen.height - 460) + 'px' );
+  });
+  $('#chat').scrollTop = $('#chat').scrollHeight;
+}
+
+function showChat() {
+  $("#nextsongs").hide();
+  $("#chattable").show();
+  $('#chattable').attr('_hidden', 'false');
+  $('#chat').scrollTop = $('#chat').scrollHeight;
+//  $.get("cgi-bin/unblank", function(data){
+//  });
+
+}
+
+function hideChat() {
+  $.get("cgi-bin/mpd/isRunning", function(data){
+    $("#chattable").hide();
+    if(data == "true") {
+      $("#nextsongs").show();
+    }
+   $('#chattable').attr('_hidden', 'true');
   });
 }
 
@@ -57,6 +82,7 @@ function updatePlaylist() {
 
 $(document).ready( function ($) {
   $("#stopped").hide();
+  hideChat();
   checkRunning();
   setInterval("checkRunning()", 3000);
 });

@@ -2,4 +2,4 @@
 echo Content-type: text/html
 echo ""
 
-nice -n19 mpc -f "%id%" | sed '2,3d' | cut -c1-32
+nice -n19 mpc -f "%position%" | sed '2,3d' | cut -c1-32

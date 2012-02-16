@@ -1,16 +1,14 @@
 #!/bin/bash
 . ./initrequest "text/html"
 
-./clean
 ./unblank
 
 TERMS=`echo $1 | tr -s " " "*"`
-mpc pause
 if [ -n "$TERMS" ] ; then
   FILE="`find /link/Media/Series/ /link/Media/Film -type f -iname "*$TERMS*.avi" -o -iname "*$TERMS*.mov" -o -iname "*$TERMS*.mpg"  -o -iname "*$TERMS*.mpeg"  -o -iname "*$TERMS*.mkv" -o -iname "*$TERMS*.flv" | shuf | sed '1q'`"
 else
   FILE="`find /link/Media/Series/ /link/Media/Film -type f -iname "*.avi" -o -iname "*.mov" -o -iname "*.mpg"  -o -iname "*.mpeg"  -o -iname "*.mkv" -o -iname "*.flv" | shuf | sed '1q'`"
 fi
-`mplayer -fs "$FILE" &> /dev/null; mpc play` &> /dev/null &
 
-disown
+mplayer -fs "$FILE" &> /dev/null
+

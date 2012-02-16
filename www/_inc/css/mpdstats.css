@@ -16,6 +16,10 @@ white-space:nowrap;
 background-color:#222;
 }
 
+.message { 
+  display: inline;
+}
+
 .right {
 text-overflow:clip;
 border: 1px dashed #888;

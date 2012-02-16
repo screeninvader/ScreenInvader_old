@@ -10,6 +10,7 @@ if [ "$QUERY_STRING" != "OFF" -a "$QUERY_STRING" != "off" ]; then
   midori -c /home/lounge/midori_mpdstat/ --class="MPDstat" --name="MPDstat" -e ZoomOut
   midori -c /home/lounge/midori_mpdstat/ --class="MPDstat" --name="MPDstat" -e ZoomOut
   midori -c /home/lounge/midori_mpdstat/ --class="MPDstat" --name="MPDstat" -e ZoomOut
+  midori -c /home/lounge/midori_mpdstat/ --class="MPDstat" --name="MPDstat" -e ZoomOut
   xrandr --auto --output VGA-0 --rate 60 --mode 1024x768
   xset s 10800
   xset dpms 10800 0 0

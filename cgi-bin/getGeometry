@@ -1,0 +1,4 @@
+#!/bin/bash
+
+xrandr | grep "VGA-0 " | cut -d" " -f3 | cut -d"+" -f1
+
