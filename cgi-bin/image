@@ -9,4 +9,6 @@ export HOME=/home/lounge
 
 feh -g"`./getGeometry`" --image-bg black --auto-zoom "$QUERY_STRING" &> /dev/null &
 disown &> /dev/null
+echo "`date` $QUERY_STRING" >> log/image.log
+
 exit 0

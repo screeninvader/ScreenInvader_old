@@ -2,9 +2,18 @@
 
 . ./initrequest "text/html"
 
+./clean
 ./unblank
 
-COOKIE_FILE=/var/tmp/youtube-dl-cookies.txt
-mplayer -fs -cookies -cookies-file "${COOKIE_FILE}" "$(youtube-dl -g -f18 --cookies ${COOKIE_FILE} "$QUERY_STRING")" &> /dev/null &
-disown
+set -e
+
+(
+  flock -x -w 10 200
+  COOKIE_FILE=/var/tmp/youtube-dl-cookies.txt
+  mplayer -fs -cookies -cookies-file "${COOKIE_FILE}" "$(youtube-dl -g -f18 --cookies ${COOKIE_FILE} "$QUERY_STRING")" &> /dev/null &
+  disown
+  echo "`date` $QUERY_STRING" >> log/youtube.log
+) 200>/var/lock/.mplayer.exclusivelock
+
+
 

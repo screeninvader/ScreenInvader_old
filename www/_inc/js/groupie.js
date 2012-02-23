@@ -1,3 +1,6 @@
+String.prototype.startsWith = function(str)
+{return (this.match("^"+str)==str)}
+
 String.prototype.wordWrap = function(m, b, c){
     var i, j, s, r = this.split("\n");
     if(m > 0) for(i in r){
@@ -148,6 +151,9 @@ var Groupie = {
 	text=$(msg).find('.body').text();
         $('#chat').append('<pre style="display:inline;"><code style="display:inline;">&lt;' + nick + '&gt; ');
 	msg = text;
+//	if(msg.startsWith("!lyrics"))
+//	  $.get('http://10.20.30.51/cgi-bin/mpd/lyrics');
+
 
   while( msg.length > 0) {
     $('#chat').append(msg.slice(0,60).replace(/\s/,"&nbsp;") + '<br/>');

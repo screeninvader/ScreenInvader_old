@@ -40,7 +40,13 @@ if [ `mpc |wc -l` != 1 ]; then
         ARTIST=`mpc --format "%artist%" | head -n 1`
         TITLE=`mpc --format "%title%" | head -n 1`
         getsong "${ARTIST}:${TITLE}"
-        parse | while read line; do
+        text="`parse`"
+	if [ "`echo "$text" | sed '1q'`" == "Search results" ]; then
+	   echo "No Lyrics found.";
+	   exit 0;
+        fi
+
+        echo "$text" | while read line; do
 	  echo "$line<br/>"
         done
         rm $TMP
