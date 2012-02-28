@@ -1,0 +1,13 @@
+#!/bin/bash
+
+. ./initrequest "text/html"
+
+export HOME=/home/lounge
+
+./clean
+./unblank
+
+export QUERY_STRING="http://10.20.30.51/cgi-bin/printheadline?$QUERY_STRING"
+/var/www/cgi-bin/browse $QUERY_STRING
+
+exit 0

@@ -5,8 +5,10 @@
 ./unblank
 
 mpc -q pause &> /dev/null
-TERMS="`echo $QUERY_STRING | tr " " "*"`"
-FILE="`find /link/Media/ -type f -iname "*$TERMS*.avi" -o -iname "*$TERMS*.mov" -o -iname "*$TERMS*.mpg"  -o -iname "*$TERMS*.mpeg"  -o -iname "*$TERMS*.mkv" -o -iname "*$TERMS*.flv" | sed '1q'`"
+TERMS="`echo $QUERY_STRING | sed 's/%20/ /g' | sed 's/ /\*/g'`"
+echo "QUERY_STRING $TERMS"
+
+FILE="`find /link/Media/Series /link/Media/Film -type f -iname "*$TERMS*" | sed '1q'`"
 
 mplayer -fs "$FILE" &> /dev/null
 

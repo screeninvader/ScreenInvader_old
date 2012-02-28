@@ -2,6 +2,7 @@
 
 . ./initrequest "text/plain"
 
+killall -9 waitForButton
 killall -9 mplayer.orig
 killall -9 mplayer
 killall -9 feh
