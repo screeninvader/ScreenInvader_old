@@ -1,195 +1,51 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
-   "http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
-	<head>
-		<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
-		<title>lounge control 2.0</title>
-		<script type="text/javascript" src="_inc/js/jquery.min.js"></script>
-		<script type="text/javascript" src="_inc/js/jquery.amp.js"></script>
-		<link rel="stylesheet" type="text/css" href="_inc/css/index.css">
-	</head>
+<head>
+  <meta http-equiv="Content-type" content="text/html;charset=UTF-8"></meta>
+  <title>switch control</title>
+  <script type="text/javascript" src="_inc/js/jquery.min.js"></script>
+  <script type="text/javascript" src="_inc/js/switch_control.js"></script>
+  <script type="text/javascript" src="_inc/js/sound_control.js"></script>
+  <script type="text/javascript" src="_inc/js/show_control.js"></script>
+  <script type="text/javascript" src="_inc/js/screen_control.js"></script>
+  <script type="text/javascript" src="_inc/js/lounge.js"></script>  
+  <link rel="stylesheet" type="text/css" href="_inc/css/lounge.css"></link>
+  <style>
+    #switch-control {
+      width: 120px;
+    }
 
-	<body>
-		<div id="wrapper">
-			<div id="header">
-				<div id="branding">
-					<div id="meta-logo" class="off">metalab</div>
-					<div id="slogan"><span id="title">Lounge Control</span>
-					<span id="version">2.0</span>
-					<div class="subtitle">wireless magic</div></div>
-				</div>
-				<div id="on-off-info">Loading Data, please wait</div>
-				<!--<div id="on-off">
-					<div id="on" class="hidden on-off-btn"><a title="Turn Amplifier ON">ON</a><div class="on-off-caption">Click Button <br />==<br />Amplifier ON</div></div>
-					<div id="off" class="hidden on-off-btn"><a title="Turn Amplifier OFF">OFF</a><div class="on-off-caption">Click Button <br />== <br />Amplifier OFF</div></div>
-					<p id="on-off-info">Loading Data, <br />cough cough</p>
-				</div>-->
-			</div>
-			<div id="content" class="hidden">
-				<div id="left-column">
-					<div id="input-selection-container">
-						<h1 id="input-selection-title">Select Input</h1>
-						<ul id="input-selection-list-usual">
-							<li>Inputs:</li>
-							<li><input class="input-select" type="radio" name="switch" value="AUDIO1">Music Player Daemon</li>
-							<li><input class="input-select" type="radio" name="switch" value="AUDIO2">Dock</li>
-							<li><input class="input-select" type="radio" name="switch" value="AV5">WII</li>
-							<li><input class="input-select" type="radio" name="switch" value="AV6">PS3</li>
-							<li><input class="input-select" type="radio" name="switch" value="AUDIO3">AUDIO3</li>
-							<li><input class="input-select" type="radio" name="switch" value="AUDIO4">AUDIO4</li>
-							<li><input class="input-select" type="radio" name="switch" value="Bluetooth">Bluetooth</li>
-							<li><input class="input-select" type="radio" name="switch" value="DOCK">DOCK</li>
-							<li><input class="input-select" type="radio" name="switch" value="PC">PC</li>
-							<li><input class="input-select" type="radio" name="switch" value="PHONO">PHONO</li>
-							<li><input class="input-select" type="radio" name="switch" value="TUNER">TUNER</li>
-							<li><input class="input-select" type="radio" name="switch" value="USB">USB</li>
-							<li><input class="input-select" type="radio" name="switch" value="V-AUX">V-AUX</li>
-						</ul>
-						<ul id="input-selection-list-av">
-							<li> AV input</li>
-							<li><input class="input-select" type="radio" name="switch" value="AV1">AV1</li>
-							<li><input class="input-select" type="radio" name="switch" value="AV2">AV2</li>
-							<li><input class="input-select" type="radio" name="switch" value="AV3">AV3</li>
-							<li><input class="input-select" type="radio" name="switch" value="AV4">AV4</li>
-							<li><input class="input-select" type="radio" name="switch" value="AV7">AV7</li>
-						</ul>
-						<ul id="input-selection-list-hdmi">
-							<li>HDMI input</li>
-							<li><input class="input-select" type="radio" name="switch" value="HDMI1">HDMI1</li>
-							<li><input class="input-select" type="radio" name="switch" value="HDMI2">HDMI2</li>
-							<li><input class="input-select" type="radio" name="switch" value="HDMI3">HDMI3</li>
-							<li><input class="input-select" type="radio" name="switch" value="HDMI4">HDMI4</li>
-							<li><input class="input-select" type="radio" name="switch" value="HDMI5">HDMI5</li>
-							<li><input class="input-select" type="radio" name="switch" value="HDMI6">HDMI6</li>
-							<li><input class="input-select" type="radio" name="switch" value="HDMI7">HDMI7</li>
-						</ul>
-						<br/>
-					</div>
+    #sound-control {
+      width: 120px;
+    }
 
-					<div id="browser">
-						<span>Browse:</span>
-						<input type="text" id="url-to-load"><input id="browse-button" type="submit" value="browse">
-					</div>
-					
-					<div id="video-player">
-						<div><a id="show-video-player-button">Show Videoplayer</a></div>
-						<div id="video-player-gui" class="hidden">
-							<div id="play-from-selection">
-								<a id="life-stream-upload-button" class="life-stream">Live Stream Upload</a>
-								<span>|</span>
-								<a id="search-and-play-button" class="search-and-play">Search and Play Movie:</a>
-							</div>
-							<div id="life-stream-container" class="hidden">
-								<form id="life-stream-uploader" action="cgi-bin/video" method="post" enctype="multipart/form-data">
-									<input name="Datei" type="file" size="50" accept="video/*,audio/*"><input id="start-video-stream" name="Submit" type="submit">
-								</form>
-								<div class="player-info">This will stream the file from your computer to the Server.</div>
-							</div>
-							
-							<div id="search-and-play-container" class="hidden">
-									<input type="text" id="vid-load-text"><input id="vid-load-button" type="submit" value="Search">
-								<div class="player-info">This will search the moviedatabase on the mediaserver. If the searchstring is part of a movie name this movie will start to play.<br /> if you close this fenster the movie will stop too.</div>
-							</div>
-							
-							<div id="video-control-holder">
-								<a id="show-video-controls"></a>
-								
-								<div id="video-controls">
-									<div class="arrow-container">
-										<div id="rewindmore" class="video-control-button">
-											<div class="triple-arrow-left arrow"></div>
-											<div class="triple-arrow-left arrow"></div>
-											<div class="triple-arrow-left arrow"></div>
-										</div>
-									</div>
-									<div class="arrow-container">
-										<div id="rewind" class="video-control-button">
-										<div class="double-arrow-left arrow"></div>
-										<div class="double-arrow-left arrow"></div>
-										</div>
-									</div>
-									<div class="arrow-container">
-										<div id="pause" class="pause-btn">
-											<div id="video-pause-button" class="video-pause-play-button">
-												<div id="pausebar" class="floatleft">|</div>
-												<div id="pausebar" class="floatleft">|</div>
-											</div>
-											<div id="video-play-button" class="floatleft hidden video-pause-play-button">
-												<div id="playbar" class="floatleft">|></div>
-											</div>
-										</div>
-									</div>
-									<div class="arrow-container">
-										<div id="forward" class="video-control-button">
-											<div class="double-arrow-right arrow"></div>
-											<div class="double-arrow-right arrow"></div>
-										</div>
-									</div>
-									<div class="arrow-container">
-										<div id="forwardmore" class="video-control-button">
-											<div class="triple-arrow-right arrow"></div>
-											<div class="triple-arrow-right arrow"></div>
-											<div class="triple-arrow-right arrow"></div>
-										</div>
-									</div>
-									<div class="clearboth">clearboth</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				
-				
-				<div id="right-column">
-					<div>
-						<h1>On Screen Display</h1>
-						<div id="screentoggle" class="green">ON</div>
-                                                <h1>Beamer Mode</h1>
-                                                <div id="beamertoggle" class="red">OFF</div>
-					</div>
-					<div id="current-input">
-						<div id="input-title">Selected Input:</div>
-						<div id="input-name">No Input Selected</div>
-					</div>
-					<div id="volume-control" class="vol-cont">
-						<div id="volume-control-title">Volume:</div>
-						<span id="volume-minus" class="volume-control-button">-</span>
-						<div id="volume-value"><span id="volume-val">0</span></div>
-						<span id="volume-plus" class="volume-control-button">+</span>
-						<div id="dezibel-value"><span>== </span><span id="db-val">0</span><span>dB</span></div>
-						<div id="volume-mute">Mute</div>
-					</div>
-					
-					<div id="bass-control" class="vol-cont">
-						<div id="bass-control-title">Bass:</div>
-						<span id="bass-minus" class="volume-control-button">-</span>
-						<div id="bass-value"><span id="bass-val">0</span><span>dB</span></div>
-						<span id="bass-plus" class="volume-control-button">+</span>	
-					</div>
-					
-					<div id="treble-control" class="vol-cont">
-						<div id="treble-control-title">Treble:</div>
-						<span id="treble-minus" class="volume-control-button">-</span>
-						<div id="treble-value"><span id="treble-val">0</span><span>dB</span></div>
-						<span id="treble-plus" class="volume-control-button">+</span>
-					</div>
-				</div>
-				
-				<div class="clearboth">clearboth</div>
-				
-				<div id="clean"><a class="clean-link" >clean the screen, remove all evil</a></div>
-				
-				<div id="github"><a href="https://github.com/kallaballa/LoungeControl">this project is hosted on github</a></div>
-				
-				<!--<div id="logo">logo</div>-->
-				<div id="all-rites-reversed" class="box-of-spandora">
-					<!--<div id='warped'>
-						<span class='w0'>A</span><span class='w1'>l</span><span class='w2'>l</span><span class='w3'> </span><span class='w4'>R</span><span class='w5'>i</span><span class='w6'>t</span><span class='w7'>e</span><span class='w8'>s</span><span class='w9'> </span><span class='w10'>R</span><span class='w11'>e</span><span class='w12'>v</span><span class='w13'>e</span><span class='w14'>r</span><span class='w15'>s</span><span class='w16'>e</span><span class='w17'>d</span>
-					</div>-->
-					All Rites Reversed
-				</div>
-				<div class="clearboth">clearboth</div>
-			</div><!-- end of #content-->
-		</div>
-	</body>
+    #screen-control {
+      width: 130px;
+    }
+
+    .panel-column {
+      display: inline-block;
+      vertical-align: top;
+      padding-left: 5px;
+      padding-right: 5px;
+    }
+
+   .panel-row {
+      display: block;
+      vertical-align: top;
+    }
+  </style>
+</head>
+<body>
+<div class="panel-column">
+  <div id="show_panel" class="panel-row"></div>
+</div>
+<div class="panel-column">
+  <div id="sound_panel" class="panel-row"></div>
+</div>
+<div class="panel-column">
+  <div id="switch_panel" class="panel-row"></div>
+  <div id="screen_panel" class="panel-row"></div>
+</div>
+</body>
 </html>
