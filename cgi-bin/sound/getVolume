@@ -1,0 +1,9 @@
+#!/bin/bash
+echo "ContentType: text/plain"
+echo ""
+
+volume=`cat "../requests/getstatus" | netcat 10.20.30.50 80 | grep "^<" | sed 's/.*<Lvl><Val>//' | sed 's/<\/Val><Exp>.*//'`
+
+echo $volume | tee tmp/currentVolume
+
+

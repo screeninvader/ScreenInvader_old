@@ -1,0 +1,7 @@
+#!/bin/bash
+echo "ContentType: text/plain"
+echo ""
+
+volume=`cat tmp/currentVolume`
+echo ./setVolume "$[ $volume + 5 ];"
+cat $volume > tmp/currentVolume
