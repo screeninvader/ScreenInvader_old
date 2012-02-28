@@ -1,6 +1,0 @@
-#!/bin/bash
-echo "ContentType: text/plain"
-echo ""
-
-cat "requests/getstatus" | netcat 10.20.30.50 80 | grep "^<" | sed 's/.*<Lvl><Val>//' | sed 's/<\/Val><Exp>.*//'
-
