@@ -3,4 +3,4 @@ export DISPLAY=:0
 echo "Content-type: $1"
 echo ""
 
-
+cd /var/www/cgi-bin

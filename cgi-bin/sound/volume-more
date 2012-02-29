@@ -1,7 +1,8 @@
 #!/bin/bash
-echo "ContentType: text/plain"
-echo ""
 
-volume=`cat tmp/currentVolume`
-echo ./setVolume "$[ $volume + 5 ];"
-cat $volume > tmp/currentVolume
+. /var/www/cgi-bin/initrequest "text/plain"
+
+volume=`sound/getVolume | sed '1,2d'`
+newvol=$[ $volume + 5 ];
+sound/setVolume "$newvol" &> /dev/null
+echo $newvol

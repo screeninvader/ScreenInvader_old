@@ -1,0 +1,11 @@
+#!/bin/bash
+
+. /var/www/cgi-bin/initrequest "text/html"
+
+if [ "$1" == "true" ]; then
+  xset dpms force standby
+else
+  xset s reset
+  xset dpms force on
+fi
+

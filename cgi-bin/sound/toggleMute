@@ -1,0 +1,9 @@
+#!/bin/bash
+
+. /var/www/cgi-bin/initrequest "text/plain"
+if [ "`sound/isMute | sed '1,2d'`" == "true" ]; then
+    cat "requests/muteoff" | ./post &> /dev/null
+else
+    cat "requests/muteon" | ./post &> /dev/null
+fi
+echo

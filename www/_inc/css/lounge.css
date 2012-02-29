@@ -26,13 +26,13 @@ input {
   padding: 2px;
   border: 1px outset #fff;
   border-radius: 9px;
-  background-color: #888;
+  background-color: #666;
 }
 
 .dropdown * {
   color: #fff;
   border: 0;
-  background-color: transparent;
+  background-color: #666;
   font-family: "Lucida Console", Monaco, monospace;
   font-size: 85%;
 }
@@ -43,9 +43,27 @@ input {
   padding-left: 5px;
   padding-right: 5px;
   font-size: 85%;
-  background-color: #888;
-  border: 1px outset #fff;
   border-radius: 9px;
+}
+
+.toggle {
+  width: 20px;
+  padding: 2px;
+  padding-left: 5px;
+  padding-right: 5px;
+  font-size: 85%;
+  border-radius: 9px;
+}
+
+.up {
+  border: 1px outset #fff;
+  background-color: #666;
+}
+
+
+.down {
+  border: 1px inset #fff;
+  background-color: #888;
 }
 
 .header {

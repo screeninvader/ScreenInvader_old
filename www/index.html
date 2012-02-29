@@ -8,6 +8,9 @@
   <script type="text/javascript" src="_inc/js/sound_control.js"></script>
   <script type="text/javascript" src="_inc/js/show_control.js"></script>
   <script type="text/javascript" src="_inc/js/screen_control.js"></script>
+  <script type="text/javascript" src="_inc/js/find_control.js"></script>
+  <script type="text/javascript" src="_inc/js/cleanup_control.js"></script>
+  <script type="text/javascript" src="_inc/js/random_control.js"></script>
   <script type="text/javascript" src="_inc/js/lounge.js"></script>  
   <link rel="stylesheet" type="text/css" href="_inc/css/lounge.css"></link>
   <style>
@@ -23,6 +26,13 @@
       width: 130px;
     }
 
+    #cleanup-control table {
+      background-color: #000;
+      border: 0;
+    }
+ 
+    #cleanup-control #cleanup-button {
+    } 
     .panel-column {
       display: inline-block;
       vertical-align: top;
@@ -37,15 +47,20 @@
   </style>
 </head>
 <body>
-<div class="panel-column">
-  <div id="show_panel" class="panel-row"></div>
-</div>
-<div class="panel-column">
+<div class="panel-column" style="width:750px">
+  <div class="panel-column">
+    <div id="show_panel" class="panel-row"></div>
+    <div id="find_panel" class="panel-row"></div>
+    <div id="random_panel" class="panel-row"></div>
+  </div>
+  <div class="panel-column">
   <div id="sound_panel" class="panel-row"></div>
-</div>
-<div class="panel-column">
-  <div id="switch_panel" class="panel-row"></div>
-  <div id="screen_panel" class="panel-row"></div>
+  </div>
+  <div class="panel-column"  style="display: inline-block">
+    <div id="switch_panel" class="panel-row"></div>
+    <div id="screen_panel" class="panel-row"></div>
+  </div>
+  <div id="cleanup_panel" class="panel-row" style="width:750px"></div>
 </div>
 </body>
 </html>

@@ -1,24 +1,6 @@
 #!/bin/bash
 function errex(){ echo "$1"; exit; };
 
-PLUMBLEN=174
-
 ARG="$1"
-ARGLEN=`echo $ARG | wc -c`
-MSGLEN=$[ $PLUMBLEN + $ARGLEN - 1 ]
 
-for i in `seq 0 0`; do
-echo "POST /YamahaRemoteControl/ctrl HTTP/1.1"
-echo "User-Agent: Opera/9.80 (X11; Linux x86_64; U; en) Presto/2.10.229 Version/11.60"
-echo "Host: 10.20.30.50"
-echo "Accept: text/html, application/xml;q=0.9, application/xhtml+xml, image/png, image/webp, image/jpeg, image/gif, image/x-xbitmap, */*;q=0.1"
-echo "Accept-Language: en-US,en;q=0.9"
-echo "Accept-Encoding: gzip, deflate"
-echo "Referer: http://10.20.30.50/"
-echo "Connection: Keep-Alive"
-echo "Content-Length: $MSGLEN"
-echo "Content-Type: text/xml"
-echo "Content-Transfer-Encoding: binary"
-echo ""
-echo -n "<?xml version=\"1.0\"?><YAMAHA_AV cmd=\"PUT\"><Main_Zone><Sound_Video><Tone><Treble><Val>$ARG</Val><Exp>1</Exp><Unit>dB</Unit></Treble></Tone></Sound_Video></Main_Zone></YAMAHA_AV>"
-done | unix2dos
+echo -n "<?xml version=\"1.0\"?><YAMAHA_AV cmd=\"PUT\"><Main_Zone><Sound_Video><Tone><Treble><Val>$ARG</Val><Exp>1</Exp><Unit>dB</Unit></Treble></Tone></Sound_Video></Main_Zone></YAMAHA_AV>" | unix2dos

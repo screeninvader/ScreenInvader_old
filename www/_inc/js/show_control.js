@@ -1,15 +1,12 @@
 function ShowControl () {
   this.init = function() {
-   /* $('#show-control #inputs #input-select').live ('change', function(){
-      var selectedInput = $('#switch-control #inputs #input-select option:selected').text();
-      $.get('cgi-bin/switch/setInput?' + selectedInput);
-    })*/
+     $('#show-control #show-button').live ('click', function(){
+      var url = $('#show-control #url-input').val();
+      $.get('cgi-bin/show?' + url);
+    })
   };
   
   this.update = function() {
-    /*$.get('cgi-bin/getInput', function(data) {
-      $('select > option:selected').val('data'); 
-    });*/
   };
   
   this.loadInto = function(into) {

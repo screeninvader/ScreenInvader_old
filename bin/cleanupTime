@@ -1,0 +1,19 @@
+#!/bin/bash
+
+set -x
+(
+export DISPLAY=:0
+/etc/init.d/thttpd stop
+cd /var/www/cgi-bin
+./clean
+export QUERY_STRING="http://10.20.30.51/cleanup.html"
+sudo -u lounge bash -c '/var/www/cgi-bin/browse "file://localhost/var/www/cleanup.html"' &
+disown
+
+COOKIE_FILE=/var/tmp/youtube-dl-cookies.txt
+sudo -u lounge bash -c 'mplayer -vo null cleanupsong.mp4' &
+disown
+cd /var/www/bin
+./waitForButton
+/etc/init.d/thttpd start
+) &> /tmp/bla

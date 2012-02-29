@@ -1,0 +1,9 @@
+#!/bin/bash
+
+. /var/www/cgi-bin/initrequest "text/plain"
+
+mute=`cat "./requests/getstatus" | ./post | grep "^<" | sed 's/.*<Mute>//' | sed 's/<\/Mute>.*//'`
+
+[ $mute == "On" ] && echo true || echo false;
+
+

@@ -1,15 +1,16 @@
 function SwitchControl () {
   this.init = function() {
     $('#switch-control #inputs #input-select').live ('change', function(){
-      var selectedInput = $('#switch-control #inputs #input-select option:selected').text();
-      $.get('cgi-bin/switch/setInput?' + selectedInput);
+      var selectedInput = $('#switch-control * option:selected').each(function() {
+        $.get('cgi-bin/switch/setInput?'  + ($(this).index() + 1));
+      });
     })
   };
   
   this.update = function() {
-    $.get('cgi-bin/getInput', function(data) {
-      $('select > option:selected').val('data'); 
-    });
+    $.get('cgi-bin/switch/getInput', function(data) {
+      $('#switch-control * option').eq(parseInt(data) - 1).attr('selected', 'selected');
+    }, 'text');
   };
   
   this.loadInto = function(into) {
@@ -22,4 +23,4 @@ function SwitchControl () {
 switchWidget = new SwitchControl();
 switchWidget.init();
 switchWidget.update();
-
+setInterval("switchWidget.update()", 5000);

@@ -1,0 +1,13 @@
+#!/bin/bash
+. /var/www/cgi-bin/initrequest "text/html"
+. ./link/functions
+
+MOVIE_EXT="mpeg mpg mpa mp2 m2a avi mov qt asf asx wma wmv wmx rm ra ram rmvb mp4 3gp ogm mkv"
+
+[ -z "$QUERY_STRING" ] && QUERY_STRING="$@";
+TERMS="`prepareTerms "$QUERY_STRING"`"
+LOCATEARGS=`makeLocateArgs "$TERMS" $MOVIE_EXT`
+
+bash -c "locate $LOCATEARGS" | while read line; do title=`basename "$line"`; echo "<br/><a href=\"http://10.20.30.51/cgi-bin/link/show?$line\">$title</a>"; done
+
+

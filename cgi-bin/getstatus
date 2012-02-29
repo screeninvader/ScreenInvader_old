@@ -1,7 +1,5 @@
 #!/bin/bash
 
-echo Content-type: text/xml
-echo ""
-
-cat "requests/getstatus" | netcat 10.20.30.50 80 | grep "^<"
+. /var/www/cgi-bin/initrequest "text/xml"
+cat "requests/getstatus" | ./post | grep "^<"
 
