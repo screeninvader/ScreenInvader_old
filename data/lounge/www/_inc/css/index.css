@@ -1,0 +1,386 @@
+/*
+YUI 3.4.1 (build 4118) reset.css
+Copyright 2011 Yahoo! Inc. All rights reserved.
+Licensed under the BSD License.
+http://yuilibrary.com/license/
+*/
+html{color:#000;background:#FFF}body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,textarea,p,blockquote,th,td{margin:0;padding:0}table{border-collapse:collapse;border-spacing:0}fieldset,img{border:0}address,caption,cite,code,dfn,em,strong,th,var{font-style:normal;font-weight:normal}ol,ul{list-style:none}caption,th{text-align:left}h1,h2,h3,h4,h5,h6{font-size:100%;font-weight:normal}q:before,q:after{content:''}abbr,acronym{border:0;font-variant:normal}sup{vertical-align:text-top}sub{vertical-align:text-bottom}input,textarea,select{font-family:inherit;font-size:inherit;font-weight:inherit}input,textarea,select{*font-size:100%}legend{color:#000}
+
+body {
+	overflow-y: scroll;
+}
+
+a {
+	cursor: pointer;
+}
+
+a:hover {
+	color: #c00;
+}
+
+
+html,body {
+	background: #075586;
+	font-family: arial, sans-serif;
+	font-size: 14px;
+}
+
+.green {
+ text-align: center;
+ vertical-align: middle;
+ padding: 5px;
+ background-color: #0f0;
+}
+
+.red {
+  text-align: center;
+  vertical-align: middle;
+  padding: 5px;
+  background-color: #f00;
+}
+
+#wrapper {
+	width: 650px;
+	position: relative;
+	left: 50%;
+	margin: 20px 0 20px -325px;
+	background: white;
+	box-shadow: 0 0 13px 7px #333;
+	display: block;
+	border-radius: 50px 25px 0 50px;
+}
+
+#header {
+	height: 100px;
+}
+
+
+#on-off-info {
+	padding: 40px 0 0;
+}
+
+
+#branding {
+	float: left;
+	width: 450px;
+}
+
+#logo {
+	background: url(../img/logo.png);
+	height: 100px;
+	width: 100px;
+	text-indent: -9999px;
+	margin: 56px 0 0;
+	margin: 56px 0 0;
+	float: right;
+}
+
+#meta-logo {
+	background: url(../img/meta-logo.png);
+	height: 100px;
+	width: 100px;
+	text-indent: -9999px;
+	float: left;
+	border-radius: 50px;
+	cursor: pointer;
+}
+
+#slogan {
+	margin: 35px 0 0 10px;
+	width: 147px;
+	float: left;
+}
+
+#title {
+	font-size: 18px;
+}
+#version {
+	color: red;
+	-webkit-transform: rotate(20deg);
+	-moz-transform: rotate(-90deg);
+	display: block;
+	height: 15px;
+	width: 20px;
+	float: right;
+}
+
+
+
+
+#content {
+	margin: 30px 0 0;
+}
+
+a {
+	text-decoration: none;
+}
+
+#left-column {
+	float: left;
+	margin: 0 0 0 20px;
+}
+
+#right-column {
+	float: right;
+	text-align: center;
+	line-height: 18px;
+	margin: 0 20px 0 0;
+	width: 156px;
+}
+
+#on-off {
+	height: 50px;
+	width: 150px;
+	float: right;
+}
+.on-off-caption {
+	text-indent: 0;
+	float: left;
+	margin: -4px 0 0 58px;
+	width: 95px;
+	background: white;
+	padding: 5px;
+	border-radius: 10px;
+	box-shadow: 4px 0 13px 4px #333;
+}
+
+.on-off-btn {
+	height: 50px;
+	width: 50px;
+	cursor: pointer;
+	float: right;
+}
+
+#meta-logo.off {
+	background-color: #f11;
+	box-shadow: 0px 0px 10px 1px #f11;
+}
+
+#meta-logo.on {
+	background-color: #1f1;
+	box-shadow: 0px 0px 10px 1px #1f1;
+
+}
+
+.hidden {
+	display: none;
+	opacity: 0;
+}
+
+#input-selection-container {
+	
+}
+
+#input-selection-container ul {
+	float: left;
+	margin: 0 20px;
+}
+
+#input-selection-title {
+	text-align: center;
+	font-weight: bold;
+}
+
+#input-selection-list ul li {
+	list-style-type: none;
+}
+
+#input-name {
+	text-align: center;
+	margin: 10px 0;
+}
+#volume-mute {
+	text-align: center;
+	cursor: pointer;
+}
+#volume-value, #bass-value, #treble-value {
+	display: inline;
+}
+
+.volume-control-button {
+	font-weight: bold;
+	padding: 0 5px;
+	background: grey;
+	border-radius: 10px;
+	cursor: pointer;
+}
+#volume-minus, #bass-minus, #treble-minus {
+	padding: 0 7px;
+}
+
+.vol-cont {
+	margin: 10px 0;
+}
+
+.chosen-input {
+	font-weight: bold;
+}
+
+.blank-unblank-button {
+	background-color: lime;
+	padding: 4px;
+	width: 50px;
+	text-align: center;
+	font-size: 12px;
+	float: left;
+	margin: 5px 10px;
+	cursor: pointer;
+}
+
+
+#blank {
+	background-color: #f00;
+}
+
+#browser {
+	clear: left;
+	padding: 50px 0 0;
+}
+
+#life-stream-uploader {
+	margin: 20px 0 0;
+	width: 420px;
+}
+
+#github {
+	margin: 45px 0 0;
+	float: right;
+}
+
+#github a, #github a:visited {
+	background: url(../img/logo.png);
+	width: 190px;
+	height: 100px;
+	background-position: -200px 0;
+	display: block;
+	text-indent: -9999px;
+}
+
+#github a:hover {
+	color: #000;
+}
+
+#right-column a, #right-column a:visited {
+	color: #000;
+}
+
+
+.clearboth {
+	clear: both;
+	line-height: 0;
+	height: 0;
+	text-indent: -9999px;
+	font-size: 0;
+}
+
+#clean {
+	margin: 20px;
+}
+
+#clean a {
+	font-size: 16px;
+	font-weight: bold;
+	text-decoration: underline;
+	color: #000;
+}
+#clean a:hover {
+	color: #c00;
+}
+
+/******************************* VIDEO PLAYER STYLES **************************************************/
+
+#video-player {
+	margin: 30px 00;
+	border: 1px solid #000;
+	border-radius: 5px;
+}
+
+#video-controls {
+	border: 1px solid #000;
+	border-radius: 2px;
+	margin: 20px 0 0;
+}
+
+
+.arrow-container {
+	margin: 7px 3px;
+	height: 15px;
+	width: 15px;
+	float: left;
+	cursor: pointer;
+	opacity: 0.6;
+}
+.arrow-container:hover {
+	opacity: 1;
+}
+
+.video-control-button {
+	float: left;
+	margin: 4px 0 0;
+}
+
+
+.arrow {
+	float: left;
+	width: 0;
+	height: 0;
+}
+
+#video-play-button {
+	border-top: 8px solid transparent;
+	border-bottom: 8px solid transparent;
+	border-left: 8px solid green;
+}
+
+.double-arrow-right {
+	border-top: 4px solid transparent;
+	border-bottom: 4px solid transparent;
+	border-left: 4px solid green;
+}
+
+
+.triple-arrow-right {
+	border-top: 3px solid transparent;
+	border-bottom: 3px solid transparent;
+	border-left: 3px solid green;
+	margin: 1px 0 0;
+}
+
+
+.double-arrow-left {
+	border-top: 5px solid transparent;
+	border-bottom: 5px solid transparent;
+	border-right: 5px solid green;
+}
+
+
+.triple-arrow-left {
+	border-top: 4px solid transparent;
+	border-bottom: 4px solid transparent;
+	border-right: 4px solid green;
+	margin: 1px 0 0;
+}
+
+
+.floatleft {
+	float: left;
+}
+
+#play-from-selection {
+	margin: 10px 0;
+}
+
+#play-from-selection a {
+	padding: 0 5px 0 0;
+}
+
+.player-info {
+	width: 370px;
+}
+/****************** all rites reversed style ******************************/
+
+#all-rites-reversed {
+	float: left;
+	margin: 90px 0 0 17px;
+	width: 116px;
+}

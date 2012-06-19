@@ -1,0 +1,16 @@
+#!/bin/bash
+. /lounge/bin/initcgi "text/html"
+
+./reset
+
+[ -z "$QUERY_STRING" ] && QUERY_STRING=$1;
+notify "loading pdf..."
+
+if [ -n "`echo "$QUERY_STRING" | grep "^http"`" ]; then
+ wget "$QUERY_STRING" -O /tmp/evince.pdf
+ QUERY_STRING=/tmp/evince.pdf
+fi
+
+evince "$QUERY_STRING"
+
+  

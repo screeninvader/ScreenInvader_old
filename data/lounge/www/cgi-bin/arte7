@@ -1,0 +1,32 @@
+#!/bin/bash
+
+. /lounge/bin/initcgi "text/html"
+
+#./reset
+
+notify "loading arte+7..."
+
+[ -z "$QUERY_STRING" ] && QUERY_STRING="$@"
+
+(
+
+function playUrl() {
+  notify "playing arte+7"
+  mplayer "$1"
+  disown
+}
+
+function wgeto {
+  wget -O - -q "$1"
+}
+
+XML_URL=`wgeto "$QUERY_STRING" | fgrep "vars_player.videorefFileUrl" | cut -d"\"" -f2`
+XML_DE_URL=`wgeto "$XML_URL" | fgrep "<video lang=\"de\"" | cut -d"\"" -f4`
+RTMP_URL=`wgeto "$XML_DE_URL" | sed -n -e 's/.*<url quality="hd">\(.*\)<\/url>.*/\1/p'`
+
+if [ -n "$RTMP_URL" ]; then 
+  playUrl "$RTMP_URL"
+else
+  notify "failed"
+fi
+) &> /dev/null

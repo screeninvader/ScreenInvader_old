@@ -1,0 +1,13 @@
+#!/bin/bash
+
+url=$1
+client_id="2dcf4e12afd6ed5119741f888260fc85"
+resolve="http://api.soundcloud.com/resolve.json?url=$url&client_id=$client_id"
+stream=`curl -v -L -o - "$resolve" | grep -Po '"stream_url":.*?[^\\\]",' | cut -d"\"" -f4`
+json=`curl -v -L -o - "$resolve"`
+#echo $json | sed 's/,/,\n/g' | sed '1,/"kind":"track"/d' | fgrep '"title":' | cut -d"\"" -f4- | sed 's/\\"/\"/g' | sed 's/\",$//'
+for s in $stream; do
+echo  mpc add "${s}?client_id=${client_id}"
+done
+mpc play
+#/var/www/cge-bin/show "$stream?$client_id"

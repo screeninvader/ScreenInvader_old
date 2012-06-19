@@ -1,0 +1,14 @@
+#!/bin/bash
+echo Content-type: text/html
+echo ""
+
+ARTIST="`nice -n19 mpc -f "%artist%" | sed '2,3d' | cut -c1-32`"
+
+if [ -z "$ARTIST" ]; then
+  FILE="`nice -n19 mpc -f "%file%" | sed '2,3d'`"
+  ARTIST="`basename "$FILE" | cut -d"-" -f1`"
+fi
+
+
+echo "$ARTIST"
+

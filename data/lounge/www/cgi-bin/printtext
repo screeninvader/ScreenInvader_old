@@ -1,0 +1,13 @@
+#!/bin/bash
+
+. /lounge/bin/initcgi "text/html"
+cat <<- eohtml
+	<html>
+	<head>
+	<title></title>
+	</head>
+	<body style="background-color: #000000">
+	 	<pre style="padding: 20px; width:100%; color: #ffffff; font-weight: bold; font-family: 'Lucida Console', Monaco, monospace;">$1</pre>
+	</body>
+	</html>
+eohtml

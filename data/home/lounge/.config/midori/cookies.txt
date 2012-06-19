@@ -1,0 +1,1 @@
+en.wikipedia.org	FALSE	/	FALSE	1342111641	mediaWiki.user.bucket:ext.articleFeedback-tracking	10%3Atrack

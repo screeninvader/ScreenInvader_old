@@ -1,0 +1,11 @@
+#!/bin/bash
+
+. /lounge/bin/initcgi "text/plain"
+killall -9 showhelp &> /dev/null
+killall -9 replayrandom &> /dev/null
+killall -9 curl &> /dev/null
+killall -9 waitForButton &> /dev/null
+
+xdotool mousemove 1900 1200
+screen/setBlank false
+

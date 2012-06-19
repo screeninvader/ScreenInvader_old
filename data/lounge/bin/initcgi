@@ -1,0 +1,8 @@
+#!/bin/bash
+export DISPLAY=:0
+export HOME=/home/lounge
+export PATH="/lounge/bin:/lounge/www/cgi-bin/:$PATH"
+echo "Content-type: $1"
+echo ""
+
+cd /lounge/www/cgi-bin/

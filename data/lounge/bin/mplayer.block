@@ -1,0 +1,22 @@
+#!/bin/bash
+set -x
+(
+  flock -s 200
+  running="`ps -eo pid,cmd | fgrep mplayer | fgrep -v "bash " | fgrep -v grep | awk '{ print($1) }'`"
+
+  [ -n "$running" ] && /var/www/cgi-bin/mplayer/pause &> /dev/null
+  for other in $running; do
+    [ "$$" != "$other" ] && kill -9 $other
+  done
+
+  pid=`ps -ef | grep "midori.*class=Browser" | fgrep -v grep | tr -s " " | cut -d" " -f2`
+  [ -n "$pid" ] && kill -9 $pid
+
+  killall -9 feh.orig
+  killall -9 evince.orig
+  mpc pause; 
+  /usr/bin/mplayer -fs "$@" &>/dev/null
+  [ $? -ne 0 ] && exit 1
+  mpc play;
+) 200>/var/lock/mplayer
+

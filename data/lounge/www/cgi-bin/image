@@ -1,0 +1,13 @@
+#!/bin/bash
+
+. /lounge/bin/initcgi "text/html"
+./reset
+
+[ -z "$QUERY_STRING" ] && QUERY_STRING="$@"
+notify "loading image... `basename "$QUERY_STRING"`"
+(
+  feh -F --image-bg black --auto-zoom "$QUERY_STRING" &
+  disown
+) &> /dev/null
+
+exit 0

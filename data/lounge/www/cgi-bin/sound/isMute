@@ -1,0 +1,9 @@
+#!/bin/bash
+
+. /lounge/bin/initcgi "text/plain"
+
+mute=`amixer sget Master | grep "Mono:" | awk '{ print $6 }'`
+
+[ "$mute" == "[on]" ] && echo false || echo true
+
+

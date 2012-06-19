@@ -1,0 +1,6 @@
+#!/bin/bash
+echo Content-type: text/html
+echo ""
+
+[ "`nice -n19 mpc | wc -l`" != "1" ] && echo -n true || echo -n false
+

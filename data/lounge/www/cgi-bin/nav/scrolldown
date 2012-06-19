@@ -1,0 +1,9 @@
+#!/bin/bash
+export DISPLAY=:0
+
+./reset
+
+if killall -0 midori; then 
+  midori --class="Browser" --name="Browser"  -e ScrollDown &
+  disown
+fi

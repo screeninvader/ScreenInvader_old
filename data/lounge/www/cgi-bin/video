@@ -1,0 +1,9 @@
+#!/bin/bash
+. /lounge/bin/initcgi "text/html"
+
+./reset
+[ -z "$QUERY_STRING" ] && QUERY_STRING="$@";
+/var/www/bin/notify "playling video... `basename "$QUERY_STRING"`"
+mplayer.video "$QUERY_STRING"
+
+

@@ -1,0 +1,10 @@
+#!/bin/bash
+
+minor=$RANDOM
+let "minor %= 9"
+major=$RANDOM
+let "major %= 2"
+ sleep "$major.$minor"
+echo  "$major.$minor"
+
+

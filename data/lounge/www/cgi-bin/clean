@@ -1,0 +1,14 @@
+#!/bin/bash
+
+. /lounge/bin/initcgi "text/plain"
+
+killall -9 curl &> /dev/null
+killall -9 waitForButton &> /dev/null
+killall -9 mplayer &> /dev/null
+killall -9 feh &> /dev/null
+killall -9 evince &> /dev/null
+xdotool mousemove 1900 1200
+pid=`ps -ef | grep "midori.*class=Browser" | fgrep -v grep | tr -s " " | cut -d" " -f2`
+[ -n "$pid" ] && kill -9 $pid
+screen/setBlank false
+

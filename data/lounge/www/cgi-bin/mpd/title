@@ -1,0 +1,14 @@
+#!/bin/bash
+echo Content-type: text/html
+echo ""
+
+TITLE="`nice -n19 mpc -f "%title%" | sed '2,3d' | cut -c1-32`"
+
+if [ -z "$TITLE" ]; then
+  FILE="`nice -n19 mpc -f "%file%" | sed '2,3d'`"
+  TITLE="`basename "$FILE" | cut -d"-" -f3- | sed 's///g'`"
+fi
+
+
+echo "$TITLE"
+

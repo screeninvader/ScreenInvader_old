@@ -1,0 +1,5 @@
+#!/bin/bash
+
+export DISPLAY=:0
+/lounge/bin/notify "next track" 1
+xdotool key greater

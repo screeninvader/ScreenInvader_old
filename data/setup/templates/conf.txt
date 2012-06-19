@@ -1,0 +1,42 @@
+function makeHostnameConf() {
+  hostname $1
+}
+
+function makeDNSConf() {
+  cat > /etc/resolv.conf <<EORESOLVCONF
+domain local
+search local
+nameserver $1
+EORESOLVCONF
+}
+
+function makeDHCPNetConf() {
+  cat > /etc/network/interfaces <<EODHCPCONF
+auto lo
+iface lo inet loopback
+allow-hotplug eth0
+iface eth0 inet dhcp
+EODHCPCONF
+}
+
+function makeManualNetConf() {
+  cat > /etc/network/interfaces <<EONETCONF
+auto lo
+iface lo inet loopback
+allow-hotplug eth0
+iface eth0 inet static
+address $1
+netmask $2
+gateway $3
+EONETCONF
+}
+
+function makeSMBConf() {
+  cat > /etc/auto.smb <<EOSMBCONF
+$4      -fstype=cifs,uid=1000,gid=1000,user=$1,password=$2,domain=$3,ro ://$4/$5
+EOSMBCONF
+
+ln -s "/var/autofs/smb/$4" "/share/$4"
+}
+
+

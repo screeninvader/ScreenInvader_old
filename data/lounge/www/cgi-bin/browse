@@ -1,0 +1,18 @@
+#!/bin/bash
+. /lounge/bin/initcgi "text/html"
+
+notify "showing web page: $@" 3
+./reset
+killall mplayer &>/dev/null
+killall feh &>/dev/null
+export MOZ_PLUGIN_PATH="/usr/lib/flashplugin-nonfree/"
+
+[ -z "$QUERY_STRING" ] && QUERY_STRING="$@";
+pid=`ps -ef | grep "midori.*class=Browser" | fgrep -v grep | tr -s " " | cut -d" " -f2`
+if [ -n "$pid" ]; then 
+	midori --class="Browser" --name="Browser" -e TabCloseOther 
+fi
+pid=`ps -ef | grep "midori.*class=Browser" | fgrep -v grep | tr -s " " | cut -d" " -f2`
+[ -n "$pid" ] && kill -9 $pid
+
+midori --class="Browser" --name="Browser" "$QUERY_STRING" &> /dev/null

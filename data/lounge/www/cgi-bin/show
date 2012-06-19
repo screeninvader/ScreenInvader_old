@@ -1,0 +1,133 @@
+#!/bin/bash
+
+set -x
+
+. /lounge/bin/initcgi "text/html"
+
+killall -9 youtube &> /dev/null
+reset &> /dev/null
+
+(
+VIDEO_HOSTS="m.youtube.com youtu.be youtube.com vimeo.com myvideo.com"
+
+isVideoUrl() {
+  for host in $VIDEO_HOSTS; do
+    [ -n "`echo "$1" | fgrep "$host"`" ] && return 0;
+  done
+
+  return 1;
+}
+
+isArte7Url() {
+  [ -n "`echo "$1" | fgrep "videos.arte.tv"`" ] && return 0;
+  return 1;
+}
+
+isSoundCloudUrl() {
+  [ -n "`echo "$1" | fgrep "soundcloud.com"`" ] && return 0;
+  return 1;
+}
+
+isSoupUrl() {
+  [ -n "`echo "$1" | fgrep "soup.io/post"`" ] && return 0;
+  return 1;
+}
+
+function getHead() {
+  HEAD=
+  LOCATION="$1"
+  while [ -n "$LOCATION" ]; do
+    HEAD="`curl --head \"$LOCATION\"`"
+    LOCATION="`echo "$HEAD" | fgrep "Location: " | cut -d" " -f2 | dos2unix`"
+  done
+  echo "$HEAD" | dos2unix
+}
+
+function isFileType() {
+  echo -n "isFileType $2"
+  if [ -n "`echo "$1" | fgrep -i "$2"`" ]; then
+    echo true
+    return 0
+  else
+    echo false
+    return 1
+  fi
+}
+
+
+
+[ -z "$QUERY_STRING" ] && QUERY_STRING="$@";
+
+QUERY_STRING="`echo $QUERY_STRING | sed 's/https/http/'`"
+
+if [ -z "`echo "$QUERY_STRING" | grep "^http"`" ]; then
+  FILE="`echo -e "$QUERY_STRING" | echo -e $(sed 's/%/\\\x/g')`"
+  echo "FILE $FILE"
+  FILEINFO="`file "$FILE"`"
+  echo "INFO $FILEINFO"
+
+  QUERY_STRING="$FILE"
+ 
+  if isFileType "$FILEINFO" "audio"; then
+    video "$QUERY_STRING"
+  elif isFileType "$FILEINFO" "video"; then
+   video "$QUERY_STRING"
+  elif isFileType "$FILEINFO" "image"; then
+    image "$QUERY_STRING"
+  elif isFileType "$FILEINFO" "pdf"; then
+    pdf "$QUERY_STRING"
+  elif isFileType "$FILEINFO" "text"; then
+    browse "$QUERY_STRING"
+  elif isFileType "$FILEINFO" "bitmap"; then
+    image "$QUERY_STRING"
+  else
+    video "$QUERY_STRING"
+  fi
+elif isSoundCloudUrl "$QUERY_STRING"; then
+  soundcloud "$QUERY_STRING"
+elif isArte7Url "$QUERY_STRING"; then
+  arte7 "$QUERY_STRING"
+elif isVideoUrl "$QUERY_STRING"; then
+  export QUERY_STRING="`echo "$QUERY_STRING" | sed 's/m.youtube/youtube/g'`"
+  youtube "$QUERY_STRING"
+else
+  HEAD=`getHead "$QUERY_STRING"`
+  LOCATION="$QUERY_STRING";
+  CONTENT_TYPE="`echo "$HEAD" | fgrep -i "Content-Type: " | cut -d" " -f2 | cut -d ";" -f1`"
+
+  [ -z "$CONTENT_TYPE" ] && CONTENT_TYPE="audio/mpeg";
+  [ "$CONTENT_TYPE" == "audio/x-scpls" -o "$CONTENT_TYPE" == "application/pls" ] && CONTENT_TYPE="playlist/pls"
+  [ "$CONTENT_TYPE" == "image/gif" ] && CONTENT_TYPE="animation/gif";
+
+   CATEGORY="`echo "$CONTENT_TYPE" | cut -d"/" -f1;`"
+
+  echo $CATEGORY
+  QUERY_STRING="$LOCATION"
+  case "$CATEGORY" in
+    "animation" )
+      animate "$LOCATION"
+    ;;
+    "image" )
+      image "$LOCATION"
+    ;;
+    "playlist" )
+      playlist "$LOCATION"
+    ;;
+    "audio" )
+      video "$LOCATION"
+    ;;
+    "video" )
+      video "$LOCATION"
+    ;;
+    "text" )
+      browse "$LOCATION"
+    ;;
+    "application" )
+      pdf "$LOCATION"
+    ;;
+  esac
+fi
+) &>/dev/null &
+
+cat /lounge/www/close.html
+

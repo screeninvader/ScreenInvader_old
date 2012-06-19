@@ -1,0 +1,11 @@
+#!/bin/bash
+
+. /lounge/bin/initcgi "text/plain"
+
+volume=`sound/getVolume | sed '1,2d'`
+newvol=$[ $volume - 5 ];
+
+sound/setVolume "$newvol" &> /dev/null &
+disown
+echo $newvol
+

@@ -1,0 +1,9 @@
+#!/bin/bash
+
+. /lounge/bin/initcgi "text/plain"
+./reset
+
+if killall -0 midori; then 
+  midori --class="Browser" --name="Browser" -e ZoomIn &
+  disown
+fi

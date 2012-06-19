@@ -1,0 +1,2 @@
+#!/bin/bash
+amixer sset Master off &> /dev/null

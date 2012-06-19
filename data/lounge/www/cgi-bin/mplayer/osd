@@ -1,0 +1,5 @@
+#!/bin/bash
+
+export DISPLAY=:0
+/lounge/bin/notify "toggle osd" 1
+xdotool key o

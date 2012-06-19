@@ -1,0 +1,12 @@
+#!/bin/bash
+. /lounge/bin/initcgi "text/html"
+
+./reset
+(
+killall -9 feh
+killall -9 midori 
+[ -z "$QUERY_STRING" ] && QUERY_STRING="$@";
+notify "playling gif... `basename "$QUERY_STRING"`"
+mplayer.animate "$QUERY_STRING"
+) &>/dev/null
+

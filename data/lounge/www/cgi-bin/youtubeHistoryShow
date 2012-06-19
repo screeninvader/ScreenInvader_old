@@ -1,0 +1,4 @@
+#!/bin/bash
+
+./printtext "<h1>Youtube History</h1>$(cat /tmp/youtube-history)"
+

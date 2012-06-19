@@ -1,0 +1,5 @@
+#!/bin/bash
+
+export DISPLAY=:0
+/lounge/bin/notify "previous track" 1
+xdotool key less

@@ -1,0 +1,8 @@
+#!/bin/bash
+export DISPLAY=:0
+
+./reset
+
+if killall -0 midori; then 
+  xdotool key Page_Down
+fi

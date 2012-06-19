@@ -1,0 +1,27 @@
+#!/bin/bash
+set -x
+(
+  flock -s 200
+  running="`ps -eo pid,cmd | fgrep mplayer | fgrep -v "bash " | fgrep -v grep | awk '{ print($1) }'`"
+
+  [ -n "$running" ] && /var/www/cgi-bin/mplayer/pause &> /dev/null
+  sleep 0.5
+  #bash -c "/usr/bin/mplayer -vfm ffmpeg -lavdopts lowres=0:fast:skipframe=nonref -fs \"$@\"; mpc play;" &> /dev/null  &
+  rm /tmp/tmp.*
+  tmp=`mktemp`
+  wget -q -O "$tmp" "$@"
+  bash -c "/usr/bin/mplayer -vf scale -nofontconfig -nosound -noar -nomouseinput -nocache -noconsolecontrols  -nolirc -nojoystick -vc rawbgr8 -brightness 10 -fixed-vo -noidx -noautosub -ao null -really-quiet -loop 0 -fs \"$tmp\"" &> /dev/null &
+  disown
+  sleep 8;
+  for other in $running; do
+    [ "$$" != "$other" ] && kill -9 $other
+  done
+
+  pid=`ps -ef | grep "midori.*class=Browser" | fgrep -v grep | tr -s " " | cut -d" " -f2`
+  [ -n "$pid" ] && kill -9 $pid
+
+  killall -9 feh.orig
+  killall -9 evince.orig
+
+) 200>/var/lock/mplayer
+

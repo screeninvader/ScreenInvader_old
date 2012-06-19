@@ -1,0 +1,19 @@
+#!/bin/bash
+
+running="`ps -eo pid,cmd | fgrep mplayer | fgrep -v grep | awk '{ print($1) }'`"
+
+mpc pause
+[ -n "$running" ] && /var/www/cgi-bin/mplayer/pause &> /dev/null
+#bash -c "/usr/bin/mplayer -vfm ffmpeg -lavdopts lowres=0:fast:skipframe=nonref -fs \"$@\"; mpc play;" &> /dev/null  &
+bash -c "/usr/bin/mplayer -cache 10 -fs \"$@\"; mpc play;" &> /dev/null  &
+disown
+
+sleep 6;
+pid=`ps -ef | grep "midori.*class=Browser" | fgrep -v grep | tr -s " " | cut -d" " -f2`
+[ -n "$pid" ] && kill -9 $pid
+
+killall -9 feh.orig
+killall -9 evince.orig
+for other in $running; do
+  kill -9 $other
+done

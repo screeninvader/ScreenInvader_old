@@ -1,0 +1,9 @@
+#!/bin/bash
+
+. /lounge/bin/initcgi "text/plain"
+
+
+[ "`ps -eo cmd | fgrep mplayer | wc -l`" -gt 1 ] && echo true || echo false
+
+exit 0
+

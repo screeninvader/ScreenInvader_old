@@ -1,0 +1,8 @@
+#!/bin/bash
+export DISPLAY=:0
+timeout=$2
+
+[ -z "$timeout" ] && timeout=2
+
+echo "naughty.notify({title = \"$1\", ontop = false, timeout = $timeout})" | awesome-client -
+

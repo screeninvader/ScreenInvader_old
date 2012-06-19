@@ -1,0 +1,5 @@
+#!/bin/bash
+
+export DISPLAY=:0
+/lounge/bin/notify "toggle subtitle" 1
+xdotool key j

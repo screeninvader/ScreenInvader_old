@@ -1,0 +1,6 @@
+#!/bin/bash
+
+. /var/www/cgi-bin/initrequest
+
+cat "requests/getstatus" | netcat 10.20.30.50 80 | grep "^<" >> ./tmp/currentStatus
+

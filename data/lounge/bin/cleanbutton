@@ -1,0 +1,14 @@
+#!/bin/bash
+
+/etc/init.d/thttpd stop
+. /var/www/cgi-bin/initrequest
+
+mpc pause
+
+sudo -u lounge /var/www/cgi-bin/browse /var/www/cleanup.html &
+disown
+stty -F /dev/ttyACM0 raw ispeed 9600 ospeed 9600 -ignpar cs8 -cstopb -echo
+read -t 1800 LINE < /dev/ttyACM0
+/var/www/cgi-bin/reset
+mpc play
+/etc/init.d/thttpd start

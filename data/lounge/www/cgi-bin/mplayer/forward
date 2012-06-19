@@ -1,0 +1,5 @@
+#!/bin/bash
+
+export DISPLAY=:0
+/lounge/bin/notify "forward" 1 &> /dev/null &
+xdotool key Right
