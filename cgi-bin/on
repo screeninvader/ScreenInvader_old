@@ -1,7 +1,0 @@
-#!/bin/bash
-
-. /var/www/cgi-bin/initrequest "text/plain"
-
-
-cat "requests/on" | ./post &> /dev/null
-sound/setVolume -380

@@ -1,9 +1,0 @@
-#!/bin/bash
-echo Content-type: text/html
-echo ""
-
-ID=`./id | sed "1,2d"`
-mpc playlist | sed "1,$[ ID ]d" | head -n10 | cut -c1-62 | while read line; do
-  echo "<li class='playlistitem'>$line</li>";
-done
-

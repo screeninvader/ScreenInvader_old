@@ -1,6 +1,0 @@
-#!/bin/bash
-
-. /var/www/cgi-bin/initrequest "text/plain"
-
-cat "requests/standby" | ./post &> /dev/null
-

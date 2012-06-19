@@ -1,7 +1,0 @@
-#!/bin/bash
-
-. /var/www/cgi-bin/initrequest "text/plain"
-
-cat "./requests/getstatus" | ./post | grep "^<" | sed 's/.*<Lvl><Val>//' | sed 's/<\/Val><Exp>.*//'
-
-

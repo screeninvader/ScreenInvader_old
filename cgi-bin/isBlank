@@ -1,5 +1,0 @@
-#!/bin/bash
-. ./initrequest
-
-[ -n "`xset -q | fgrep 'Monitor is On'`" ] && echo false || echo true
-

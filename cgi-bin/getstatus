@@ -1,5 +1,0 @@
-#!/bin/bash
-
-. /var/www/cgi-bin/initrequest "text/xml"
-cat "requests/getstatus" | ./post | grep "^<"
-

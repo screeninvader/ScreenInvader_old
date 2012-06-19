@@ -1,6 +1,0 @@
-#!/bin/bash
-
-. /var/www/cgi-bin/initrequest "text/plain"
-
-./requests/vol "$1" | ./post > /dev/null
-

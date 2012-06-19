@@ -1,4 +1,0 @@
-#!/bin/bash
-
-xset s reset
-xset dpms force on

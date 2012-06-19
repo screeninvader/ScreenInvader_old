@@ -1,9 +1,0 @@
-#!/bin/bash
-. ./initrequest "text/html"
-
-./unblank
-
-TERMS="`echo $QUERY_STRING | sed 's/%20/ /g'`"
-
-find /link/Media/Music -type f -iname "*$TERMS*.mp3" -o  -iname "*$TERMS*.ogg" -o  -iname "*$TERMS*.flac" | while read line; do filename=`basename "$line"`; title=${filename%.avi}; echo "<br/><a href=\"http://10.20.30.51/cgi-bin/playlink?$title\">$line</a>"; done
-

@@ -1,9 +1,0 @@
-#!/bin/bash
-. ./initrequest "text/html"
-
-./unblank
-
-TERMS="`echo $QUERY_STRING | sed 's/%20/ /g' | sed 's/ /\*/g'`"
-
-find /link/Media/Film -type f -iname "*$TERNS*" | while read line; do title=`basename "$line"`; echo "<br/><a href=\"http://10.20.30.51/cgi-bin/playlink?$title\">$line</a>"; done
-

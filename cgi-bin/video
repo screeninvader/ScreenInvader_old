@@ -1,9 +1,0 @@
-#!/bin/bash
-. /var/www/cgi-bin/initrequest "text/html"
-
-./clean
-
-[ -z "$QUERY_STRING" ] && QUERY_STRING="$@";
-mpc pause
-mplayer -fs "$QUERY_STRING"
-mpc play

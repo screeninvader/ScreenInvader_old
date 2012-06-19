@@ -1,5 +1,0 @@
-#!/bin/bash
-. /var/www/cgi-bin/initrequest "text/plain"
-
-[ -n "`xset -q | fgrep 'Monitor is On'`" ] && echo false || echo true
-

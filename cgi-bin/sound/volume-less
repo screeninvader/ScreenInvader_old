@@ -1,8 +1,0 @@
-#!/bin/bash
-
-. /var/www/cgi-bin/initrequest "text/plain"
-
-volume=`sound/getVolume | sed '1,2d'`
-newvol=$[ $volume - 5 ];
-sound/setVolume "$newvol" &> /dev/null
-echo $newvol

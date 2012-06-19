@@ -1,9 +1,0 @@
-#!/bin/bash
-
-. /var/www/cgi-bin/initrequest "text/plain"
-
-volume=`cat "./requests/getstatus" | ./post | grep "^<" | sed 's/.*<Treble><Val>//' | sed 's/<\/Val><Exp>.*//'`
-
-echo $volume
-
-

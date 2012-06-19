@@ -1,4 +1,0 @@
-#!/bin/bash
-
-requests/bass "$QUERY_STRING" | ./post > /dev/null
-

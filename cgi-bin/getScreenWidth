@@ -1,4 +1,0 @@
-#!/bin/bash
-
-xrandr | grep "VGA-0 connected  " | tr -s " " | cut -d" " -f4
-

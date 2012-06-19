@@ -1,4 +1,0 @@
-#!/bin/bash
-
-xrandr | grep " v: height " | tr -s " " | cut -d" " -f4
-

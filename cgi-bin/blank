@@ -1,5 +1,0 @@
-#!/bin/bash
-
-. ./initrequest "text/html"
-
-xset dpms force standby

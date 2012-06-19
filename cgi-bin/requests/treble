@@ -1,6 +1,0 @@
-#!/bin/bash
-function errex(){ echo "$1"; exit; };
-
-ARG="$1"
-
-echo -n "<?xml version=\"1.0\"?><YAMAHA_AV cmd=\"PUT\"><Main_Zone><Sound_Video><Tone><Treble><Val>$ARG</Val><Exp>1</Exp><Unit>dB</Unit></Treble></Tone></Sound_Video></Main_Zone></YAMAHA_AV>" | unix2dos

@@ -1,6 +1,0 @@
-#!/bin/bash
-
-. ./initrequest
-
-[ -n "`xrandr | grep 'VGA-0.*1024x768'`" ] && echo true || echo false
-
