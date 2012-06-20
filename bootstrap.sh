@@ -2,11 +2,11 @@
 
 VIDEO_DRIVERS="xserver-xorg-video-all xserver-xorg-video-ati xserver-xorg-video-radeon xserver-xorg-video-nv xserver-xorg-video-intel xserver-xorg-video-geode xserver-xorg-video-glide xserver-xorg-video-glint xserver-xorg-video-i128 xserver-xorg-video-i740 xserver-xorg-video-mach64 xserver-xorg-video-geode xserver-xorg-video-cirrus xserver-xorg-video-mga xserver-xorg-video-openchrome xserver-xorg-video-via xserver-xorg-video-fbdev xserver-xorg-video-dummy xserver-xorg-video-glamo xserver-xorg-video-apm  xserver-xorg-video-ark  xserver-xorg-video-chips xserver-xorg-video-neomagic xserver-xorg-video-nouveau xserver-xorg-video-qxl  xserver-xorg-video-r128 xserver-xorg-video-radeonhd xserver-xorg-video-rendition xserver-xorg-video-s3 xserver-xorg-video-s3virge xserver-xorg-video-savage xserver-xorg-video-siliconmotion xserver-xorg-video-sis  xserver-xorg-video-sisusb xserver-xorg-video-tdfx xserver-xorg-video-tga xserver-xorg-video-trident xserver-xorg-video-tseng xserver-xorg-video-vesa xserver-xorg-video-vmware xserver-xorg-video-voodoo"
 
-PKG_WHITE="debconf-english localepurge dialog sudo mplayer-nogui thttpd feh mpd mpc xdotool linux-image-686 alsa-utils awesome psmisc clive midori dos2unix curl dropbear xinit autofs smbfs mingetty"
+PKG_WHITE="keyboard-configuration debconf-english sudo dialog mplayer-nogui thttpd feh mpd mpc xdotool linux-image-686 alsa-utils awesome psmisc clive midori dos2unix curl dropbear xinit autofs smbfs mingetty xserver-xorg xserver-xorg-input-kbd xserver-xorg-input-mouse"
 
-PKG_BLACK="info manpages rsyslog tasksel tasksel-data aptitude"
+PKG_BLACK="info manpages rsyslog tasksel tasksel-data aptitude locales"
 
-FILES_BLACK="/var/cache/apt/pkgcache.bin /var/cache/apt/srcpkgcache.bin /usr/share/man/?? /usr/share/man/??_* /usr/share/doc/* /usr/share/icons/* /root/.bash_history"
+FILES_BLACK="/var/cache/apt/pkgcache.bin /var/cache/apt/srcpkgcache.bin /usr/share/man/* /usr/share/locale/* /usr/share/doc/* /usr/share/zoneinfo/* /usr/share/icons/* /root/.bash_history /lib/modules/*/kernel/drivers/net/wireless/* /lib/modules/*/kernel/drivers/infiniband/* /lib/modules/*/kernel/drivers/bluetooth/* /lib/modules/*/kernel/drivers/media/* /var/cache/*"
 
 export LC_ALL="C"
 DEBIAN_MIRROR="http://ftp.at.debian.org/debian"
@@ -73,25 +73,23 @@ function printVideoDrivers() {
 
 function askVideoDriver() {
   NUM="`echo $VIDEO_DRIVERS | wc -w`"
-  (
-    echo -n "Please select a video driver (default=0):"
-    DRIVER=""
-    while read idx; do
-      [ -z "$idx" ] && idx=0
-      if printf "%d" $idx > /dev/null 2>&1; then
-	if [ $idx -lt 0 -o $idx -ge $NUM ]; then
-				  echo "Out of range: $idx."
-	else
-	  DRIVER="`echo $VIDEO_DRIVERS | sed 's/ /\n/g' | sed -n "$[ $idx + 1 ]p"`"
-	  echo "Selected: `echo "$DRIVER"  | cut -d"-" -f4`" 1>&2
-	  break
-	fi
+  echo -n "Please select a video driver (default=0):" 1>&2
+  DRIVER=""
+  while read idx; do
+    [ -z "$idx" ] && idx=0
+    if printf "%d" $idx > /dev/null 2>&1; then
+      if [ $idx -lt 0 -o $idx -ge $NUM ]; then
+	echo "Out of range: $idx." 1>&2
       else
-	echo "Invalid input: $idx. Please select the video driver by entering a number."
+	DRIVER="`echo $VIDEO_DRIVERS | sed 's/ /\n/g' | sed -n "$[ $idx + 1 ]p"`"
+	echo "Selected: $DRIVER" 1>&2
+	break
       fi
-      echo -n "Please select a video driver (default=0):"
-    done
-  ) 1>&2
+    else
+      echo "Invalid input: $idx. Please select the video driver by entering a number." 1>&2
+    fi
+    echo -n "Please select a video driver (default=0):" 1>&2
+  done
   echo $DRIVER
 }
 
@@ -130,10 +128,13 @@ function doUserConf() {
 }
 
 function doPackageConf() {
-  export DEBIAN_FRONTEND=noninteractive
+	export DEBIAN_FRONTEND=noninteractive
   aptni="apt-get -q -y --no-install-recommends --force-yes -o Dpkg::Options::=\"--force-confdef\" -o Dpkg::Options::=\"--force-confold\" ";
 
-  check "Prepare package manager" \
+  check "Prune debconf cache" \
+		"$CHRT mkdir -p /var/cache/debconf/"
+
+	check "Prepare package manager" \
     "$CHRT dpkg --configure -a"
 
   check "Fix dependencies" \
@@ -146,18 +147,24 @@ function doPackageConf() {
     "$CHRT $aptni install $PKG_WHITE"
 
   check "Remove black listed packages" \
-    "$CHRT $aptni remove $PKG_BLACK"
+    "$CHRT $aptni purge $PKG_BLACK"
+
+  check "Autoremove packages" \
+		"$CHRT $aptni autoremove"
 }
 
 function doCleanup() {
   check "Clean apt cache" \
     "$CHRT apt-get clean"
 
-  check "Copy data" \
-    "rsync -axh --delete $BOOTSTRAP_DIR/data/* $CHROOT_DIR/"
+  check "Copy system changes" \
+   "cd $BOOTSTRAP_DIR/data; rsync -axh boot  etc usr $CHROOT_DIR/"
   
+  check "Copy lounge changes" \
+   "cd $BOOTSTRAP_DIR/data; rsync -axh --delete lounge setup home $CHROOT_DIR/"
+
   check "Remove black listed files" \
-    "$CHRT rm -rf $FILES_BLACK"
+    "$CHRT bash -c \"rm -fr $FILES_BLACK\""
 }
 
 function doPrepareChroot() {
@@ -195,9 +202,9 @@ EOPOLICY
 }
 
 function doFreeChroot() {
-	pkill -KILL -P $$ &> /dev/null
-	( 
-		cd "$CHROOT_DIR"
+  pkill -KILL -P $$ &> /dev/null
+  ( 
+    cd "$CHROOT_DIR"
     umount dev/pts
     umount tmp
     umount sys 
@@ -207,7 +214,7 @@ function doFreeChroot() {
   ) &>/dev/null
   rm -rf "$CHROOT_DIR/etc/apt/apt.conf.d/00aptcacher"
   rm -rf "$CHROOT_DIR/usr/sbin/policy-rc.d"
-	exit
+  exit
 }
 
 ###### main
@@ -234,33 +241,33 @@ source "$BOOTSTRAP_DIR/.functions.sh"
 export CHROOT_DIR="`absPath $1`"
 export CHRT="chroot \"$CHROOT_DIR\" "
 
-if [ $# -ne 1 -o ! -d "$CHROOT_DIR" ]; then
-	printUsage
+if [ $# -ne 1 ]; then
+  printUsage
 else
   printVideoDrivers
-  PKG_WHITE="${PKG_WHITE} $(askVideoDriver)"
+  PKG_WHITE="$PKG_WHITE $(askVideoDriver)"
 
   if [ -z "$NODEBOOT" ]; then 
-		doDebootstrap
-	else
-		skip "debootstrap"
-	fi
+    doDebootstrap
+  else
+    skip "debootstrap"
+  fi
 
   doPrepareChroot
   trap doFreeChroot SIGINT SIGTERM EXIT
   if [ -z "$NOUSERCONF" ]; then
-		doUserConf
-	else
-		skip "user configuration"
-	fi
+    doUserConf
+  else
+    skip "user configuration"
+  fi
 
   if [ -z "$NOINSTALL" ]; then 
-		doPackageConf
-	else
-		skip "package configuration"
-	fi
+    doPackageConf
+  else
+    skip "package configuration"
+  fi
 
-	doCleanup
+  doCleanup
 fi
 
 
