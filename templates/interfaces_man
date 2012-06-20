@@ -1,3 +1,5 @@
+#!/bin/bash
+
 cat <<EONETCONF
 auto lo
 iface lo inet loopback
@@ -7,5 +9,4 @@ address $1
 netmask $2
 gateway $3
 EONETCONF
-}
 

@@ -1,3 +1,5 @@
+#!/bin/bash
+
 cat <<EODHCPCONF
 auto lo
 iface lo inet loopback

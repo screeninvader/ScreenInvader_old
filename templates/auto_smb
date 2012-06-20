@@ -1,3 +1,5 @@
+#!/bin/bash
+
 cat <<EOSMBCONF
 $4      -fstype=cifs,users,user=$1,password=$2,domain=$3,ro ://$4/$5
 EOSMBCONF

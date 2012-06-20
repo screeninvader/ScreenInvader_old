@@ -1,3 +1,5 @@
+#!/bin/bash
+
 cat <<EORESOLVCONF
 domain local
 search local
