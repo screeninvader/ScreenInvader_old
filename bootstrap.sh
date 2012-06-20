@@ -130,11 +130,6 @@ function doDebootstrap() {
     "debootstrap --arch $ARCH squeeze "$CHROOT_DIR" $BOOTSTRAP_MIRROR"
 }
 
-function doUserConf() {
-  check "Set root login shell" \
-    "$CHRT usermod -s /setup/firstboot.sh root"
-}
-
 function doPackageConf() {
   export DEBIAN_FRONTEND=noninteractive
   aptni="apt-get -q -y --no-install-recommends --force-yes -o Dpkg::Options::=\"--force-confdef\" -o Dpkg::Options::=\"--force-confold\" ";
@@ -165,10 +160,10 @@ function doCopy() {
   check "Copy system data" \
    "cd $BOOTSTRAP_DIR/data; rsync -axh etc usr $CHROOT_DIR/"
   
-  check "Copy lounge data" \
+  check "Sync lounge data" \
    "cd $BOOTSTRAP_DIR/data; rsync -axh --delete lounge $CHROOT_DIR/"
 
-  check "Copy setup data" \
+  check "Sync setup data" \
    "cd $BOOTSTRAP_DIR/; rsync -axh --delete setup $CHROOT_DIR/"
 }
 
@@ -265,7 +260,6 @@ else
   fi
 
   doCopy
-  doUserConf
   doCleanup
 fi
 
