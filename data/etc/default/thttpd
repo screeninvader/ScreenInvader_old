@@ -1,2 +1,2 @@
-HOME="/home/lounge"
+export HOME="/lounge"
 ENABLED=yes
