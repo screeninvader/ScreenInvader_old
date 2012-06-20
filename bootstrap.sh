@@ -118,7 +118,7 @@ function doUserConf() {
     "$CHRT passwd"
 
   check "Set root login shell" \
-    "$CHRT usermod -s /setup/configure.sh root"
+    "$CHRT usermod -s /lounge/firstboot.sh root"
 
   check "Add user lounge" \
     "$CHRT adduser lounge --disabled-password --gecos \"\" "
