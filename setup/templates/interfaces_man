@@ -1,0 +1,12 @@
+#!/bin/bash
+
+cat <<EONETCONF
+auto lo
+iface lo inet loopback
+allow-hotplug eth0
+iface eth0 inet static
+address $1
+netmask $2
+gateway $3
+EONETCONF
+
