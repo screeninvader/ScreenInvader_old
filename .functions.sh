@@ -58,11 +58,12 @@ function try {
 
 function check {
   log="&1"
-  if	[ -n "$BOOTSTRAP_LOG" ]; then
-		try -o "1" -n "$1" "$2" >>"$BOOTSTRAP_LOG"
-	else
-		try -n "$1" "$2"
-	fi
+  if [ -n "$BOOTSTRAP_LOG" ]; then
+    echo "### $1" >> "$BOOTSTRAP_LOG"
+    try -o "1" -n "$1" "$2" >>"$BOOTSTRAP_LOG"
+  else
+    try -n "$1" "$2"
+  fi
 
   [ $? -ne 0 ] && exit
 }
