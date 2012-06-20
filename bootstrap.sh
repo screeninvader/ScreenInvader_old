@@ -2,23 +2,22 @@
 
 VIDEO_DRIVERS="xserver-xorg-video-all xserver-xorg-video-ati xserver-xorg-video-radeon xserver-xorg-video-nv xserver-xorg-video-intel xserver-xorg-video-geode xserver-xorg-video-glide xserver-xorg-video-glint xserver-xorg-video-i128 xserver-xorg-video-i740 xserver-xorg-video-mach64 xserver-xorg-video-geode xserver-xorg-video-cirrus xserver-xorg-video-mga xserver-xorg-video-openchrome xserver-xorg-video-via xserver-xorg-video-fbdev xserver-xorg-video-dummy xserver-xorg-video-glamo xserver-xorg-video-apm  xserver-xorg-video-ark  xserver-xorg-video-chips xserver-xorg-video-neomagic xserver-xorg-video-nouveau xserver-xorg-video-qxl  xserver-xorg-video-r128 xserver-xorg-video-radeonhd xserver-xorg-video-rendition xserver-xorg-video-s3 xserver-xorg-video-s3virge xserver-xorg-video-savage xserver-xorg-video-siliconmotion xserver-xorg-video-sis  xserver-xorg-video-sisusb xserver-xorg-video-tdfx xserver-xorg-video-tga xserver-xorg-video-trident xserver-xorg-video-tseng xserver-xorg-video-vesa xserver-xorg-video-vmware xserver-xorg-video-voodoo"
 
-PKG_WHITE="keyboard-configuration debconf-english sudo dialog mplayer-nogui thttpd feh mpd mpc xdotool linux-image-686 alsa-utils awesome psmisc clive midori dos2unix curl dropbear xinit autofs smbfs mingetty xserver-xorg xserver-xorg-input-kbd xserver-xorg-input-mouse"
+PKG_WHITE="debian-multimedia-keyring keyboard-configuration debconf-english sudo dialog mplayer-nogui thttpd feh mpd mpc xdotool linux-image-686 alsa-utils awesome psmisc clive midori dos2unix curl dropbear xinit autofs smbfs mingetty xserver-xorg xserver-xorg-input-kbd xserver-xorg-input-mouse"
 
 PKG_BLACK="info manpages rsyslog tasksel tasksel-data aptitude locales"
 
-FILES_BLACK="/var/cache/apt/pkgcache.bin /var/cache/apt/srcpkgcache.bin /usr/share/man/* /usr/share/locale/* /usr/share/doc/* /usr/share/zoneinfo/* /usr/share/icons/* /root/.bash_history /lib/modules/*/kernel/drivers/net/wireless/* /lib/modules/*/kernel/drivers/infiniband/* /lib/modules/*/kernel/drivers/bluetooth/* /lib/modules/*/kernel/drivers/media/* /var/cache/*"
+FILES_BLACK="/var/cache/apt/pkgcache.bin /var/cache/apt/srcpkgcache.bin /usr/share/man/* /usr/share/locale/* /usr/share/doc/* /usr/share/zoneinfo/* /usr/share/icons/* /root/.bash_history /lib/modules/*/kernel/drivers/net/wireless/* /lib/modules/*/kernel/drivers/infiniband/* /lib/modules/*/kernel/drivers/bluetooth/* /lib/modules/*/kernel/drivers/media/* /var/cache/debconf*"
 
 export LC_ALL="C"
-DEBIAN_MIRROR="http://ftp.at.debian.org/debian"
-DEBIAN_MULTIMEDIA_MIRROR="http://www.debian-multimedia.org"
+DEBIAN_MIRROR="http://ftp.at.debian.org/debian/"
+DEBIAN_MULTIMEDIA_MIRROR="http://www.debian-multimedia.org/"
 
 dir="`dirname $0`"
 BOOTSTRAP_DIR="`cd $dir; pwd`"
-BOOTSTRAP_LOG="bootstrap.log"
+BOOTSTRAP_LOG="$BOOTSTRAP_DIR/bootstrap.log"
 ARCH=i386
 APTCACHER_PORT=
 NOINSTALL=
-NOUSERCONF=
 NODEBOOT=
 CHROOT_DIR=
 CHRT=
@@ -28,15 +27,14 @@ function printUsage() {
   cat 1>&2 <<EOUSAGE
 Bootstrap a Lounge Media Center installation.
 
-$0 [-a <arch>][-l <logfile>][-c <apt-cacher-port>][-u -n -x -d ] <bootstrapdir>"
+$0 [-a <arch>][-l <logfile>][-c <apt-cacher-port>][-i -d -u ] <bootstrapdir>"
 Options:"
   -a <arch> Bootstrap a system with of the given architecture
   -l <file> Specify the log file
-  -c <port> Enables using apt-cacher-ng on the specified port
-  -n        Don't configure and install packages
-  -x        Don't do user configuration
+  -p <port> Enables using apt-cacher-ng on the specified port
+  -i        Don't configure and install packages
   -d        Don't debootstrap
-  -u        Combined -n, -x and -d
+  -u        Combined -d and -i
 EOUSAGE
   exit 1
 }
@@ -99,7 +97,7 @@ function skip() {
 }
 
 function doDebootstrap() {
-  check "create target dir" \
+  check "Create target dir" \
     "mkdir -p \"$CHROOT_DIR\""
 
   BOOTSTRAP_MIRROR=$DEBIAN_MIRROR
@@ -109,26 +107,17 @@ function doDebootstrap() {
     echo "http://127.0.0.1:$APTCACHER_PORT/$HOST/debian"
   )
 
-  check "bootstrap debian" \
+  check "Bootstrap debian" \
     "debootstrap --arch $ARCH squeeze "$CHROOT_DIR" $BOOTSTRAP_MIRROR"
 }
 
 function doUserConf() {
-  checkcat "Configure root user" \
-    "$CHRT passwd"
-
   check "Set root login shell" \
-    "$CHRT usermod -s /lounge/firstboot.sh root"
-
-  check "Add user lounge" \
-    "$CHRT adduser lounge --disabled-password --gecos \"\" "
-  
-  check "Add group audio" \
-    "$CHRT usermod -G audio lounge"
+    "$CHRT usermod -s /setup/firstboot.sh root"
 }
 
 function doPackageConf() {
-	export DEBIAN_FRONTEND=noninteractive
+  export DEBIAN_FRONTEND=noninteractive
   aptni="apt-get -q -y --no-install-recommends --force-yes -o Dpkg::Options::=\"--force-confdef\" -o Dpkg::Options::=\"--force-confold\" ";
 
   check "Prune debconf cache" \
@@ -153,10 +142,7 @@ function doPackageConf() {
     "$CHRT $aptni autoremove"
 }
 
-function doCleanup() {
-  check "Clean apt cache" \
-    "$CHRT apt-get clean"
-
+function doCopy() {
   check "Copy system data" \
    "cd $BOOTSTRAP_DIR/data; rsync -axh boot etc usr $CHROOT_DIR/"
   
@@ -165,6 +151,11 @@ function doCleanup() {
 
   check "Copy setup data" \
    "cd $BOOTSTRAP_DIR/; rsync -axh --delete setup $CHROOT_DIR/"
+}
+
+function doCleanup() {
+  check "Clean apt cache" \
+    "$CHRT apt-get clean"
 
   check "Remove black listed files" \
     "$CHRT bash -c \"rm -fr $FILES_BLACK\""
@@ -180,12 +171,12 @@ function doPrepareChroot() {
 
   mkdir -p "$CHROOT_DIR/etc/apt/"
 
-  $BOOTSTRAP_DIR/templates/sources_list > $CHROOT_DIR/etc/apt/sources.list
+  $BOOTSTRAP_DIR/templates/sources_list "$DEBIAN_MIRROR" "$DEBIAN_MULTIMEDIA_MIRROR" > $CHROOT_DIR/etc/apt/sources.list
 
   if [ -n "$APTCACHER_PORT" ]; then
     # use apt-cacher-ng to cache packages during install
     mkdir -p "$CHROOT_DIR/etc/apt/apt.conf.d/"
-    $BOOTSTRAP_DIR/templates/00aptcacher > $CHROOT_DIR/etc/apt/apt.conf.d/00aptcacher
+    $BOOTSTRAP_DIR/templates/00aptcacher "$APTCACHER_PORT" > $CHROOT_DIR/etc/apt/apt.conf.d/00aptcacher
   fi
 
   # disable starting daemons after install
@@ -212,16 +203,15 @@ function doFreeChroot() {
 
 ###### main
 
-while getopts 'a:l:c:nxud' c
+while getopts 'a:l:p:idu' c
 do
   case $c in
     a) ARCH="$OPTARG";;
     l) BOOTSTRAP_LOG="`absPath $OPTARG`";;
-    c) APTCACHER_PORT="$OPTARG";;
-    n) NOINSTALL="YES";;
-    x) NOUSERCONF="YES";;
+    p) APTCACHER_PORT="$OPTARG";;
+    i) NOINSTALL="YES";;
     d) NODEBOOT="YES";;
-    u) NOUSERCONF="YES"; NOINSTALL="YES"; NODEBOOT="YES";;
+    u) NOINSTALL="YES"; NODEBOOT="YES";;
     \?) printUsage;;
   esac
 done
@@ -248,11 +238,6 @@ else
 
   doPrepareChroot
   trap doFreeChroot SIGINT SIGTERM EXIT
-  if [ -z "$NOUSERCONF" ]; then
-    doUserConf
-  else
-    skip "user configuration"
-  fi
 
   if [ -z "$NOINSTALL" ]; then 
     doPackageConf
@@ -260,6 +245,8 @@ else
     skip "package configuration"
   fi
 
+  doCopy
+  doUserConf
   doCleanup
 fi
 
