@@ -2,7 +2,7 @@
 
 cat <<EOSOURCES
 # debian
-deb $1  squeeze main
+deb $1 squeeze main
 # debian multimedia
 deb $2 squeeze main non-free 
 EOSOURCES
