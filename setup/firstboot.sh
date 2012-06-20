@@ -144,7 +144,7 @@ function rebootConf(){
   fi
 }
 
-doConf
+doConf "hostname"
 
 update-rc.d autofs defaults
 update-rc.d thttpd defaults
@@ -158,7 +158,7 @@ mkdir -p /var/lib/mpd
 chown -R mpd:audio  /var/lib/mpd
 chown -R mpd:audio /var/run/mpd/
 chmod a+rwx /var/run/mpd/
-chown -R lounge:lounge /home/lounge/
+chown -R lounge:lounge /lounge/
 
 usermod -s /bin/bash root
 shutdown -r now
