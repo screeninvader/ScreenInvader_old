@@ -114,7 +114,7 @@ function smbConf() {
     fi
   fi
 
-	doConf "reboot"
+  doConf "reboot"
 }
 
 function rebootConf(){
