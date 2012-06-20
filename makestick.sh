@@ -48,9 +48,6 @@ check "Make partition" \
 check "Make filesystem" \
   "mkfs.ext4 $DEVICE*1"
 
-check "Install syslinux mbr" \
-  "printf '\1' | cat /usr/share/syslinux/altmbr.bin - | dd bs=440 count=1 conv=notrunc of=$DEVICE"
-
 tmpdir=`mktemp  -d`
 check "Make temporary mount dir" \
   "[ $? -q 0 ]"
@@ -75,6 +72,9 @@ rmdir $tmpdir
 check "Remove temporary mount dir" \
   "rmdir $tmpdir"
 
+check "Install syslinux mbr" \
+				  "printf '\1' | cat /usr/share/syslinux/altmbr.bin - | dd bs=440 count=1 conv=notrunc of=$DEVICE"
+
 check "Check file system" \
-  "fsck.ext4 $DEVICE*1"
+  "fsck.ext4 -fa $DEVICE*1"
 
