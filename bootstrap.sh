@@ -132,9 +132,9 @@ function doPackageConf() {
   aptni="apt-get -q -y --no-install-recommends --force-yes -o Dpkg::Options::=\"--force-confdef\" -o Dpkg::Options::=\"--force-confold\" ";
 
   check "Prune debconf cache" \
-		"$CHRT mkdir -p /var/cache/debconf/"
+    "$CHRT mkdir -p /var/cache/debconf/"
 
-	check "Prepare package manager" \
+  check "Prepare package manager" \
     "$CHRT dpkg --configure -a"
 
   check "Fix dependencies" \
@@ -150,7 +150,7 @@ function doPackageConf() {
     "$CHRT $aptni purge $PKG_BLACK"
 
   check "Autoremove packages" \
-		"$CHRT $aptni autoremove"
+    "$CHRT $aptni autoremove"
 }
 
 function doCleanup() {
@@ -168,37 +168,27 @@ function doCleanup() {
 }
 
 function doPrepareChroot() {
-  ( 
-    cd "$CHROOT_DIR"
-    mount --bind /dev/ dev
-    mount -t proc none proc
-    mount -t sysfs none sys
-    mount -t tmpfs none tmp
-    mount -t devpts none dev/pts
+  cd "$CHROOT_DIR"
+  mount --bind /dev/ dev
+  mount -t proc none proc
+  mount -t sysfs none sys
+  mount -t tmpfs none tmp
+  mount -t devpts none dev/pts
 
-    mkdir -p "$CHROOT_DIR/etc/apt/"
-    cat > "$CHROOT_DIR/etc/apt/sources.list" <<EOSOURCES
-deb $DEBIAN_MIRROR  squeeze main
-deb $DEBIAN_MULTIMEDIA_MIRROR squeeze main non-free 
-EOSOURCES
+  mkdir -p "$CHROOT_DIR/etc/apt/"
 
-    if [ -n "$APTCACHER_PORT" ]; then
-      # use apt-cacher-ng to cache packages during install
-      mkdir -p "$CHROOT_DIR/etc/apt/apt.conf.d/"
-      cat > "$CHROOT_DIR/etc/apt/apt.conf.d/00aptcacher" <<EOAPTCONF
-acquire::http { Proxy "http://127.0.0.1:$APTCACHER_PORT"; };
-EOAPTCONF
-    fi
+  $BOOTSTRAP_DIR/templates/sources_list > $CHROOT_DIR/etc/apt/sources.list
 
-    # disable starting daemons after install
-    mkdir -p "$CHROOT_DIR/usr/sbin"
-    cat > "$CHROOT_DIR/usr/sbin/policy-rc.d" <<EOPOLICY
-#!/bin/sh
-exit 101
-EOPOLICY
+  if [ -n "$APTCACHER_PORT" ]; then
+    # use apt-cacher-ng to cache packages during install
+    mkdir -p "$CHROOT_DIR/etc/apt/apt.conf.d/"
+    $BOOTSTRAP_DIR/templates/00aptcacher > $CHROOT_DIR/etc/apt/apt.conf.d/00aptcacher
+  fi
 
-    chmod 755 "$CHROOT_DIR/usr/sbin/policy-rc.d"
-  )
+  # disable starting daemons after install
+  mkdir -p "$CHROOT_DIR/usr/sbin"
+  $BOOTSTRAP_DIR/templates/policy-rc_d > "$CHROOT_DIR/usr/sbin/policy-rc.d"
+  chmod 755 "$CHROOT_DIR/usr/sbin/policy-rc.d"
 }
 
 function doFreeChroot() {
