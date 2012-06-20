@@ -18,13 +18,8 @@ EOUSAGE
 }
 
 function makeSyslinuxConf() {
-  cat > "$1/boot/syslinux/syslinux.cfg" <<EOSYSLINUX
-DEFAULT loungemc
-LABEL loungemc
-  SAY Booting Lounge Media Center
-	KERNEL /vmlinuz
-	APPEND quiet splash ro root=UUID=`blkid $DEVICE*1	| cut -d "\"" -f2` initrd=/initrd.img
-EOSYSLINUX
+  uuid="`blkid $DEVICE*1 | cut -d "\"" -f2`"
+  templates/syslinux_cfg $uuid > "$1/boot/syslinux/syslinux.cfg" 
 }
 
 [ $# -eq 0 -o $# -gt 2 ] && printUsage;
@@ -32,8 +27,7 @@ EOSYSLINUX
 [ -z "$SIZE" ] && SIZE=400
 [ printf "%d" $SIZE &> /dev/null -o $SIZE -lt 100 ] && error "Invalid size: $SIZE"
 
-export BOOTSTRAP_LOG="makepartition.log"
-
+export BOOTSTRAP_LOG="makestick.log"
 source "$MAKEPARTITION_DIR/.functions.sh"
 
 check "Write zeros to device" \
@@ -73,7 +67,7 @@ check "Remove temporary mount dir" \
   "rmdir $tmpdir"
 
 check "Install syslinux mbr" \
-  "printf '\1' | cat /usr/share/syslinux/altmbr.bin - | dd bs=440 count=1 conv=notrunc of=$DEVICE"
+  "printf '\1' | cat syslinux_altmbr.bin - | dd bs=440 count=1 conv=notrunc of=$DEVICE"
 
 check "Check file system" \
   "fsck.ext4 -fa $DEVICE*1"
