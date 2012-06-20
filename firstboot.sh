@@ -1,7 +1,6 @@
 #!/bin/bash
 [ -z "$LC_ALL" ] && export LC_ALL=C
 cd `dirname $0`
-sleep 2
 
 ask="dialog --stdout --ok-label Next --cancel-label Back"
 
@@ -69,12 +68,7 @@ function makeInittabConf() {
 SCREENS="hostname network smb reboot"
 
 function doConf() {
-  off=$1
-  screens=$SCREENS
-  [ -n "$off" ] && screens="`echo $SCREENS | sed "s/^.*$1/$1/"`"
-  for s in $screens; do
-    ${s}Conf
-  done
+	${1}Conf
 }
 
 function hostnameConf(){
@@ -84,6 +78,7 @@ function hostnameConf(){
   done
 
   makeHostnameConf "$HOSTNAME"
+	doConf "network"
 }
 
 function networkConf() {
@@ -98,12 +93,14 @@ function networkConf() {
         makeManualNetConf "$1" "$2" "$3"
         makeDNSConf "$4"
       else
-	doConf "network"
+				doConf "network"
       fi
     fi
   else
     doConf "hostname"
   fi
+
+	doConf "smb"
 }
 
 function smbConf() {
@@ -116,6 +113,8 @@ function smbConf() {
       doConf "network"
     fi
   fi
+
+	doConf "reboot"
 }
 
 function rebootConf(){
@@ -128,26 +127,12 @@ function rebootConf(){
 
 doConf
 
-apt-get install -f
 update-rc.d autofs defaults
 update-rc.d thttpd defaults
 update-rc.d mpd defaults
 update-rc.d xserver defaults
 
 mkdir -p /share
-
-for i in `seq 1 9`; do 
-  ln -sf /var/autofs/removable/sda$i /share/sda$i;
-  ln -sf /var/autofs/removable/sdb$i /share/sdb$i;
-  ln -sf /var/autofs/removable/sdc$i /share/sdc$i; 
-  ln -sf /var/autofs/removable/sdd$i /share/sdd$i; 
-done
-
-ln -sf /lounge/thttpd.conf /etc/thttpd/thttpd.conf
-ln -sf /lounge/mpd.conf /etc/mpd.conf
-ln -sf /lounge/mpd.init.d /etc/init.d/mpd
-ln -sf /lounge/smb.conf /etc/samba/smb.conf
-
 mkdir -p /var/cache/debconf/
 mkdir -p /var/run/mpd/
 mkdir -p /var/lib/mpd
