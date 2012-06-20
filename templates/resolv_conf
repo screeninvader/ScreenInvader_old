@@ -1,7 +1,0 @@
-#!/bin/bash
-
-cat <<EORESOLVCONF
-domain local
-search local
-nameserver $1
-EORESOLVCONF

@@ -157,11 +157,14 @@ function doCleanup() {
   check "Clean apt cache" \
     "$CHRT apt-get clean"
 
-  check "Copy system changes" \
-   "cd $BOOTSTRAP_DIR/data; rsync -axh boot  etc usr $CHROOT_DIR/"
+  check "Copy system data" \
+   "cd $BOOTSTRAP_DIR/data; rsync -axh boot etc usr $CHROOT_DIR/"
   
-  check "Copy lounge changes" \
-   "cd $BOOTSTRAP_DIR/data; rsync -axh --delete lounge setup home $CHROOT_DIR/"
+  check "Copy lounge data" \
+   "cd $BOOTSTRAP_DIR/data; rsync -axh --delete lounge $CHROOT_DIR/"
+
+  check "Copy setup data" \
+   "cd $BOOTSTRAP_DIR/; rsync -axh --delete setup $CHROOT_DIR/"
 
   check "Remove black listed files" \
     "$CHRT bash -c \"rm -fr $FILES_BLACK\""
