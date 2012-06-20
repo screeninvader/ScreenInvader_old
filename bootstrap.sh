@@ -163,7 +163,7 @@ function doPackageConf() {
 
 function doCopy() {
   check "Copy system data" \
-   "cd $BOOTSTRAP_DIR/data; rsync -axh boot etc usr $CHROOT_DIR/"
+   "cd $BOOTSTRAP_DIR/data; rsync -axh etc usr $CHROOT_DIR/"
   
   check "Copy lounge data" \
    "cd $BOOTSTRAP_DIR/data; rsync -axh --delete lounge $CHROOT_DIR/"
