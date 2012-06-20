@@ -1,3 +1,4 @@
+#!/bin/bash
 #
 # LoungeMC - A content centered media center 
 #  Copyright (C) 2012 Amir Hassan <amir@viel-zu.org>
