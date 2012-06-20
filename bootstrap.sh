@@ -1,3 +1,22 @@
+#
+# LoungeMC - A content centered media center 
+#  Copyright (C) 2012 Amir Hassan <amir@viel-zu.org>
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+#
+
 #!/bin/bash
 
 VIDEO_DRIVERS="xserver-xorg-video-all xserver-xorg-video-ati xserver-xorg-video-radeon xserver-xorg-video-nv xserver-xorg-video-intel xserver-xorg-video-geode xserver-xorg-video-glide xserver-xorg-video-glint xserver-xorg-video-i128 xserver-xorg-video-i740 xserver-xorg-video-mach64 xserver-xorg-video-geode xserver-xorg-video-cirrus xserver-xorg-video-mga xserver-xorg-video-openchrome xserver-xorg-video-via xserver-xorg-video-fbdev xserver-xorg-video-dummy xserver-xorg-video-glamo xserver-xorg-video-apm  xserver-xorg-video-ark  xserver-xorg-video-chips xserver-xorg-video-neomagic xserver-xorg-video-nouveau xserver-xorg-video-qxl  xserver-xorg-video-r128 xserver-xorg-video-radeonhd xserver-xorg-video-rendition xserver-xorg-video-s3 xserver-xorg-video-s3virge xserver-xorg-video-savage xserver-xorg-video-siliconmotion xserver-xorg-video-sis  xserver-xorg-video-sisusb xserver-xorg-video-tdfx xserver-xorg-video-tga xserver-xorg-video-trident xserver-xorg-video-tseng xserver-xorg-video-vesa xserver-xorg-video-vmware xserver-xorg-video-voodoo"
