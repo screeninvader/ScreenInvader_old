@@ -1,6 +1,0 @@
-#!/bin/bash
-
-. /lounge/bin/initcgi "text/plain"
-
-[ -n "`xrandr --current | grep 'VGA-0.*1024x768'`" ] && echo true || echo false
-
