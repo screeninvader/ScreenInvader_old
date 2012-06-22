@@ -1,0 +1,19 @@
+#!/bin/bash
+set -x
+. /lounge/bin/initcgi "text/html"
+. /lounge/bin/locatefunctions.sh
+
+MEDIA_EXT="svg avi mpeg mpg mov wmv mp4 3gp ogm mkv jpg jpeg gif png"
+
+
+[ -z "$QUERY_STRING" ] && QUERY_STRING="$@";
+TERMS="`prepareTerms "$QUERY_STRING"`"
+notify "searching for $TERMS"
+LOCATEARGS="`makeLocateArgs "$TERMS" $MEDIA_EXT`"
+locate="locate.findutils -l1 $LOCATEARGS"
+echo $locate
+
+FILE="`bash -c "$locate"`"
+QUERY_STRING="$FILE"
+
+[ -z "$FILE" ] && notify "nothing found" || /lounge/www/cgi-bin/show "$FILE"

@@ -1,0 +1,157 @@
+#!/bin/bash
+#
+# LoungeMC - A content centered media center 
+#  Copyright (C) 2012 Amir Hassan <amir@viel-zu.org>
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+#
+
+function printUsage() {
+  cat 1>&2 <<EOUSAGE
+Run a player command.
+
+player <COMMAND>
+
+available commands are:
+  loadVideo <URL>
+  loadAnim <URL>
+  loadList <URL>
+
+EOUSAGE
+  exit 1
+}
+
+function mplayer_cmd {
+  ( 
+    echo "$@" > /var/run/mplayerfifo
+  ) 200>/var/lock/mplayerfifo
+}
+
+function loadStdin {
+  wmctrl -r MPlayer -b remove,hidden
+  rm -f /var/run/mplayerstdin
+  mkfifo /var/run/mplayerstdin
+  mplayer_cmd "loadfile /var/run/mplayerstdin"
+  cat > /var/run/mplayerstdin
+}
+
+function loadVideo() {
+  (
+    flock -n 200
+    wmctrl -r MPlayer -b remove,hidden
+    mplayer_cmd "loop 1" 
+    mplayer_cmd "loadfile $1"
+  ) 200>/var/lock/mplayer
+}
+
+function loadList() {
+  (
+    flock -n 200
+    wmctrl -r MPlayer -b remove,hidden
+    mplayer_cmd "loop 1" 
+    mplayer_cmd "loadlist $1"
+  ) 200>/var/lock/mplayer
+}
+
+function loadAnim() {
+  (
+    flock -n 200
+    wmctrl -r MPlayer -b remove,hidden
+    mplayer_cmd "loop 0" 
+    mplayer_cmd "loadfile $1"
+  ) 200>/var/lock/mplayer
+}
+
+function previous() {
+  (
+    flock -n 200
+    wmctrl -r MPlayer -b remove,hidden
+    mplayer_cmd "pt_step -1" 
+  ) 200>/var/lock/mplayer
+}
+
+function next() {
+  (
+    flock -n 200
+    wmctrl -r MPlayer -b remove,hidden
+    mplayer_cmd "pt_step 1" 
+  ) 200>/var/lock/mplayer
+}
+
+function forward() {
+  (
+    flock -n 200
+    mplayer_cmd "seek +10" 
+  ) 200>/var/lock/mplayer
+}
+
+function forwardMore() {
+  (
+    flock -n 200
+    mplayer_cmd "seek +60"
+  ) 200>/var/lock/mplayer
+}
+
+
+function rewind() {
+  (
+    flock -n 200
+    mplayer_cmd "seek -10" 
+  ) 200>/var/lock/mplayer
+}
+
+function rewindMore() {
+  (
+    flock -n 200
+    mplayer_cmd "seek -60"
+  ) 200>/var/lock/mplayer
+}
+
+function pause() {
+  (
+    flock -n 200
+    mplayer_cmd "pause"
+  ) 200>/var/lock/mplayer
+}
+
+function stop() {
+  (
+    flock -n 200
+    mplayer_cmd "stop"
+  ) 200>/var/lock/mplayer
+}
+
+function hide() {
+  (
+    flock -n 200
+    wmctrl -r MPlayer -b add,hidden
+  ) 200>/var/lock/mplayer
+}
+
+function osd() {
+  (
+    flock -n 200
+    mplayer_cmd "osd 1" 
+  ) 200>/var/lock/mplayer
+}
+
+function subtitle() {
+  (
+    flock -n 200
+    mplayer_cmd "sub_visibility 1" 
+  ) 200>/var/lock/mplayer
+}
+
+"$1" "$2"

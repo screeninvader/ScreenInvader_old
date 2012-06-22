@@ -1,0 +1,3 @@
+updatedb.loungemc  --prunepaths='' --prunefs='/' --netpaths='' --findoptions='-type f \( -iname "*png" -o -iname "*jpg" -o -iname "*jpeg" -o -iname "*svg" -o -iname "*gif" -o -iname "*bmp" -o -iname "*pnm" -o -iname "*ppm" \)' --output="/lounge/image.db" --localpaths="/share/"
+
+

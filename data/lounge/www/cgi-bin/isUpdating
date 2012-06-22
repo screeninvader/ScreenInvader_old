@@ -22,7 +22,7 @@
 
 . /lounge/bin/initcgi "text/plain"
 
-[ "`ps -ef | fgrep updatedb.findutils | wc -l`" -gt 1 ] && echo true || echo false
+[ "`ps -ef | fgrep updatedb.loungemc | wc -l`" -gt 1 ] && echo true || echo false
 
 
 

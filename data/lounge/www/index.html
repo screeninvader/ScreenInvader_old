@@ -62,7 +62,8 @@
   <div class="panel-columm">
     <div>
       <div id="show_panel"  style="padding-top 10px;"></div>
-      <div id="upload_panel"  style="padding-top: 10px;"></div>
+      <div id="find_panel"  style="padding-top 10px;"></div>
+			<div id="upload_panel"  style="padding-top: 10px;"></div>
     </div>
     <div>
       <div id="player_panel"  style="padding-top: 10px;"></div>
@@ -72,7 +73,8 @@
 <div id="sound_panel" class="panel-column"  style="padding-top: 10px"></Div>
 </div>
 <div id="cleanup_panel" style="margin: 10px"></div>
-  </div>
+<span id="update-library" onclick="$.get('cgi-bin/updatelibrary'); checkUpdating();" class="button up">Update Library</span>
+	</div>
   Bookmarklet: <a id="bookmarklet" title="Post current web content to the LoungeControl" href="" style="color:orange;">Lounge it!</a>
  </div>
 </div>
