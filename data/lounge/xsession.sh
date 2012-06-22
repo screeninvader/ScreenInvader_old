@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# LoungeMC - A content centered media center 
+# LoungeMC - A content centered media center
 #  Copyright (C) 2012 Amir Hassan <amir@viel-zu.org>
 #
 # This program is free software; you can redistribute it and/or modify
@@ -24,7 +24,7 @@ xhost + &
 xset dpms force on
 sudo -u lounge rm -f /var/run/mplayerfifo
 sudo -u lounge mkfifo /var/run/mplayerfifo
-sudo -u lounge /usr/bin/mplayer -idle -input file=/var/run/mplayerfifo & 
+sudo -u lounge bash -c "while [ 0 ]; do sleep 1; /usr/bin/mplayer -idle -input file=/var/run/mplayerfifo; done" &
 nice -n19 midori -c /lounge/.config/midori_mpdstat/ --class="MPDstat" --name="MPDstat" http://localhost/mpdstat.html &
+sudo -u lounge bash -c "sleep 1; xdotool mousemove 1900 1200" &
 sudo -u lounge awesome
-sudo -u lounge xdotool mousemove 1900 1200
