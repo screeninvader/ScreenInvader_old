@@ -22,6 +22,9 @@ export DISPLAY=:0
 setterm -blank 0 -powersave off -powerdown 0 &
 xhost + &
 xset dpms force on
+sudo -u lounge rm -f /var/run/mplayerfifo
+sudo -u lounge mkfifo /var/run/mplayerfifo
+sudo -u lounge /usr/bin/mplayer -idle -input file=/var/run/mplayerfifo & 
 nice -n19 midori -c /lounge/.config/midori_mpdstat/ --class="MPDstat" --name="MPDstat" http://localhost/mpdstat.html &
 sudo -u lounge awesome
-
+sudo -u lounge xdotool mousemove 1900 1200

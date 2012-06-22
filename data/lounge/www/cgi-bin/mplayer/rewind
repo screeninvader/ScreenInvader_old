@@ -22,4 +22,4 @@
 
 export DISPLAY=:0
 /lounge/bin/notify "rewind" 1
-xdotool key Left
+player rewind

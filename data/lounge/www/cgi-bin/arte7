@@ -29,10 +29,9 @@ notify "loading arte+7..."
 [ -z "$QUERY_STRING" ] && QUERY_STRING="$@"
 
 (
-
 function playUrl() {
   notify "playing arte+7"
-  mplayer "$1"
+  player loadVideo "$1"
   disown
 }
 

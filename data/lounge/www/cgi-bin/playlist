@@ -24,6 +24,6 @@
 ./reset
 [ -z "$QUERY_STRING" ] && QUERY_STRING="$@";
 notify "playling list... `basename "$QUERY_STRING"`"
-mplayer-playlist "$QUERY_STRING"
+player loadList "$QUERY_STRING"
 
 

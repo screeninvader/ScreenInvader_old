@@ -39,17 +39,8 @@ function playVideoFromCSV() {
   URL="`echo "$1" | cut -d'"' -f6`"
   notify "playing: $TITLE"
 #  addToHistory
-  mplayer.video "$URL"
+  player loadVideo "$URL"
   disown
-}
-
-function playVideoFromCSVB() {
-  TITLE="`echo "$1" | cut -d'"' -f2`"
-  URL="`echo "$1" | cut -d'"' -f6`"
-  notify "playing: $TITLE"
-#  addToHistory
-  mplayer.block "$URL"
- [ $? != 0 ] && exit 1; 
 }
 
 CSV="`getCliveCSV "$QUERY_STRING"`"
@@ -76,20 +67,6 @@ else
   notify "failed"
 fi
 
-}
-
-function playB() {
-ALL=
-for line in $1; do
-  CSV="`getCliveCSV "$line"`"
-  ALL="$ALL `echo $CSV |cut -d'"' -f6`"
-done
-  if [ -n "$ALL" ]; then
-    notify "playing"
-    mplayer.playlist "$ALL"
-  else
-    notify "failed"
-  fi
 }
 
 #if [ -n "`echo "$QUERY_STRING" | fgrep "list="`" ]; then

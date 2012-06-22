@@ -22,4 +22,4 @@
 
 export DISPLAY=:0
 /lounge/bin/notify "forward more" 1
-xdotool key Up
+player forwardMore

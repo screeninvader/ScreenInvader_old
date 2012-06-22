@@ -22,7 +22,7 @@
 
 . /lounge/bin/initcgi "text/html"
 ./reset
-
+player hide
 [ -z "$QUERY_STRING" ] && QUERY_STRING="$@"
 notify "loading image... `basename "$QUERY_STRING"`"
 (

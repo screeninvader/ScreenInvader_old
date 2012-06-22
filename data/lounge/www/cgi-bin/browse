@@ -23,7 +23,7 @@
 
 notify "showing web page: $@" 3
 ./reset
-killall mplayer &>/dev/null
+player hide
 killall feh &>/dev/null
 export MOZ_PLUGIN_PATH="/usr/lib/flashplugin-nonfree/"
 

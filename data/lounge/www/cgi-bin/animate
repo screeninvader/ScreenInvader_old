@@ -22,11 +22,10 @@
 . /lounge/bin/initcgi "text/html"
 
 ./reset
-(
 killall -9 feh
-killall -9 midori 
+killall -9 midori
+
 [ -z "$QUERY_STRING" ] && QUERY_STRING="$@";
 notify "playling gif... `basename "$QUERY_STRING"`"
-mplayer.animate "$QUERY_STRING"
-) &>/dev/null
+player loadAnim "$QUERY_STRING"
 

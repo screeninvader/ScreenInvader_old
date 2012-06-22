@@ -25,6 +25,5 @@
 
 [ -z "$QUERY_STRING" ] && QUERY_STRING="$@";
 notify "playling video... `basename "$QUERY_STRING"`"
-mpc pause &> /dev/null
-cat | sed "1,4d" | bash -c "mplayer -fs -; mpc play;" &> /dev/null  &
+cat | sed "1,4d" | player loadStdin
 disown
