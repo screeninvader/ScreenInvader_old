@@ -1,0 +1,8 @@
+#!/bin/bash
+
+. /lounge/bin/initcgi "text/plain"
+
+treble=`sound/getTreble | sed '1,2d'`
+newtreble=$[ $treble + 5 ];
+sound/setTreble "$newtreble" &> /dev/null
+echo $newtreble

@@ -1,0 +1,5 @@
+#!/bin/bash
+
+. /lounge/bin/initcgi "text/plain"
+
+./requests/bass "$1" | ./post > /dev/null

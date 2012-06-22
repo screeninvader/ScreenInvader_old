@@ -1,0 +1,32 @@
+#!/bin/bash
+
+. /lounge/bin/initcgi "text/plain"
+
+input="`cat "/lounge/www/cgi-bin/requests/getinput" | ./post | grep "^<" | sed 's/.*<Input_Sel>//g' | sed 's/<\/Input_Sel>.*//g'`"
+
+case $input in
+    "AUDIO1" )
+      echo 1
+    ;;
+    "AUDIO2" )
+      echo 2
+    ;;
+    "AV5" )
+      echo 3
+    ;;
+    "AV6" )
+      echo 4
+    ;;
+    "Bluetooth" )
+      echo 5
+    ;;
+    "USB")
+      echo 6
+    ;;
+    "V-AUX")
+      echo 7
+    ;;
+
+esac
+
+
