@@ -20,5 +20,5 @@
 # same will not be seen as the first read key seen takes
 # precedence.
 #
-/var/autofs/removable   /etc/auto.removable     --timeout=2
-/var/autofs/smb		/etc/auto.smb		--timeout=60
+/share/removable   /etc/auto.removable     --timeout=2
+/share/smb		/etc/auto.smb		--timeout=60
