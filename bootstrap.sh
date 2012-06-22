@@ -24,6 +24,8 @@ VIDEO_DRIVERS="xserver-xorg-video-all xserver-xorg-video-ati xserver-xorg-video-
 
 PKG_WHITE="debian-multimedia-keyring keyboard-configuration debconf-english sudo dialog mplayer-nogui thttpd feh mpd mpc xdotool linux-image-686 alsa-utils awesome psmisc clive midori dos2unix curl dropbear xinit autofs smbfs mingetty xserver-xorg xserver-xorg-input-kbd xserver-xorg-input-mouse x11-xserver-utils"
 
+PKG_EXTRA="vim rsync less"
+
 PKG_BLACK="info manpages rsyslog tasksel tasksel-data aptitude locales"
 
 FILES_BLACK="/var/cache/apt/pkgcache.bin /var/cache/apt/srcpkgcache.bin /usr/share/man/* /usr/share/locale/* /usr/share/doc/* /usr/share/zoneinfo/* /usr/share/icons/* /root/.bash_history /lib/modules/*/kernel/drivers/net/wireless/* /lib/modules/*/kernel/drivers/infiniband/* /lib/modules/*/kernel/drivers/bluetooth/* /lib/modules/*/kernel/drivers/media/* /var/cache/debconf*"
@@ -41,7 +43,7 @@ NOINSTALL=
 NODEBOOT=
 CHROOT_DIR=
 CHRT=
-
+DEBUG=
 
 function printUsage() {
   cat 1>&2 <<EOUSAGE
@@ -55,6 +57,7 @@ Options:"
   -i        Don't configure and install packages
   -d        Don't debootstrap
   -u        Combined -d and -i
+  -x        Install extra packages for debugging
 EOUSAGE
   exit 1
 }
@@ -218,7 +221,7 @@ function doFreeChroot() {
 
 ###### main
 
-while getopts 'a:l:p:idu' c
+while getopts 'a:l:p:idux' c
 do
   case $c in
     a) ARCH="$OPTARG";;
@@ -227,6 +230,7 @@ do
     i) NOINSTALL="YES";;
     d) NODEBOOT="YES";;
     u) NOINSTALL="YES"; NODEBOOT="YES";;
+    x) INSTALL_EXTRA="YES";;
     \?) printUsage;;
   esac
 done
@@ -243,7 +247,9 @@ if [ $# -ne 1 ]; then
   printUsage
 else
   printVideoDrivers
+  
   PKG_WHITE="$PKG_WHITE $(askVideoDriver)"
+  [ -n "$INSTALL_EXTRA" ] && PKG_WHITE="$PKG_WHITE $PKG_EXTRA" 
 
   if [ -z "$NODEBOOT" ]; then 
     doDebootstrap
