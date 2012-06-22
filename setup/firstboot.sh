@@ -140,7 +140,7 @@ function rebootConf(){
   if askDoReboot; then
     return 0
   else
-   doConf
+   doConf "hostname"
   fi
 }
 
