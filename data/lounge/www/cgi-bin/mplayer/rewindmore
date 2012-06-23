@@ -22,4 +22,4 @@
 
 export DISPLAY=:0
 /lounge/bin/notify "rewind more" 1
-player rewindMore
+/lounge/bin/player rewindMore

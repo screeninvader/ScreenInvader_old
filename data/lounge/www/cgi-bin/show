@@ -147,7 +147,7 @@ else
     ;;
   esac
 fi
-) &>/dev/null &
+) &>/tmp/show &
 
 cat /lounge/www/close.html
 
