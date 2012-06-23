@@ -39,7 +39,7 @@ function playVideoFromCSV() {
   URL="`echo "$1" | cut -d'"' -f6`"
   notify "playing: $TITLE"
 #  addToHistory
-  player loadVideo "$URL"
+  player loadVideo "$URL" "$TITLE"
   disown
 }
 
@@ -76,4 +76,4 @@ fi
 #else
  play "$QUERY_STRING"
 #fi
-) &> /dev/null
+) &> /tmp/youtube

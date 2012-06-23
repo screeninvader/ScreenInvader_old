@@ -20,10 +20,8 @@
 
 
 . /lounge/bin/initcgi "text/html"
-
-./clean
+./reset
 
 [ -z "$QUERY_STRING" ] && QUERY_STRING="$@";
 notify "playling video... `basename "$QUERY_STRING"`"
 cat | sed "1,4d" | player loadStdin
-disown

@@ -20,6 +20,12 @@
 
 
 
-export DISPLAY=:0
-/lounge/bin/notify "toggle pause" 1
-/lounge/bin/player pause
+. /lounge/bin/initcgi "text/html"
+
+echo -n "" > /var/run/player/playlist
+echo -n "" > /var/run/player/playlist_titles
+echo 0 > /var/run/player/playlist_idx
+
+player stop
+player hide
+

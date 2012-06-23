@@ -20,6 +20,7 @@
 
 
 
-export DISPLAY=:0
-/lounge/bin/notify "toggle pause" 1
-/lounge/bin/player pause
+. /lounge/bin/initcgi "text/html"
+
+player jump "$QUERY_STRING" &> /tmp/jump
+

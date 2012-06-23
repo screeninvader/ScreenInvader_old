@@ -1,0 +1,50 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+   "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+		<title>lounge controller 2.0</title>
+		<script type="text/javascript" src="_inc/js/jquery.min.js"></script>
+                <script type="text/javascript" src="_inc/js/lounge.js"></script>
+		<link rel="stylesheet" type="text/css" href="_inc/css/lounge.css">
+<script type="text/javascript">
+   function loadPlaylist() {
+     $.get('cgi-bin/playlist', function(data) {
+          $('#playlist').html(data);
+     }, "text");
+
+   }
+   function updateQueueToggle() {
+     $.get('cgi-bin/isQueueMode', function(data) {
+        if(data.charAt(0) == 'f') {
+          $('#queuetoggle').html('Post Mode');
+        } else if (data.charAt(0) == 't') {
+          $('#queuetoggle').html('Queue Mode');
+        }
+     }, "text");
+   }
+
+  $('.button').live('mousedown', function(){
+   $(this).addClass('down');
+   $(this).removeClass('up');
+  }).live('mouseup', function(){
+   $(this).addClass('up');
+   $(this).removeClass('down');
+  })
+
+   loadPlaylist
+     setInterval("loadPlaylist()", 1000);  
+     setInterval("updateQueueToggle()", 1000);
+
+</script>
+	</head>
+	<body style="padding: 0; margin: 0; background-color: #000;">
+        <table style="width:100px;">
+	<tr>
+		<td id="queuetoggle" onclick="$.get('cgi-bin/toggleQueue'); updateQueueToggle();" class="button up">Queue Mode</td>
+		<td id="clearplaylist" onclick="$.get('cgi-bin/playlist_clear');" class="button up">Clear Playlist</td>
+	<tr>
+		<td colspan="2" style="text-align:left;" id="playlist"></td>
+	</tr></table>
+	</body>
+</html>

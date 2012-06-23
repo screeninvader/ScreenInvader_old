@@ -20,6 +20,10 @@
 
 
 
-export DISPLAY=:0
-/lounge/bin/notify "toggle pause" 1
-/lounge/bin/player pause
+. /lounge/bin/initcgi "text/html"
+
+if [ -f /var/run/player/queuemode ]; then
+  echo "true"
+else
+  echo "false"
+fi

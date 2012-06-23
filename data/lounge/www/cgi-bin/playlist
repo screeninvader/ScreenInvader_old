@@ -20,10 +20,21 @@
 
 
 
-. /lounge/bin/initcgi "text/html"
-./reset
-[ -z "$QUERY_STRING" ] && QUERY_STRING="$@";
-notify "playling list... `basename "$QUERY_STRING"`"
-player loadList "$QUERY_STRING"
+. /lounge/bin/initcgi "text/plain"
+
+i=0
+
+if [ ! -s /var/run/player/playlist ]; then
+  echo "<span style=\"color: lightgrey; font-weight: bold;\">(playlist empty)</span>"
+fi
+
+cat /var/run/player/playlist_titles | while read line; do
+  item="`sed "$[$i+1]!d" /var/run/player/playlist`"
+  current="`cat /var/run/player/currentpath`"
+  color="white"
+  [ "$item" == "$current" ] && color="orange"
+  echo "<a style=\"color: $color;\" href=\"javascript:(function(){$.get('cgi-bin/playlist_jump?$i');})()\">$line</a></br>"
+  i=$[ $i + 1 ]
+done
 
 
