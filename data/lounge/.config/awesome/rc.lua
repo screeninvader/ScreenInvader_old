@@ -198,8 +198,6 @@ awful.rules.rules = {
                      buttons = clientbuttons } },
     { rule = { class = "Mirage" },
       properties = { ontop = true, focus = true, floating = true } },
-    { rule = { class = "MPlayer" },
-      properties = { focus = true, floating = true } },
     { rule = { class = "gromit" },
       properties = { focus = false, floating = true } },
     { rule = { class = "Browser" },
