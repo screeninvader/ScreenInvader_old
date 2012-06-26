@@ -29,12 +29,12 @@ if [ ! -s /var/run/player/playlist ]; then
 fi
 
 cat /var/run/player/playlist_titles | while read line; do
+  title="`echo $line | sed -e 's/\([A-Z]\)/ \1/g' -e 's/^ \([a-z]\)/\1/g'`"
   item="`sed "$[$i+1]!d" /var/run/player/playlist`"
   current="`cat /var/run/player/currentpath`"
   color="white"
   [ "$item" == "$current" ] && color="orange"
-  echo "<a style=\"color: $color;\" href=\"javascript:(function(){$.get('cgi-bin/playlist_jump?$i');})()\">$line</a></br>"
+  echo "<a style=\"color: $color;\" href=\"javascript:(function(){$.get('cgi-bin/playlist_jump?$i');})()\">$title</a></br>"
   i=$[ $i + 1 ]
 done
-
 
