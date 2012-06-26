@@ -54,11 +54,24 @@
      }, "text");
 
    }
+   function updateQueueToggle() {
+     $.get('cgi-bin/isQueueMode', function(data) {
+        if(data.charAt(0) == 'f') {
+          $('#queuetoggle').html('Post Mode');
+        } else if (data.charAt(0) == 't') {
+          $('#queuetoggle').html('Queue Mode');
+        }
+     }, "text");
+   }
+
+     setInterval("updateQueueToggle()", 1000);
      setInterval("checkUpdating()", 5000);  
 </script>
 </head>
 <body>
-<div style="display: table;">
+<table style="background-color:#000;">
+<tr><td style="width:0%;background-color:#000;">
+<div style="display: table; width:100px;">
   <div class="panel-columm">
     <div>
       <div id="show_panel"  style="padding-top 10px;"></div>
@@ -68,17 +81,32 @@
     <div>
       <div id="player_panel"  style="padding-top: 10px;"></div>
       <div id="navigate_panel"  style="padding-top: 10px;"></div>
-    </div>
+		</div>
   <div class="panel-column"> 
 <div id="sound_panel" class="panel-column"  style="padding-top: 10px"></Div>
+<div id="switch_panel"  style="padding-top: 10px;"></div>
 </div>
 <div id="cleanup_panel" style="margin: 10px"></div>
 <span id="update-library" onclick="$.get('cgi-bin/updatelibrary'); checkUpdating();" class="button up">Update Library</span>
+<span id="remove-overlay" onclick="$.get('cgi-bin/removeoverlay'); " class="button up">Remove Overlay</span>
 	</div>
   Bookmarklet: <a id="bookmarklet" title="Post current web content to the LoungeControl" href="" style="color:orange;">Lounge it!</a>
  </div>
+<td style="width:100%;height:100%;">
+<table><tr><td>
+<span id="queuetoggle" onclick="$.get('cgi-bin/toggleQueue'); updateQueueToggle();" class="button up">Queue Mode</span>
+</td><td>
+<span id="clearplaylist" onclick="$.get('cgi-bin/playlist_clear');" class="button up">Clear Playlist</span>
+</td></tr>
+<tr><td colspan=2 width="100%" style="padding-left: 0px; padding-right: 13px; ">
+<iframe frameborder="0" src="playlist.html" width="100%" height="500" name="playlistframe" style="border: 1px inset #fff;">
+</iframe>
+</td></tr>
+</table>
 </div>
-</br>
+</td></tr>
+</table>
+
 </body>
 </html>
 
