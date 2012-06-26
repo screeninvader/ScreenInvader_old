@@ -25,7 +25,3 @@
 echo -n "" > /var/run/player/playlist
 echo -n "" > /var/run/player/playlist_titles
 echo 0 > /var/run/player/playlist_idx
-
-player stop
-player hide
-

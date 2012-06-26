@@ -21,14 +21,12 @@
 
 
 . /lounge/bin/initcgi "text/html"
-./reset
-#player hide
+
 set -x
 [ -z "$QUERY_STRING" ] && QUERY_STRING="$@"
 notify "loading image... `basename "$QUERY_STRING"`"
-(
-  feh -F --image-bg black --auto-zoom "$QUERY_STRING" &
-  disown
-)
-
+tmpimg=`mktemp`
+wget -O "$tmpimg" "$QUERY_STRING"
+feh -F --image-bg black --auto-zoom "$tmpimg" &
+disown
 exit 0

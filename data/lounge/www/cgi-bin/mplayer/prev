@@ -22,4 +22,4 @@
 
 export DISPLAY=:0
 /lounge/bin/notify "previous track" 1
-/lounge/bin/player previous
+/lounge/bin/player previous &> /tmp/previous
