@@ -37,14 +37,20 @@ function path_changed() {
   echo "$path" > /var/run/player/currentpath
   if [ "$path" == "(null)" ]; then
     idx="`cat "/var/run/player/playlist_idx"`"
-    len="`wc -l /var/run/player/playlist`"
-    if [ $idx -gt $len ]; then
+    [ -z "$idx" ] && idx=0
+    len="`wc -l /var/run/player/playlist | cut -d\" \" -f1`"
+
+    if [ $idx -lt $[ $len - 1 ] ]; then
       player jump $idx
     else
-      player hide
+      player stop
       mpc play
     fi
-  fi    
+  fi
+}
+
+function eotrack() {
+  player mplayer_cmd "get_property path"
 }
 
 function sotrack() {
@@ -53,7 +59,7 @@ function sotrack() {
 }
 
 cat | while read line; do
-   contains "$line" "$EOTRACK" && player mplayer_cmd "get_property path" 
+   contains "$line" "$EOTRACK" && eotrack
    contains "$line" "$PATH_CHANGED" && path_changed "$line"
    contains "$line" "$SOTRACK" && sotrack
 done

@@ -43,12 +43,16 @@ PLAYLIST_IDX="$RUN_DIR/playlist_idx"
 MPLAYERSTDIN="$RUN_DIR/mplayerstdin"
 
 function mplayer_start {
-  rm -rf "$RUN_DIR"
+  rm -f "$RUN_DIR/cmdfifo"
+  rm -f "$RUN_DIR/cmdlock"
+  rm -f "$RUN_DIR/playlist_idx"
+  rm -f "$RUN_DIR/mplayerstdin"
+
   mkdir -p "$RUN_DIR"
   mkfifo "$CMD_FIFO";
   while [ 0 ]; do 
     sleep 1; 
-   bash -c "/usr/bin/mplayer -idle -input file="$CMD_FIFO" 2>&1 | tee /tmp/mplayer | $CALLBACK &> /tmp/callback"
+    bash -c "/usr/bin/mplayer -idle -input file="$CMD_FIFO" 2>&1 | tee /tmp/mplayer | $CALLBACK &> /tmp/callback"
   done
 }
 
@@ -73,15 +77,18 @@ function hideText() {
   ) 200>$CMD_LOCK
 }
 
-
 function jump() {
+(
+  flock -x 200
   (
     flock -x 200
-    wmctrl -r MPlayer -b remove,hidden
     mplayer_cmd "loadlist  \"$PLAYLIST\""
     [ "$1" -gt 0 ] && mplayer_cmd "pt_step $1"
     echo "$1" >  "$PLAYLIST_IDX"
+  awsetbg -c /lounge/www/_inc/img/mpd_logo.png
+    touch /var/run/player/playlist
   ) 200>$CMD_LOCK
+) 200> /var/run/player/playlist_lock
 }
 
 function isQueueMode() {
@@ -100,35 +107,42 @@ function toggleQueueMode() {
 function playlistAdd() {
   playlistEnqueue "$1" "$2"
 
+  (
+  flock -x 200
   if ! isQueueMode; then
     mplayer_cmd "loadlist  \"$PLAYLIST\""
     echo $[ `wc -l "$PLAYLIST" | cut -d" " -f1` - 1] > "$PLAYLIST_IDX"
     idx="`cat $PLAYLIST_IDX`"
     [ $idx -gt 0 ] && mplayer_cmd "pt_step $idx"
   fi
+  ) 200> /var/run/player/playlist_lock
 }
 
 function playlistEnqueue() {
   path="$1"
   title="$2"
   [ -z "$title" ] && title="(no title)"
+  (
+  flock -x 200
   echo "$path" >> "$PLAYLIST"
   echo "$title" >> "$PLAYLIST_TITLES"
+  ) 200>/var/run/player/playlist_lock
 }
 
 function loadStdin() {
-  wmctrl -r MPlayer -b remove,hidden
+  (
+  flock -x 200
   rm -f "$MPLAYERSTDIN"
   mkfifo "$MPLAYERSTDIN"
   mplayer_cmd "loadfile \"$MPLAYERSTDIN\""
   cat > "$MPLAYERSTDIN"
   mplayer_cmd "pt_step `cat "$PLAYLIST_IDX"`"
+  ) 200> /var/run/player/playlist_lock
 }
 
 function loadVideo() {
   (
     flock -x 200
-    wmctrl -r MPlayer -b remove,hidden
     playlistAdd "$1" "$2"
   ) 200>$CMD_LOCK
 }
@@ -136,7 +150,6 @@ function loadVideo() {
 function enqueueVideo() {
   (
     flock -x 200
-    wmctrl -r MPlayer -b remove,hidden
     playlistAdd "$1" "$2"
   ) 200>$CMD_LOCK
 }
@@ -144,7 +157,6 @@ function enqueueVideo() {
 function loadList() {
   (
     flock -x 200
-    wmctrl -r MPlayer -b remove,hidden
     mplayer_cmd "loadlist $1"
   ) 200>$CMD_LOCK
 }
@@ -152,7 +164,6 @@ function loadList() {
 function loadAnim() {
   (
     flock -x 200
-    wmctrl -r MPlayer -b remove,hidden
     playlistAdd "$1" "$2"
   ) 200>$CMD_LOCK
 }
@@ -160,28 +171,41 @@ function loadAnim() {
 function loadAudio() {
   (
     flock -x 200
-    wmctrl -r MPlayer -b add,hidden
     playlistAdd "$1" "$2"
   ) 200>$CMD_LOCK
 }
 
 function previous() {
+(
+  flock -x 200
   (
     flock -x 200
-    wmctrl -r MPlayer -b remove,hidden
-    echo `$[ `cat "$PLAYLIST_IDX"` -  1 ]` > "$PLAYLIST_IDX"
-    mplayer_cmd "pt_step -1" 
+    idx=$[ `cat $PLAYLIST_IDX` - 1 ]
+    [ -z "$idx" ] && idx=0
+    mplayer_cmd "loadlist  \"$PLAYLIST\""
+    [ "$idx" -gt 0 ] && mplayer_cmd "pt_step $idx"
+    echo "$idx" >  "$PLAYLIST_IDX"
+    touch /var/run/player/playlist
   ) 200>$CMD_LOCK
+) 200> /var/run/player/playlist_lock
+
 }
 
 function next() {
+(   
+  flock -x 200
   (
     flock -x 200
-    wmctrl -r MPlayer -b remove,hidden
-    idx=`cat "$PLAYLIST_IDX"`
-    echo "$[ $idx  +  1 ]" > "$PLAYLIST_IDX"
-    mplayer_cmd "pt_step 1" 
+    idx=$[ `cat $PLAYLIST_IDX` + 1 ]
+    [ -z "$idx" ] && idx=0
+    mplayer_cmd "loadlist  \"$PLAYLIST\""
+    [ "$idx" -gt 0 ] && mplayer_cmd "pt_step $idx"
+    echo "$idx" >  "$PLAYLIST_IDX"
+    touch /var/run/player/playlist
   ) 200>$CMD_LOCK
+) 200> /var/run/player/playlist_lock
+
+
 }
 
 function forward() {
@@ -223,14 +247,7 @@ function stop() {
   (
     flock -x 200
     mplayer_cmd "stop"
-  ) 200>$CMD_LOCK
-}
-
-function hide() {
-  (
-    flock -x 200
-    mplayer_cmd "stop"
-    wmctrl -r MPlayer -b add,hidden
+    awsetbg -c /lounge/www/_inc/img/mpd_logo.png
   ) 200>$CMD_LOCK
 }
 
