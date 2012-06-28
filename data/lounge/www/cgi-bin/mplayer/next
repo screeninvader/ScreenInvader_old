@@ -23,4 +23,4 @@
 export DISPLAY=:0
 export HOME="/lounge"
 /lounge/bin/notify "next track" 1
-/lounge/bin/player next &> /tmp/next
+/lounge/bin/player next
