@@ -77,7 +77,6 @@ function makeManualNetConf() {
 
 function makeSMBConf() {
   templates/auto_smb "$1" "$2" "$3" "$4" "$5" > /etc/auto.smb
-  ln -sf "/var/autofs/smb/$4" "/share/$4"
 }
 
 function makeInittabConf() {
