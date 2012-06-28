@@ -19,7 +19,7 @@
 #
 
 
-
+export HOME="/lounge"
 export DISPLAY=:0
 /lounge/bin/notify "rewind" 1
-player rewind
+/lounge/bin/player rewind

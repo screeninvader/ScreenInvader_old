@@ -3,20 +3,10 @@
 . /lounge/bin/initcgi "text/html"
 
 QUERY_STRING=`/lounge/www/cgi-bin/screen/isBeamermode | sed '1,2d'`
-echo $QUERY_STRING
-if [ "$QUERY_STRING" == "false" ]; then
   xset s 10800
   xset dpms 10800 0 0
   /lounge/www/cgi-bin/off
   sleep 1
   /lounge/www/cgi-bin/on
-  /lounge/www/cgi-bin/screen/setBlank true
-else
-  xset s 90
-  xset dpms 90 0 0
-  /lounge/www/cgi-bin/screen/setBlank true
-  sleep 3
-fi
-
 /lounge/www/cgi-bin/screen/setBlank false
 

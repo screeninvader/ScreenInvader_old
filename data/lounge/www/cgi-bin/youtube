@@ -39,24 +39,11 @@ function playVideoFromCSV() {
   URL="`echo "$1" | cut -d'"' -f6`"
   notify "playing: $TITLE"
 #  addToHistory
-  player loadVideo "$URL"
+  player loadVideo "$URL" "$TITLE"
   disown
 }
 
 CSV="`getCliveCSV "$QUERY_STRING"`"
-
-function addToHistory() {
-  HISTORY_FILE="/tmp/youtube-history"
-  TMP_HISTORY=$HISTORY_FILE".tmp"
- 
-  if [ ! -f $HISTORY_FILE ];
-  then
-    touch $HISTORY_FILE
-  fi 
-
-  echo -e "<a href=\"$QUERY_STRING\">$TITLE</a> @ $(date) <a href="javascript:\(function\(\)\{%20window.open\(\'http://`getip`/cgi-bin/show?$QUERY_STRING\'\)\;\}\)\(\)\;">Show</a>" | cat - $HISTORY_FILE > $TMP_HISTORY && mv $TMP_HISTORY $HISTORY_FILE 
-
-}
 
 function play() {
 CSV="`getCliveCSV "$1"`"
@@ -76,4 +63,4 @@ fi
 #else
  play "$QUERY_STRING"
 #fi
-) &> /dev/null
+) &> /tmp/youtube

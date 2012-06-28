@@ -1,0 +1,52 @@
+
+Please send any commentry to: xosd@ignavus.net
+
+BSD Notes:
+
+I've heard that to compile xodf under BSD you have to include
+getopt.c, getopt1.c, and getopt.h with the other files...BSD doesn't
+have these in its default distro.
+
+
+
+VERSION 2 notes:
+
+
+I added and removed some of the header functions. In particular, xosd_init
+is now deprecated (but still works) and has been replaced by xosd_create.
+For naming consistency, I also did the same for xosd_uninit. It's
+deprecated and replaced by xosd_destroy.
+
+Other new features:
+  xosd_set_offset
+has been replaced by
+  xosd_set_horizontal_offset
+  xosd_set_vertical_offset
+
+and we can now specify alignment to be top, middle, bottom and
+left,center,right.
+
+
+
+VERSION 1 notes:
+
+There are several modules here.
+
+xosd.c & xosd.h combine to form (VOLTRON!) libxosd.so, which is the main
+unit
+
+xmms_osd.c becomes libxmms_osd.so which is an xmms plugin to display various
+things whenever they change (volume, track, paused/shuffle/repeat etc...)
+
+testprog.c is a simple test program, not supposed to do anything useful,
+but handy if you're having problems getting it going.
+
+osd_cat.c is another simple program, it simply reads from stdin and displays
+it using osd. All its options are hardcoded, its not supposed to be used for
+anything too smart, I am hoping someone will code a replacement for me :)
+
+NB: The first thing to check is that you have a proper font #define'd, use
+xfontsel to find a suitable one
+
+NBB: xosd is written in C99, which means you can't complain about my
+use of C++ style comments.

@@ -17,7 +17,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-
+set -x
 function printUsage() {
   cat 1>&2 <<EOUSAGE
 Run a player command.
@@ -33,125 +33,297 @@ EOUSAGE
   exit 1
 }
 
-function mplayer_cmd {
-  ( 
-    echo "$@" > /var/run/mplayerfifo
-  ) 200>/var/lock/mplayerfifo
+RUN_DIR="/var/run/player"
+CMD_FIFO="$RUN_DIR/cmdfifo"
+CMD_LOCK="$RUN_DIR/cmdlock"
+PLAYLIST="$RUN_DIR/playlist"
+PLAYLIST_TITLES="$RUN_DIR/playlist_titles"
+PLAYLIST_IDX="$RUN_DIR/playlist_idx"
+PLAYLIST_LOCK="$RUN_DIR/playlist_lock"
+MPLAYERSTDIN="$RUN_DIR/mplayerstdin"
+
+function refresh() {
+  feh --bg-center /lounge/www/_inc/img/mpd_logo.png
 }
 
-function loadStdin {
-  wmctrl -r MPlayer -b remove,hidden
-  rm -f /var/run/mplayerstdin
-  mkfifo /var/run/mplayerstdin
-  mplayer_cmd "loadfile /var/run/mplayerstdin"
-  cat > /var/run/mplayerstdin
+function mplayer_start {
+  rm -f "$RUN_DIR/cmdfifo"
+  rm -f "$RUN_DIR/cmdlock"
+  rm -f "$RUN_DIR/playlist_idx"
+  rm -f "$RUN_DIR/mplayerstdin"
+  rm -f "$RUN_DIR/playlist_lock"
+
+  mkdir -p "$RUN_DIR"
+  mkfifo "$CMD_FIFO";
+  while [ 0 ]; do 
+    sleep 1; 
+#    bash -c "/usr/bin/mplayer -idle -vf bmovl=0:0:/var/run/player/overlay_fifo -input file="$CMD_FIFO" 2>&1 | tee /tmp/mplayer | $CALLBACK &> /tmp/callback"
+    bash -c "/usr/bin/mplayer -idle -input file="$CMD_FIFO" 2>&1 | tee /tmp/mplayer | /lounge/bin/player callback &> /tmp/callback"
+ done
+}
+
+function mplayer_cmd {
+  echo "$@" > "$CMD_FIFO"
+}
+
+function showText() {
+  (
+    flock -x 200
+    text="$1"
+    duration="$2"
+    [ -z "$duration" ] && duration=1000000000 
+    mplayer_cmd "osd_show_text \"$text\" $duration 1"
+  ) 200>$CMD_LOCK
+}
+
+function hideText() {
+  (
+    flock -x 200
+    mplayer_cmd "osd_show_text \"\" $duration 0 0"
+  ) 200>$CMD_LOCK
+}
+
+function jump() {
+(
+  flock -x 300
+  (
+    flock -x 200
+    mplayer_cmd "loadlist  \"$PLAYLIST\""
+    [ "$1" -gt 0 ] && mplayer_cmd "pt_step $1"
+    echo "$1" >  "$PLAYLIST_IDX"
+    touch /var/run/player/playlist
+  ) 200>$CMD_LOCK
+) 300>$PLAYLIST_LOCK
+}
+
+function isQueueMode() {
+  [ -f /var/run/player/queuemode ] && return 0;
+  return 1;
+}
+
+function toggleQueueMode() {
+  if isQueueMode; then
+    rm /var/run/player/queuemode
+  else
+   touch /var/run/player/queuemode
+  fi
+}
+
+function playlistAdd() {
+  playlistEnqueue "$1" "$2"
+
+  (
+  flock -x 300
+  if ! isQueueMode; then
+    mplayer_cmd "loadlist  \"$PLAYLIST\""
+    echo $[ `wc -l "$PLAYLIST" | cut -d" " -f1` - 1] > "$PLAYLIST_IDX"
+    idx="`cat $PLAYLIST_IDX`"
+    [ $idx -gt 0 ] && mplayer_cmd "pt_step $idx"
+  fi
+  ) 300>$PLAYLIST_LOCK
+}
+
+function playlistEnqueue() {
+  (
+    flock -x 300
+    path="$1"
+    title="$2"
+    [ -z "$title" ] && title="(no title)"
+		echo "$path" >> "$PLAYLIST"
+    echo "$title" >> "$PLAYLIST_TITLES"
+  ) 300>$PLAYLIST_LOCK
+}
+
+function loadStdin() {
+  (
+    flock -x 200
+    rm -f "$MPLAYERSTDIN"
+    mkfifo "$MPLAYERSTDIN"
+    mplayer_cmd "loadfile \"$MPLAYERSTDIN\""
+    cat > "$MPLAYERSTDIN"
+    mplayer_cmd "pt_step `cat "$PLAYLIST_IDX"`"
+  ) 200>$CMD_LOCK
 }
 
 function loadVideo() {
   (
-    flock -n 200
-    wmctrl -r MPlayer -b remove,hidden
-    mplayer_cmd "loop 1" 
-    mplayer_cmd "loadfile $1"
-  ) 200>/var/lock/mplayer
+    flock -x 200
+    playlistAdd "$1" "$2"
+  ) 200>$CMD_LOCK
+}
+
+function enqueueVideo() {
+  (
+    flock -x 200
+    playlistAdd "$1" "$2"
+  ) 200>$CMD_LOCK
 }
 
 function loadList() {
   (
-    flock -n 200
-    wmctrl -r MPlayer -b remove,hidden
-    mplayer_cmd "loop 1" 
+    flock -x 200
     mplayer_cmd "loadlist $1"
-  ) 200>/var/lock/mplayer
+  ) 200>$CMD_LOCK
 }
 
 function loadAnim() {
   (
-    flock -n 200
-    wmctrl -r MPlayer -b remove,hidden
-    mplayer_cmd "loop 0" 
-    mplayer_cmd "loadfile $1"
-  ) 200>/var/lock/mplayer
+    flock -x 200
+    playlistAdd "$1" "$2"
+  ) 200>$CMD_LOCK
+}
+
+function loadAudio() {
+  (
+    flock -x 200
+    playlistAdd "$1" "$2"
+  ) 200>$CMD_LOCK
 }
 
 function previous() {
+(
+  flock -x 200
   (
-    flock -n 200
-    wmctrl -r MPlayer -b remove,hidden
-    mplayer_cmd "pt_step -1" 
-  ) 200>/var/lock/mplayer
+    flock -x 200
+    idx=$[ `cat $PLAYLIST_IDX` - 1 ]
+    [ -z "$idx" ] && idx=0
+    mplayer_cmd "loadlist  \"$PLAYLIST\""
+    [ "$idx" -gt 0 ] && mplayer_cmd "pt_step $idx"
+    echo "$idx" >  "$PLAYLIST_IDX"
+    touch /var/run/player/playlist
+    refresh
+  ) 200>$CMD_LOCK
+) 200> /var/run/player/playlist_lock
+
 }
 
 function next() {
+(   
+  flock -x 200
   (
-    flock -n 200
-    wmctrl -r MPlayer -b remove,hidden
-    mplayer_cmd "pt_step 1" 
-  ) 200>/var/lock/mplayer
+    flock -x 200
+    idx=$[ `cat $PLAYLIST_IDX` + 1 ]
+    [ -z "$idx" ] && idx=0
+    mplayer_cmd "loadlist  \"$PLAYLIST\""
+    [ "$idx" -gt 0 ] && mplayer_cmd "pt_step $idx"
+    echo "$idx" >  "$PLAYLIST_IDX"
+    touch /var/run/player/playlist
+    export DISPLAY=:0
+    refresh
+  ) 200>$CMD_LOCK
+) 200> /var/run/player/playlist_lock
+
+
 }
 
 function forward() {
   (
-    flock -n 200
+    flock -x 200
     mplayer_cmd "seek +10" 
-  ) 200>/var/lock/mplayer
+  ) 200>$CMD_LOCK
 }
 
 function forwardMore() {
   (
-    flock -n 200
-    mplayer_cmd "seek +60"
-  ) 200>/var/lock/mplayer
+    flock -x 200
+    mplayer_cmd "seek +300"
+  ) 200>$CMD_LOCK
 }
-
 
 function rewind() {
   (
-    flock -n 200
+    flock -x 200
     mplayer_cmd "seek -10" 
-  ) 200>/var/lock/mplayer
+  ) 200>$CMD_LOCK
 }
 
 function rewindMore() {
   (
-    flock -n 200
-    mplayer_cmd "seek -60"
-  ) 200>/var/lock/mplayer
+    flock -x 200
+    mplayer_cmd "seek -300"
+  ) 200>$CMD_LOCK
 }
 
 function pause() {
   (
-    flock -n 200
+    flock -x 200
     mplayer_cmd "pause"
-  ) 200>/var/lock/mplayer
+  ) 200>$CMD_LOCK
 }
 
 function stop() {
   (
-    flock -n 200
+    flock -x 200
     mplayer_cmd "stop"
-  ) 200>/var/lock/mplayer
-}
-
-function hide() {
-  (
-    flock -n 200
-    wmctrl -r MPlayer -b add,hidden
-  ) 200>/var/lock/mplayer
+    refresh
+  ) 200>$CMD_LOCK
 }
 
 function osd() {
   (
-    flock -n 200
+    flock -x 200
     mplayer_cmd "osd 1" 
-  ) 200>/var/lock/mplayer
+  ) 200>$CMD_LOCK
 }
 
 function subtitle() {
   (
-    flock -n 200
+    flock -x 200
     mplayer_cmd "sub_visibility 1" 
-  ) 200>/var/lock/mplayer
+  ) 200>$CMD_LOCK
 }
 
-"$1" "$2"
+##### callbacks ######
+
+SOTRACK="DEMUXER: ==> Found"
+EOTRACK="DEMUXER: DEMUXER: freeing"
+PATH_CHANGED="GLOBAL: ANS_path="
+
+function contains() {
+ if [[ "$1" == *"$2"* ]]; then
+   return 0
+ else
+   return 1
+ fi
+}
+
+function path_changed() {
+  path="`echo $1 | cut -d'=' -f2-`"
+  echo "$path" > /var/run/player/currentpath
+  if [ "$path" == "(null)" ]; then
+    idx=0
+    len=0 
+    (
+      flock -x 300
+
+      idx="`cat "/var/run/player/playlist_idx"`"
+      [ -z "$idx" ] && idx=0
+      len="`wc -l /var/run/player/playlist | cut -d\" \" -f1`"
+    ) 300>$PLAYLIST_LOCK
+    if [ $idx -lt $[ $len - 1 ] ]; then
+      jump $[ $idx + 1 ]
+    else
+      stop
+      mpc play
+    fi
+  fi
+}
+
+function eotrack() {
+  mplayer_cmd "get_property path"
+}
+
+function sotrack() {
+  mpc pause
+  mplayer_cmd "get_property path"
+}
+
+function callback() {
+  cat | while read line; do
+    contains "$line" "$EOTRACK" && eotrack
+    contains "$line" "$PATH_CHANGED" && path_changed "$line"
+    contains "$line" "$SOTRACK" && sotrack
+  done
+}
+
+"$1" "$2" "$3" "$4" "$5"

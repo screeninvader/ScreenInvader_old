@@ -19,19 +19,19 @@ function ScreenControl () {
   this.setScreen = function(on) {
     if(on.trim() == 'true') {
       this.screen = true;
-      $('#screen-control #screen-toggle').text("Off");
-      $('#screen-control #screen-toggle').addClass("up");
-      $('#screen-control #screen-toggle').removeClass("down");
+      $('#switch-control #screen-toggle').text("Off");
+      $('#switch-control #screen-toggle').addClass("up");
+      $('#switch-control #screen-toggle').removeClass("down");
     } else if(on.trim() == 'false') {
       this.screen = false;
-      $('#screen-control #screen-toggle').text("On"); 
-      $('#screen-control #screen-toggle').addClass("down");
-      $('#screen-control #screen-toggle').removeClass("up");
+      $('#switch-control #screen-toggle').text("On"); 
+      $('#switch-control #screen-toggle').addClass("down");
+      $('#switch-control #screen-toggle').removeClass("up");
     }
   };
 
   this.init = function() {
-    $('#screen-control #screen-toggle').live ('click', function(){
+    $('#sound-control #screen-toggle').live ('click', function(){
       $.get('cgi-bin/screen/toggleBlank');
       if(screenWidget.screen)
         screenWidget.setScreen('false');

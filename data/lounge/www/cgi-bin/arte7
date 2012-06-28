@@ -31,7 +31,7 @@ notify "loading arte+7..."
 (
 function playUrl() {
   notify "playing arte+7"
-  player loadVideo "$1"
+  player loadVideo "$1" "arte+7"
   disown
 }
 

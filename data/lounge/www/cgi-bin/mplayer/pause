@@ -19,7 +19,7 @@
 #
 
 
-
+export HOME="/lounge"
 export DISPLAY=:0
 /lounge/bin/notify "toggle pause" 1
-player pause
+/lounge/bin/player pause
