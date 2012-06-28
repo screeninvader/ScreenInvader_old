@@ -21,7 +21,7 @@
 
 
 . /lounge/bin/initcgi "text/plain"
-
+awsetbg -c /lounge/www/_inc/img/mpd_logo.png
 killall feh
 killall midori
 killall mirage

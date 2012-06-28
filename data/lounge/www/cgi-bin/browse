@@ -23,8 +23,6 @@
 
 notify "showing web page: $@" 3
 ./reset
-player hide
-killall feh &>/dev/null
 export MOZ_PLUGIN_PATH="/usr/lib/flashplugin-nonfree/"
 
 [ -z "$QUERY_STRING" ] && QUERY_STRING="$@";

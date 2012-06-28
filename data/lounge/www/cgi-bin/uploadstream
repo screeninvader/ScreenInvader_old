@@ -24,4 +24,5 @@
 
 [ -z "$QUERY_STRING" ] && QUERY_STRING="$@";
 notify "playling video... `basename "$QUERY_STRING"`"
+killall player
 cat | sed "1,4d" | player loadStdin

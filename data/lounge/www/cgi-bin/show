@@ -38,6 +38,12 @@ isVideoUrl() {
   return 1;
 }
 
+isOrfUrl() {
+  [ -n "`echo "$1" | fgrep "http://tvthek.orf.at"`" ] && return 0;
+  return 1;
+}
+
+
 isArte7Url() {
   [ -n "`echo "$1" | fgrep "videos.arte.tv"`" ] && return 0;
   return 1;
@@ -105,6 +111,8 @@ if [ -z "`echo "$QUERY_STRING" | grep "^http"`" ]; then
   fi
 elif isSoundCloudUrl "$QUERY_STRING"; then
   soundcloud "$QUERY_STRING"
+elif isOrfUrl "$QUERY_STRING"; then
+  orf "$QUERY_STRING"
 elif isArte7Url "$QUERY_STRING"; then
   arte7 "$QUERY_STRING"
 elif isVideoUrl "$QUERY_STRING"; then
