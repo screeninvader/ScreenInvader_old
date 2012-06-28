@@ -5,6 +5,15 @@ body {
   font-family: "Lucida Console", Monaco, monospace;
   font-size: 14px;
 }
+iframe {
+  width: 100%;
+  padding: 3px;
+  margin: 3px;
+  background-color: #666;
+  border: 1px outset #fff;
+  border-radius: 9px;
+}
+
 
 * table {
   width: 100%;
