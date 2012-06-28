@@ -36,20 +36,30 @@ EOUSAGE
 RUN_DIR="/var/run/player"
 CMD_FIFO="$RUN_DIR/cmdfifo"
 CMD_LOCK="$RUN_DIR/cmdlock"
-CALLBACK="/lounge/bin/player_callback"
 PLAYLIST="$RUN_DIR/playlist"
 PLAYLIST_TITLES="$RUN_DIR/playlist_titles"
 PLAYLIST_IDX="$RUN_DIR/playlist_idx"
+PLAYLIST_LOCK="$RUN_DIR/playlist_lock"
 MPLAYERSTDIN="$RUN_DIR/mplayerstdin"
 
+function refresh() {
+  feh --bg-center /lounge/www/_inc/img/mpd_logo.png
+}
+
 function mplayer_start {
-  rm -rf "$RUN_DIR"
+  rm -f "$RUN_DIR/cmdfifo"
+  rm -f "$RUN_DIR/cmdlock"
+  rm -f "$RUN_DIR/playlist_idx"
+  rm -f "$RUN_DIR/mplayerstdin"
+  rm -f "$RUN_DIR/playlist_lock"
+
   mkdir -p "$RUN_DIR"
   mkfifo "$CMD_FIFO";
   while [ 0 ]; do 
     sleep 1; 
-   bash -c "/usr/bin/mplayer -idle -input file="$CMD_FIFO" 2>&1 | tee /tmp/mplayer | $CALLBACK &> /tmp/callback"
-  done
+#    bash -c "/usr/bin/mplayer -idle -vf bmovl=0:0:/var/run/player/overlay_fifo -input file="$CMD_FIFO" 2>&1 | tee /tmp/mplayer | $CALLBACK &> /tmp/callback"
+    bash -c "/usr/bin/mplayer -idle -input file="$CMD_FIFO" 2>&1 | tee /tmp/mplayer | /lounge/bin/player callback &> /tmp/callback"
+ done
 }
 
 function mplayer_cmd {
@@ -73,15 +83,17 @@ function hideText() {
   ) 200>$CMD_LOCK
 }
 
-
 function jump() {
+(
+  flock -x 300
   (
     flock -x 200
-    wmctrl -r MPlayer -b remove,hidden
     mplayer_cmd "loadlist  \"$PLAYLIST\""
     [ "$1" -gt 0 ] && mplayer_cmd "pt_step $1"
     echo "$1" >  "$PLAYLIST_IDX"
+    touch /var/run/player/playlist
   ) 200>$CMD_LOCK
+) 300>$PLAYLIST_LOCK
 }
 
 function isQueueMode() {
@@ -100,35 +112,42 @@ function toggleQueueMode() {
 function playlistAdd() {
   playlistEnqueue "$1" "$2"
 
+  (
+  flock -x 300
   if ! isQueueMode; then
     mplayer_cmd "loadlist  \"$PLAYLIST\""
     echo $[ `wc -l "$PLAYLIST" | cut -d" " -f1` - 1] > "$PLAYLIST_IDX"
     idx="`cat $PLAYLIST_IDX`"
     [ $idx -gt 0 ] && mplayer_cmd "pt_step $idx"
   fi
+  ) 300>$PLAYLIST_LOCK
 }
 
 function playlistEnqueue() {
-  path="$1"
-  title="$2"
-  [ -z "$title" ] && title="(no title)"
-  echo "$path" >> "$PLAYLIST"
-  echo "$title" >> "$PLAYLIST_TITLES"
+  (
+    flock -x 300
+    path="$1"
+    title="$2"
+    [ -z "$title" ] && title="(no title)"
+		echo "$path" >> "$PLAYLIST"
+    echo "$title" >> "$PLAYLIST_TITLES"
+  ) 300>$PLAYLIST_LOCK
 }
 
 function loadStdin() {
-  wmctrl -r MPlayer -b remove,hidden
-  rm -f "$MPLAYERSTDIN"
-  mkfifo "$MPLAYERSTDIN"
-  mplayer_cmd "loadfile \"$MPLAYERSTDIN\""
-  cat > "$MPLAYERSTDIN"
-  mplayer_cmd "pt_step `cat "$PLAYLIST_IDX"`"
+  (
+    flock -x 200
+    rm -f "$MPLAYERSTDIN"
+    mkfifo "$MPLAYERSTDIN"
+    mplayer_cmd "loadfile \"$MPLAYERSTDIN\""
+    cat > "$MPLAYERSTDIN"
+    mplayer_cmd "pt_step `cat "$PLAYLIST_IDX"`"
+  ) 200>$CMD_LOCK
 }
 
 function loadVideo() {
   (
     flock -x 200
-    wmctrl -r MPlayer -b remove,hidden
     playlistAdd "$1" "$2"
   ) 200>$CMD_LOCK
 }
@@ -136,7 +155,6 @@ function loadVideo() {
 function enqueueVideo() {
   (
     flock -x 200
-    wmctrl -r MPlayer -b remove,hidden
     playlistAdd "$1" "$2"
   ) 200>$CMD_LOCK
 }
@@ -144,7 +162,6 @@ function enqueueVideo() {
 function loadList() {
   (
     flock -x 200
-    wmctrl -r MPlayer -b remove,hidden
     mplayer_cmd "loadlist $1"
   ) 200>$CMD_LOCK
 }
@@ -152,7 +169,6 @@ function loadList() {
 function loadAnim() {
   (
     flock -x 200
-    wmctrl -r MPlayer -b remove,hidden
     playlistAdd "$1" "$2"
   ) 200>$CMD_LOCK
 }
@@ -160,28 +176,44 @@ function loadAnim() {
 function loadAudio() {
   (
     flock -x 200
-    wmctrl -r MPlayer -b add,hidden
     playlistAdd "$1" "$2"
   ) 200>$CMD_LOCK
 }
 
 function previous() {
+(
+  flock -x 200
   (
     flock -x 200
-    wmctrl -r MPlayer -b remove,hidden
-    echo `$[ `cat "$PLAYLIST_IDX"` -  1 ]` > "$PLAYLIST_IDX"
-    mplayer_cmd "pt_step -1" 
+    idx=$[ `cat $PLAYLIST_IDX` - 1 ]
+    [ -z "$idx" ] && idx=0
+    mplayer_cmd "loadlist  \"$PLAYLIST\""
+    [ "$idx" -gt 0 ] && mplayer_cmd "pt_step $idx"
+    echo "$idx" >  "$PLAYLIST_IDX"
+    touch /var/run/player/playlist
+    refresh
   ) 200>$CMD_LOCK
+) 200> /var/run/player/playlist_lock
+
 }
 
 function next() {
+(   
+  flock -x 200
   (
     flock -x 200
-    wmctrl -r MPlayer -b remove,hidden
-    idx=`cat "$PLAYLIST_IDX"`
-    echo "$[ $idx  +  1 ]" > "$PLAYLIST_IDX"
-    mplayer_cmd "pt_step 1" 
+    idx=$[ `cat $PLAYLIST_IDX` + 1 ]
+    [ -z "$idx" ] && idx=0
+    mplayer_cmd "loadlist  \"$PLAYLIST\""
+    [ "$idx" -gt 0 ] && mplayer_cmd "pt_step $idx"
+    echo "$idx" >  "$PLAYLIST_IDX"
+    touch /var/run/player/playlist
+    export DISPLAY=:0
+    refresh
   ) 200>$CMD_LOCK
+) 200> /var/run/player/playlist_lock
+
+
 }
 
 function forward() {
@@ -223,14 +255,7 @@ function stop() {
   (
     flock -x 200
     mplayer_cmd "stop"
-  ) 200>$CMD_LOCK
-}
-
-function hide() {
-  (
-    flock -x 200
-    mplayer_cmd "stop"
-    wmctrl -r MPlayer -b add,hidden
+    refresh
   ) 200>$CMD_LOCK
 }
 
@@ -246,6 +271,59 @@ function subtitle() {
     flock -x 200
     mplayer_cmd "sub_visibility 1" 
   ) 200>$CMD_LOCK
+}
+
+##### callbacks ######
+
+SOTRACK="DEMUXER: ==> Found"
+EOTRACK="DEMUXER: DEMUXER: freeing"
+PATH_CHANGED="GLOBAL: ANS_path="
+
+function contains() {
+ if [[ "$1" == *"$2"* ]]; then
+   return 0
+ else
+   return 1
+ fi
+}
+
+function path_changed() {
+  path="`echo $1 | cut -d'=' -f2-`"
+  echo "$path" > /var/run/player/currentpath
+  if [ "$path" == "(null)" ]; then
+    idx=0
+    len=0 
+    (
+      flock -x 300
+
+      idx="`cat "/var/run/player/playlist_idx"`"
+      [ -z "$idx" ] && idx=0
+      len="`wc -l /var/run/player/playlist | cut -d\" \" -f1`"
+    ) 300>$PLAYLIST_LOCK
+    if [ $idx -lt $[ $len - 1 ] ]; then
+      jump $[ $idx + 1 ]
+    else
+      stop
+      mpc play
+    fi
+  fi
+}
+
+function eotrack() {
+  mplayer_cmd "get_property path"
+}
+
+function sotrack() {
+  mpc pause
+  mplayer_cmd "get_property path"
+}
+
+function callback() {
+  cat | while read line; do
+    contains "$line" "$EOTRACK" && eotrack
+    contains "$line" "$PATH_CHANGED" && path_changed "$line"
+    contains "$line" "$SOTRACK" && sotrack
+  done
 }
 
 "$1" "$2" "$3" "$4" "$5"
