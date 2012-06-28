@@ -52,6 +52,11 @@ function mplayer_start {
   rm -f "$RUN_DIR/playlist_idx"
   rm -f "$RUN_DIR/mplayerstdin"
   rm -f "$RUN_DIR/playlist_lock"
+
+  mkdir -p "$RUN_DIR"
+  mkfifo "$CMD_FIFO";
+  while [ 0 ]; do 
+    sleep 1; 
 #    bash -c "/usr/bin/mplayer -idle -vf bmovl=0:0:/var/run/player/overlay_fifo -input file="$CMD_FIFO" 2>&1 | tee /tmp/mplayer | $CALLBACK &> /tmp/callback"
     bash -c "/usr/bin/mplayer -idle -input file="$CMD_FIFO" 2>&1 | tee /tmp/mplayer | /lounge/bin/player callback &> /tmp/callback"
  done
@@ -207,6 +212,8 @@ function next() {
     refresh
   ) 200>$CMD_LOCK
 ) 200> /var/run/player/playlist_lock
+
+
 }
 
 function forward() {
