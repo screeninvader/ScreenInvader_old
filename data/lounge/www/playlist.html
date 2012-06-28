@@ -10,9 +10,8 @@
 <script type="text/javascript">
    function loadPlaylist() {
      $.get('cgi-bin/playlist', function(data) {
-          $('#playlist').html(data);
+        $('#playlist').html(data);
      }, "text");
-
    }
    function updateQueueToggle() {
      $.get('cgi-bin/isQueueMode', function(data) {
@@ -33,18 +32,11 @@
   })
 
    loadPlaylist
-     setInterval("loadPlaylist()", 1000);  
-     setInterval("updateQueueToggle()", 1000);
+   setInterval("loadPlaylist()", 1000);  
+   setInterval("updateQueueToggle()", 1000);
 
 </script>
 	</head>
-	<body style="padding: 0; margin: 0; background-color: #000;">
-        <table style="width:100px;">
-	<tr>
-		<td id="queuetoggle" onclick="$.get('cgi-bin/toggleQueue'); updateQueueToggle();" class="button up">Queue Mode</td>
-		<td id="clearplaylist" onclick="$.get('cgi-bin/playlist_clear');" class="button up">Clear Playlist</td>
-	<tr>
-		<td colspan="2" style="text-align:left;" id="playlist"></td>
-	</tr></table>
+	<body id="playlist" style="background-color: #666; padding-right: 4px;" >
 	</body>
 </html>
