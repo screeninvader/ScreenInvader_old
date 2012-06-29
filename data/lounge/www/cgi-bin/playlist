@@ -29,11 +29,6 @@ CACHE="/var/run/player/playlist_cache"
 set -x
 (
   flock -x 200
-
-  if [ ! -f $CACHE || ! -f $LIST ]; then
-    touch $CACHE
-    touch $LIST
-  fi
   mod_p="`stat -c %Y $LIST`"
   mod_c="`stat -c %Y $CACHE`"
 
@@ -43,11 +38,11 @@ set -x
     else
       (
       echo "<div>"
-      i=0
+      i=1
       cat "$TITLES" | while read line; do
         title="`echo $line | sed -e 's/\([A-Z]\)/ \1/g' -e 's/^ \([a-z]\)/\1/g'`"
         title=${title:0:70}
-        item="`sed "$[$i+1]!d" /var/run/player/playlist`"
+        item="`sed "$[$i]!d" /var/run/player/playlist`"
   	idx="`cat /var/run/player/playlist_idx`"
         current="`cat /var/run/player/currentpath`"
         color="white"
@@ -69,4 +64,3 @@ set -x
 
   cat "$CACHE"
 ) 200> /var/run/player/playlist_lock 2>/tmp/playlist
-
