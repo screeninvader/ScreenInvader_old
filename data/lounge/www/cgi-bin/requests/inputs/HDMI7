@@ -1,3 +1,0 @@
-#!/bin/bash
-cat requests/HDMI7 | netcat 10.20.30.50 80
-

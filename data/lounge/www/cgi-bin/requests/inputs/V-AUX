@@ -1,3 +1,0 @@
-#!/bin/bash
-cat requests/V-AUX | netcat 10.20.30.50 80
-
