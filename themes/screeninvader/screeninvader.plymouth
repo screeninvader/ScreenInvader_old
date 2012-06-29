@@ -1,14 +1,11 @@
 [Plymouth Theme]
 Name=ScreenInvader
-Description=ScreenInvader
+Description=ScreenInvader Logo
 ModuleName=two-step
 
 [two-step]
-ImageDir=/usr/share/plymouth/themes/screeninvader/
+ImageDir=/usr/share/plymouth/themes/screeninvader
 HorizontalAlignment=.5
 VerticalAlignment=.5
 Transition=merge-fade
 TransitionDuration=.5
-BackgroundStartColor=0x828aff
-BackgroundEndColor=0x0012ff
-
