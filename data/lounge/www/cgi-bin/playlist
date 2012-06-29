@@ -29,6 +29,11 @@ CACHE="/var/run/player/playlist_cache"
 set -x
 (
   flock -x 200
+
+  if [ ! -f $CACHE || ! -f $LIST ]; then
+    touch $CACHE
+    touch $LIST
+  fi
   mod_p="`stat -c %Y $LIST`"
   mod_c="`stat -c %Y $CACHE`"
 
@@ -64,3 +69,4 @@ set -x
 
   cat "$CACHE"
 ) 200> /var/run/player/playlist_lock 2>/tmp/playlist
+
