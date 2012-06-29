@@ -1,32 +1,17 @@
 function ScreenControl () {
   this.screen = true;
-  this.beamer = false;
-
-  this.setBeamermode = function(on) {
-    if(on.trim() == 'false') {
-      this.beamer = false;
-      $('#screen-control #beamer-toggle').text("Off");
-      $('#screen-control #beamer-toggle').addClass("up")
-      $('#screen-control #beamer-toggle').removeClass("down");
-    } else if(on.trim() == 'true') {
-      this.beamer = true;
-      $('#screen-control #beamer-toggle').text("On");
-      $('#screen-control #beamer-toggle').addClass("down");
-      $('#screen-control #beamer-toggle').removeClass("up");
-   }
-  };
 
   this.setScreen = function(on) {
     if(on.trim() == 'true') {
       this.screen = true;
-      $('#switch-control #screen-toggle').text("Off");
-      $('#switch-control #screen-toggle').addClass("up");
-      $('#switch-control #screen-toggle').removeClass("down");
+      $('#sound-control #screen-toggle').text("Off");
+      $('#sound-control #screen-toggle').addClass("up");
+      $('#sound-control #screen-toggle').removeClass("down");
     } else if(on.trim() == 'false') {
       this.screen = false;
-      $('#switch-control #screen-toggle').text("On"); 
-      $('#switch-control #screen-toggle').addClass("down");
-      $('#switch-control #screen-toggle').removeClass("up");
+      $('#sound-control #screen-toggle').text("On"); 
+      $('#sound-control #screen-toggle').addClass("down");
+      $('#sound-control #screen-toggle').removeClass("up");
     }
   };
 
@@ -38,24 +23,6 @@ function ScreenControl () {
       else
         screenWidget.setScreen('true');
     })
-
-    $('#screen-control #beamer-toggle').live ('click', function(){
-      $.get('cgi-bin/screen/toggleBeamermode');
-      if(screenWidget.beamer)
-        screenWidget.setBeamermode('false');
-      else
-        screenWidget.setBeamermode('true');
-    })
-  };
-  
-  this.update = function() {
-    $.get('cgi-bin/screen/isBlank', function(data) {
-      screenWidget.setScreen(data);
-    }, 'text');
-
-    $.get('cgi-bin/screen/isBeamermode', function(data) {
-      screenWidget.setBeamermode(data);
-    }, 'text');
   };
   
   this.loadInto = function(into) {
