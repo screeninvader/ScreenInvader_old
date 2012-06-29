@@ -47,14 +47,15 @@ function refresh() {
 }
 
 function mplayer_start {
-  rm -f "$RUN_DIR/cmdfifo"
-  rm -f "$RUN_DIR/cmdlock"
-  rm -f "$RUN_DIR/playlist_idx"
-  rm -f "$RUN_DIR/mplayerstdin"
-  rm -f "$RUN_DIR/playlist_lock"
+  rm -f "$CMD_FIFO"
+  rm -f "$CMD_LOCK"
+  rm -f "$PLAYLIST_IDX"
+  rm -f "$MPLAYERSTRDIN"
+  rm -f "$PLAYLIST_LOCK"
 
   mkdir -p "$RUN_DIR"
   mkfifo "$CMD_FIFO";
+
   while [ 0 ]; do 
     sleep 1; 
 #    bash -c "/usr/bin/mplayer -idle -vf bmovl=0:0:/var/run/player/overlay_fifo -input file="$CMD_FIFO" 2>&1 | tee /tmp/mplayer | $CALLBACK &> /tmp/callback"
@@ -296,9 +297,9 @@ function path_changed() {
     (
       flock -x 300
 
-      idx="`cat "/var/run/player/playlist_idx"`"
+      idx="`cat "$PLAYLIST_IDX"`"
       [ -z "$idx" ] && idx=0
-      len="`wc -l /var/run/player/playlist | cut -d\" \" -f1`"
+      len="`wc -l "$PLAYLIST" | cut -d\" \" -f1`"
     ) 300>$PLAYLIST_LOCK
     if [ $idx -lt $[ $len - 1 ] ]; then
       jump $[ $idx + 1 ]
