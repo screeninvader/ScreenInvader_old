@@ -22,6 +22,7 @@ function bookmarklet() {
 
 $().ready(function () {
   lounge.init();
+  switchWidget.loadInto('#switch_panel');
   soundWidget.loadInto('#sound_panel');
   screenWidget.loadInto('#screen_panel');
   showWidget.loadInto('#show_panel');
