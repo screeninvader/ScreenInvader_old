@@ -65,8 +65,10 @@ function SoundControl () {
     });
 
     $('#sound-control #volume #plus').live ('click', function(){
-      $.get('cgi-bin/sound/volume-more');
-      soundWidget.setVolume(soundWidget.volume + 5);
+      if(!this.mute) {
+      	$.get('cgi-bin/sound/volume-more');
+        soundWidget.setVolume(soundWidget.volume + 5);
+      }
     });
 
     $('#sound-control #bass #minus').live ('click', function(){
