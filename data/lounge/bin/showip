@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# LoungeMC - A content centered media center 
+# LoungeMC - A content centered media center
 #  Copyright (C) 2012 Amir Hassan <amir@viel-zu.org>
 #
 # This program is free software; you can redistribute it and/or modify
@@ -18,9 +18,6 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 
-
-
-. /var/www/cgi-bin/initrequest
-
-cat "requests/getstatus" | netcat 10.20.30.50 80 | grep "^<" >> ./tmp/currentStatus
+export DISPLAY=:0
+/lounge/bin/osd "                   `/lounge/bin/getip`"
 

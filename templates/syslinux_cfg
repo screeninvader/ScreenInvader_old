@@ -3,7 +3,7 @@
 cat <<EOSYSLINUX
 DEFAULT loungemc
 LABEL loungemc
-  SAY Booting Lounge Media Center
+  SAY Booting ScreenInvader
 	KERNEL /vmlinuz
 	APPEND quiet splash ro root=UUID=$1 initrd=/initrd.img vga=769
 EOSYSLINUX

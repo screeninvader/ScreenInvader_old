@@ -63,4 +63,4 @@ set -x
   fi
 
   cat "$CACHE"
-) 200> /var/run/player/playlist_lock 2>/tmp/playlist
+) 200> /var/run/player/playlist_lock

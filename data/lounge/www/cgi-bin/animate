@@ -22,12 +22,12 @@
 . /lounge/bin/initcgi "text/html"
 
 ./reset
-killall -9 mirage
+killall -9 gifview
 killall -9 feh
 killall -9 midori
 
 [ -z "$QUERY_STRING" ] && QUERY_STRING="$@";
 notify "playling gif... `basename "$QUERY_STRING"`"
-mirage -f "$QUERY_STRING" &>/dev/null
+gifview  -f "$QUERY_STRING" &>/dev/null
 disown
 

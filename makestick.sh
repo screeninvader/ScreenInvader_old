@@ -49,8 +49,8 @@ source "$MAKEPARTITION_DIR/.functions.sh"
 [ -z "$SIZE" ] && SIZE=400
 [ printf "%d" $SIZE &> /dev/null -o $SIZE -lt 100 ] && error "Invalid size: $SIZE"
 
-#check "Write zeros to device" \
-#  "dd if=/dev/zero of=$DEVICE bs=1M count=$[$SIZE + 1]" 
+check "Write zeros to device" \
+  "dd if=/dev/zero of=$DEVICE bs=1M count=$[$SIZE + 1]" 
 
 check "Make disk label" \
   "parted -s $DEVICE mklabel msdos"

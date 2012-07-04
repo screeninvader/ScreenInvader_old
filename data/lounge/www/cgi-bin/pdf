@@ -27,8 +27,10 @@
 notify "loading pdf..."
 
 if [ -n "`echo "$QUERY_STRING" | grep "^http"`" ]; then
- wget "$QUERY_STRING" -O /tmp/evince.pdf
- QUERY_STRING=/tmp/evince.pdf
+ tmpfile=`mktemp`
+ wget "$QUERY_STRING" -O $tmpfile
+ QUERY_STRING=$tmpfile
+ 
 fi
 
 evince "$QUERY_STRING"

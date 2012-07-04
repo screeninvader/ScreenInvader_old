@@ -63,4 +63,4 @@ fi
 #else
  play "$QUERY_STRING"
 #fi
-) &> /tmp/youtube
+) &> /dev/null

@@ -51,12 +51,7 @@ po::powerokwait:/etc/init.d/powerfail stop
 # Note that on most Debian systems tty7 is used by the X Window System,
 # so if you want to add more getty's go ahead but skip tty7 if you run X.
 #
-1:2345:respawn:/sbin/mingetty --autologin root tty1
-2:23:respawn:/sbin/getty 38400 tty2
-3:23:respawn:/sbin/getty 38400 tty3
-4:23:respawn:/sbin/getty 38400 tty4
-5:23:respawn:/sbin/getty 38400 tty5
-6:23:respawn:/sbin/getty 38400 tty6
+1:2345:respawn:/sbin/mingetty --autologin root tty2
 
 # Example how to put a getty on a serial line (for a terminal)
 #

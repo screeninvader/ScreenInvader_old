@@ -21,10 +21,11 @@
 
 
 . /lounge/bin/initcgi "text/plain"
-awsetbg -c /lounge/www/_inc/img/mpd_logo.png
+awsetbg -c /lounge/www/_inc/img/blank.png
+awsetbg -c /lounge/www/_inc/img/logo.png
 killall feh
 killall midori
-killall mirage
+killall gifview
 xdotool mousemove 1900 1200
 screen/setBlank false
 

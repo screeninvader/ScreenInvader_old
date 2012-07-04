@@ -4,20 +4,21 @@ function ScreenControl () {
   this.setScreen = function(on) {
     if(on.trim() == 'true') {
       this.screen = true;
-      $('#switch-control #screen-toggle').text("Off");
-      $('#switch-control #screen-toggle').addClass("up");
-      $('#switch-control #screen-toggle').removeClass("down");
+      $('#sound-control #screen-toggle').text("Off");
+      $('#sound-control #screen-toggle').addClass("up");
+      $('#sound-control #screen-toggle').removeClass("down");
+      $.get('cgi-bin/screen/setBlank?true');
     } else if(on.trim() == 'false') {
       this.screen = false;
-      $('#switch-control #screen-toggle').text("On"); 
-      $('#switch-control #screen-toggle').addClass("down");
-      $('#switch-control #screen-toggle').removeClass("up");
+      $('#sound-control #screen-toggle').text("On"); 
+      $('#sound-control #screen-toggle').addClass("down");
+      $('#sound-control #screen-toggle').removeClass("up");
+      $.get('cgi-bin/screen/setBlank?false');
     }
   };
 
   this.init = function() {
     $('#sound-control #screen-toggle').live ('click', function(){
-      $.get('cgi-bin/screen/toggleBlank');
       if(screenWidget.screen)
         screenWidget.setScreen('false');
       else
@@ -34,5 +35,4 @@ function ScreenControl () {
 
 screenWidget = new ScreenControl();
 screenWidget.init();
-screenWidget.update();
-setInterval('screenWidget.update()', 3000);
+

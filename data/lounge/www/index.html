@@ -4,7 +4,6 @@
   <meta http-equiv="Content-type" content="text/html;charset=UTF-8"></meta>
   <title>switch control</title>
   <script type="text/javascript" src="_inc/js/jquery.min.js"></script>
-  <script type="text/javascript" src="_inc/js/switch_control.js"></script>
   <script type="text/javascript" src="_inc/js/sound_control.js"></script>
   <script type="text/javascript" src="_inc/js/show_control.js"></script>
   <script type="text/javascript" src="_inc/js/upload_control.js"></script>
@@ -57,9 +56,9 @@
    function updateQueueToggle() {
      $.get('cgi-bin/isQueueMode', function(data) {
         if(data.charAt(0) == 'f') {
-          $('#queuetoggle').html('Post Mode');
+          $('#queuetoggle').html('Toggle Post Mode');
         } else if (data.charAt(0) == 't') {
-          $('#queuetoggle').html('Queue Mode');
+          $('#queuetoggle').html('Toggle Queue Mode');
         }
      }, "text");
    }
@@ -94,7 +93,7 @@
  </div>
 <td style="width:100%;height:100%;">
 <table><tr><td>
-<span id="queuetoggle" onclick="$.get('cgi-bin/toggleQueue'); updateQueueToggle();" class="button up">Toggle Queue Mode</span>
+<span id="queuetoggle" onclick="$.get('cgi-bin/toggleQueue'); updateQueueToggle();" class="toggle up">Toggle Queue Mode</span>
 </td><td>
 <span id="clearplaylist" onclick="$.get('cgi-bin/playlist_clear');" class="button up">Clear Playlist</span>
 </td></tr>

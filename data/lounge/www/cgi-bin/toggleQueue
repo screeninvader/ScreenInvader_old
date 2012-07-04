@@ -22,5 +22,5 @@
 
 . /lounge/bin/initcgi "text/html"
 
-player toggleQueueMode &> /tmp/queuemode
+player toggleQueueMode
 

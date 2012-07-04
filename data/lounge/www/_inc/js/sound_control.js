@@ -98,7 +98,7 @@ function SoundControl () {
 }
 
 
-var soundWidget = new SoundControl();
+soundWidget = new SoundControl();
 soundWidget.init();
 soundWidget.update();
 setInterval('soundWidget.update()', 3000);

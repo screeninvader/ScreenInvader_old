@@ -18,20 +18,21 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 
-
+KERNEL="linux-image-686"
 
 VIDEO_DRIVERS="xserver-xorg-video-all xserver-xorg-video-ati xserver-xorg-video-radeon xserver-xorg-video-nv xserver-xorg-video-intel xserver-xorg-video-geode xserver-xorg-video-glide xserver-xorg-video-glint xserver-xorg-video-i128 xserver-xorg-video-i740 xserver-xorg-video-mach64 xserver-xorg-video-geode xserver-xorg-video-cirrus xserver-xorg-video-mga xserver-xorg-video-openchrome xserver-xorg-video-via xserver-xorg-video-fbdev xserver-xorg-video-dummy xserver-xorg-video-glamo xserver-xorg-video-apm  xserver-xorg-video-ark  xserver-xorg-video-chips xserver-xorg-video-neomagic xserver-xorg-video-nouveau xserver-xorg-video-qxl  xserver-xorg-video-r128 xserver-xorg-video-radeonhd xserver-xorg-video-rendition xserver-xorg-video-s3 xserver-xorg-video-s3virge xserver-xorg-video-savage xserver-xorg-video-siliconmotion xserver-xorg-video-sis  xserver-xorg-video-sisusb xserver-xorg-video-tdfx xserver-xorg-video-tga xserver-xorg-video-trident xserver-xorg-video-tseng xserver-xorg-video-vesa xserver-xorg-video-vmware xserver-xorg-video-voodoo"
 
-PKG_WHITE="debian-multimedia-keyring keyboard-configuration debconf-english sudo dialog mplayer-nogui mirage thttpd feh mpd mpc xdotool linux-image-686 alsa-utils awesome psmisc clive midori dos2unix curl dropbear xinit autofs smbfs mingetty xserver-xorg xserver-xorg-input-kbd xserver-xorg-input-mouse x11-xserver-utils wmctrl locate plymouth"
+PKG_WHITE="debian-multimedia-keyring keyboard-configuration debconf-english sudo dialog mplayer-nogui thttpd feh mpd mpc xdotool alsa-utils awesome psmisc clive midori dos2unix curl dropbear xinit autofs smbfs mingetty xserver-xorg xserver-xorg-input-kbd xserver-xorg-input-mouse x11-xserver-utils locate plymouth xfonts-intl-european gifsicle kbd"
 
 PKG_EXTRA="rsyslogd vim rsync less"
 
-PKG_BLACK="info manpages rsyslog tasksel tasksel-data aptitude locales"
+PKG_BLACK="info manpages rsyslog tasksel tasksel-data aptitude locales man-db whiptail iptables wmctrl vim-tiny vim-common traceroute netcat-traditional iputils-ping dmidecode libboost-iostreams1.42.0 libcwidget3 libept1 libnewt0.52 libnfnetlink0 libsigc++-2.0-0c2a"
 
-FILES_BLACK="/var/cache/apt/pkgcache.bin /var/cache/apt/srcpkgcache.bin /usr/share/man/* /usr/share/locale/* /usr/share/doc/* /usr/share/zoneinfo/* /usr/share/icons/* /root/.bash_history /lib/modules/*/kernel/drivers/infiniband/* /lib/modules/*/kernel/drivers/bluetooth/* /lib/modules/*/kernel/drivers/media/* /lib/modules/*/kernel/drivers/net/wireless/* /var/cache/debconf*"
+FILES_BLACK="/var/cache/apt/pkgcache.bin /var/cache/apt/srcpkgcache.bin /usr/share/man/* /usr/share/locale/* /usr/share/doc/* /usr/share/zoneinfo/* /usr/share/icons/* /root/.bash_history /lib/modules/*/kernel/drivers/infiniband/* /lib/modules/*/kernel/drivers/bluetooth/* /lib/modules/*/kernel/drivers/media/* /lib/modules/*/kernel/drivers/net/wireless/* /var/cache/debconf* /usr/share/doc-base/*"
 
 export LC_ALL="C"
 DEBIAN_MIRROR="http://ftp.at.debian.org/debian/"
+EMDEBIAN_MIRROR="http://ftp.uk.debian.org/emdebian/grip"
 DEBIAN_MULTIMEDIA_MIRROR="http://www.debian-multimedia.org/"
 
 dir="`dirname $0`"
@@ -44,6 +45,7 @@ NODEBOOT=
 CHROOT_DIR=
 CHRT=
 DEBUG=
+GIDX=
 
 function printUsage() {
   cat 1>&2 <<EOUSAGE
@@ -52,6 +54,7 @@ Bootstrap a Lounge Media Center installation.
 $0 [-a <arch>][-l <logfile>][-c <apt-cacher-port>][-i -d -u ] <bootstrapdir>"
 Options:"
   -a <arch> Bootstrap a system with of the given architecture
+  -g <num>  Build with selected graphics card
   -l <file> Specify the log file
   -p <port> Enables using apt-cacher-ng on the specified port
   -i        Don't configure and install packages
@@ -123,10 +126,10 @@ function doDebootstrap() {
   check "Create target dir" \
     "mkdir -p \"$CHROOT_DIR\""
 
-  BOOTSTRAP_MIRROR=$DEBIAN_MIRROR
+  BOOTSTRAP_MIRROR=$EMDEBIAN_MIRROR
 
   [ -n "$APTCACHER_PORT" ] && BOOTSTRAP_MIRROR=$(
-    HOST="`echo $DEBIAN_MIRROR | sed 's/^http*:\/\///g' | sed 's/\/.*$//g'`"
+    HOST="`echo $EMDEBIAN_MIRROR | sed 's/^http*:\/\///g' | sed 's/\/.*$//g'`"
     echo "http://127.0.0.1:$APTCACHER_PORT/$HOST/debian"
   )
 
@@ -153,6 +156,9 @@ function doPackageConf() {
   check "Install white listed packages" \
     "$CHRT $aptni install $PKG_WHITE"
 
+  check "Install kernel" \
+    "$CHRT $aptni install $KERNEL"
+
   check "Remove black listed packages" \
     "$CHRT $aptni purge $PKG_BLACK"
 
@@ -162,13 +168,29 @@ function doPackageConf() {
 
 function doCopy() {
   check "Copy system data" \
-   "cd $BOOTSTRAP_DIR/data; rsync -axh etc usr $CHROOT_DIR/"
+    "cd $BOOTSTRAP_DIR/data; rsync -axh etc usr $CHROOT_DIR/"
   
   check "Sync lounge data" \
-   "cd $BOOTSTRAP_DIR/data; rsync -axh --delete lounge $CHROOT_DIR/"
+    "cd $BOOTSTRAP_DIR/data; rsync -axh --delete lounge $CHROOT_DIR/"
 
   check "Sync setup data" \
-   "cd $BOOTSTRAP_DIR/; rsync -axh --delete setup $CHROOT_DIR/"
+    "cd $BOOTSTRAP_DIR/; rsync -axh --delete setup $CHROOT_DIR/"
+
+  check "Copy plymouth theme" \
+    "cp -a $BOOTSTRAP_DIR/themes/screeninvader $CHROOT_DIR/usr/share/plymouth/themes/"
+
+  check "Copy xosd lib" \
+    "cp -a $BOOTSTRAP_DIR/build/xosd-2.2.14/src/libxosd/.libs/libxosd.so.2.2.14 $CHROOT_DIR/usr/lib/"
+
+  check "ldconfig" \
+    "$CHRT ldconfig"
+
+  check "Copy osd binary"  \
+    "cp -a $BOOTSTRAP_DIR/build/xosd-2.2.14/src/xmms_plugin/osd $CHROOT_DIR/lounge/bin/"
+
+  check "Update plymouth theme" \
+    "$CHRT plymouth-set-default-theme -R screeninvader"
+
 }
 
 function doCleanup() {
@@ -189,7 +211,7 @@ function doPrepareChroot() {
 
   mkdir -p "$CHROOT_DIR/etc/apt/"
 
-  $BOOTSTRAP_DIR/templates/sources_list "$DEBIAN_MIRROR" "$DEBIAN_MULTIMEDIA_MIRROR" > $CHROOT_DIR/etc/apt/sources.list
+  $BOOTSTRAP_DIR/templates/sources_list "$EMDEBIAN_MIRROR" "$DEBIAN_MIRROR" "$DEBIAN_MULTIMEDIA_MIRROR" > $CHROOT_DIR/etc/apt/sources.list
 
   if [ -n "$APTCACHER_PORT" ]; then
     # use apt-cacher-ng to cache packages during install
@@ -221,13 +243,14 @@ function doFreeChroot() {
 
 ###### main
 
-while getopts 'a:l:p:idux' c
+while getopts 'a:l:p:g:idux' c
 do
   case $c in
     a) ARCH="$OPTARG";;
     l) BOOTSTRAP_LOG="`absPath $OPTARG`";;
     p) APTCACHER_PORT="$OPTARG";;
     i) NOINSTALL="YES";;
+    g) GIDX="$OPTARG";;
     d) NODEBOOT="YES";;
     u) NOINSTALL="YES"; NODEBOOT="YES";;
     x) INSTALL_EXTRA="YES";;
@@ -248,7 +271,12 @@ if [ $# -ne 1 ]; then
 else
   printVideoDrivers
   
-  PKG_WHITE="$PKG_WHITE $(askVideoDriver)"
+  if [ -z "$GIDX" ]; then
+    PKG_WHITE="$PKG_WHITE $(askVideoDriver)"
+  else
+    DRIVER="`echo $VIDEO_DRIVERS | sed 's/ /\n/g' | sed -n "$[ $GIDX + 1 ]p"`"
+    PKG_WHITE="$PKG_WHITE $DRIVER"
+  fi
   [ -n "$INSTALL_EXTRA" ] && PKG_WHITE="$PKG_WHITE $PKG_EXTRA" 
 
   if [ -z "$NODEBOOT" ]; then 

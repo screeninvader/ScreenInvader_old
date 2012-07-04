@@ -22,5 +22,5 @@
 
 . /lounge/bin/initcgi "text/html"
 
-player jump "$QUERY_STRING" &> /tmp/jump
+player jump "$QUERY_STRING"
 

@@ -34,7 +34,6 @@ case "$1" in
 
 	stop)
 		echo -n "Stopping $DESC: "
-		killall awesome
 		killall Xorg
 		echo "$NAME."
 		;;

@@ -20,7 +20,7 @@
 #!/bin/bash
 [ -z "$LC_ALL" ] && export LC_ALL=C
 cd `dirname $0`
-
+chvt 2
 ask="dialog --stdout --ok-label Next --cancel-label Back"
 
 function askHowNetConf() {

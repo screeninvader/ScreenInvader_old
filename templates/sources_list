@@ -1,9 +1,11 @@
 #!/bin/bash
 
 cat <<EOSOURCES
-# debian
+# emdebian
 deb $1 squeeze main
+# debian
+deb $2 squeeze main
 # debian multimedia
-deb $2 squeeze main non-free 
+deb $3 squeeze main non-free 
 EOSOURCES
 

@@ -37,28 +37,32 @@ RUN_DIR="/var/run/player"
 CMD_FIFO="$RUN_DIR/cmdfifo"
 CMD_LOCK="$RUN_DIR/cmdlock"
 PLAYLIST="$RUN_DIR/playlist"
+PLAYLIST_CACHE="$RUN_DIR/playlist_cache"
 PLAYLIST_TITLES="$RUN_DIR/playlist_titles"
 PLAYLIST_IDX="$RUN_DIR/playlist_idx"
 PLAYLIST_LOCK="$RUN_DIR/playlist_lock"
 MPLAYERSTDIN="$RUN_DIR/mplayerstdin"
 
 function refresh() {
-  feh --bg-center /lounge/www/_inc/img/mpd_logo.png
+  feh --bg-center /lounge/www/_inc/img/blank.png
+  feh --bg-center /lounge/www/_inc/img/logo.png
 }
 
 function mplayer_start {
-  rm -f "$RUN_DIR/cmdfifo"
-  rm -f "$RUN_DIR/cmdlock"
-  rm -f "$RUN_DIR/playlist_idx"
-  rm -f "$RUN_DIR/mplayerstdin"
-  rm -f "$RUN_DIR/playlist_lock"
+  rm -f "$CMD_FIFI"
+  rm -f "$CMD_LOCK"
+  rm -f "$PLAYLIST_IDX"
+  rm -f "$MPLAYERSTDIN"
+  rm -f "$PLAYLIST_LOCK"
 
   mkdir -p "$RUN_DIR"
   mkfifo "$CMD_FIFO";
+  touch "$PLAYLIST_CACHE"
+  touch "$PLAYLIST"
+
   while [ 0 ]; do 
     sleep 1; 
-#    bash -c "/usr/bin/mplayer -idle -vf bmovl=0:0:/var/run/player/overlay_fifo -input file="$CMD_FIFO" 2>&1 | tee /tmp/mplayer | $CALLBACK &> /tmp/callback"
-    bash -c "/usr/bin/mplayer -idle -input file="$CMD_FIFO" 2>&1 | tee /tmp/mplayer | /lounge/bin/player callback &> /tmp/callback"
+    bash -c "/usr/bin/mplayer -idle -input file="$CMD_FIFO" 2>&1 | /lounge/bin/player callback"
  done
 }
 
@@ -89,9 +93,11 @@ function jump() {
   (
     flock -x 200
     file="`sed -n "$1p" $PLAYLIST`"
-    mplayer_cmd "loadfile \"$file\""
+    mplayer_cmd "loadfile $file"
     echo "$1" >  "$PLAYLIST_IDX"
-    touch /var/run/player/playlist
+    touch $PLAYLIST
+    killall osd
+    refresh
   ) 200>$CMD_LOCK
 ) 300>$PLAYLIST_LOCK
 }
@@ -110,17 +116,14 @@ function toggleQueueMode() {
 }
 
 function playlistAdd() {
-  playlistEnqueue "$1" "$2"
+(  playlistEnqueue "$1" "$2"
 
-  (
-  flock -x 300
   if ! isQueueMode; then
-    mplayer_cmd "loadlist  \"$PLAYLIST\""
-    echo $[ `wc -l "$PLAYLIST" | cut -d" " -f1` - 1] > "$PLAYLIST_IDX"
-    idx="`cat $PLAYLIST_IDX`"
-    [ $idx -gt 0 ] && mplayer_cmd "pt_step $idx"
+    lines="`wc -l "$PLAYLIST" | cut -d" " -f1`"
+    idx="$[ $lines ]"
+    jump "$idx" 
   fi
-  ) 300>$PLAYLIST_LOCK
+)
 }
 
 function playlistEnqueue() {
@@ -129,7 +132,7 @@ function playlistEnqueue() {
     path="$1"
     title="$2"
     [ -z "$title" ] && title="(no title)"
-		echo "$path" >> "$PLAYLIST"
+    echo "$path" >> "$PLAYLIST"
     echo "$title" >> "$PLAYLIST_TITLES"
   ) 300>$PLAYLIST_LOCK
 }
@@ -143,17 +146,11 @@ function loadStdin() {
 }
 
 function loadVideo() {
-  (
-    flock -x 200
     playlistAdd "$1" "$2"
-  ) 200>$CMD_LOCK
 }
 
 function enqueueVideo() {
-  (
-    flock -x 200
-    playlistAdd "$1" "$2"
-  ) 200>$CMD_LOCK
+    playlistAdd "$1" "$2" 
 }
 
 function loadList() {
@@ -184,14 +181,9 @@ function previous() {
     flock -x 200
     idx=$[ `cat $PLAYLIST_IDX` - 1 ]
     [ -z "$idx" ] && idx=0
-    mplayer_cmd "loadlist  \"$PLAYLIST\""
-    [ "$idx" -gt 0 ] && mplayer_cmd "pt_step $idx"
-    echo "$idx" >  "$PLAYLIST_IDX"
-    touch /var/run/player/playlist
-    refresh
+    jump "$idx"
   ) 200>$CMD_LOCK
 ) 200> /var/run/player/playlist_lock
-
 }
 
 function next() {
@@ -201,16 +193,9 @@ function next() {
     flock -x 200
     idx=$[ `cat $PLAYLIST_IDX` + 1 ]
     [ -z "$idx" ] && idx=0
-    mplayer_cmd "loadlist  \"$PLAYLIST\""
-    [ "$idx" -gt 0 ] && mplayer_cmd "pt_step $idx"
-    echo "$idx" >  "$PLAYLIST_IDX"
-    touch /var/run/player/playlist
-    export DISPLAY=:0
-    refresh
+    jump "$idx"
   ) 200>$CMD_LOCK
 ) 200> /var/run/player/playlist_lock
-
-
 }
 
 function forward() {
@@ -292,6 +277,7 @@ function eotrack() {
   if [ $idx -lt $[ $len ] ]; then
     jump $[ $idx + 1 ]
   else
+    /lounge/bin/showip
     stop
     mpc play
   fi
