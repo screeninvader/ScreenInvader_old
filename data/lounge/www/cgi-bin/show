@@ -28,7 +28,7 @@ killall -9 youtube &> /dev/null
 reset &> /dev/null
 
 (
-VIDEO_HOSTS="m.youtube.com youtu.be youtube.com vimeo.com myvideo.com"
+VIDEO_HOSTS="m.youtube.com youtu.be youtube.com vimeo.com myvideo.de"
 
 isVideoUrl() {
   for host in $VIDEO_HOSTS; do
