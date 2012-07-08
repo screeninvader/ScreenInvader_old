@@ -145,6 +145,7 @@ function rebootConf(){
 
 doConf "hostname"
 
+cp templates/inittab /etc/inittab 
 update-rc.d autofs defaults
 update-rc.d thttpd defaults
 update-rc.d mpd defaults
