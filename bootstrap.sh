@@ -134,7 +134,6 @@ function doDebootstrap() {
     echo "http://127.0.0.1:$APTCACHER_PORT/$HOST/debian"
   )
 
-set -x
   check "Bootstrap debian" \
     "debootstrap --foreign --arch $ARCH squeeze "$CHROOT_DIR" $BOOTSTRAP_MIRROR"
 }
