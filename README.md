@@ -1,22 +1,25 @@
-LoungeMC - A content centered media center 
+ScreenInvader - A content centered media center 
 =========================================
 
 #### Install Image #####
 
-Download the image from http://tbd/LoungeMC.lzma and write it to your an external hard disk.
+Download the image from http://tbd/screeninvader.lzma and write it to your an external hard disk.
 
-    wget -O - http://tbd/LoungeMC.lzma > lzcat /dev/sdX
+    wget -O - http://tbd/screeninvader.lzma > lzcat /dev/sdX
 
-#### Build the lounge mc system from scratch ####
+#### Build the ScreenInvader system from scratch ####
 
 ##### Prepare an external boot device ######
 
-		# makestick.sh prepares an external boot device to install
+    # makestick.sh prepares an external boot device to install
     cd LoungeMC/
     ./makestick.sh /dev/sdX 400
 
-		# Run bootstrap.sh to create the LoungeMC file system.
-    ./bootstrap.sh 
+    # Mount the boot device
+    mount /dev/sdX /media/stick
+
+    # Run bootstrap.sh to create the file system.
+    ./bootstrap.sh /media/stick
 
 -------
 
