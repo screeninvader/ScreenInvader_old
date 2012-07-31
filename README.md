@@ -3,7 +3,7 @@ ScreenInvader - A content centered media center
 
 #### Install Image #####
 
-Download the image from http://tbd/screeninvader.lzma and write it to your an external hard disk.
+Download the image from http://tbd/screeninvader.lzma and write it to an external storage device.
 
     wget -O - http://tbd/screeninvader.lzma > lzcat /dev/sdX
 
@@ -12,7 +12,7 @@ Download the image from http://tbd/screeninvader.lzma and write it to your an ex
 ##### Prepare an external boot device ######
 
     # makestick.sh prepares an external boot device to install
-    cd LoungeMC/
+    cd ScreenInvader/
     ./makestick.sh /dev/sdX 400
 
     # Mount the boot device
