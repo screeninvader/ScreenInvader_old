@@ -32,8 +32,8 @@ FILES_BLACK="/var/cache/apt/pkgcache.bin /var/cache/apt/srcpkgcache.bin /usr/sha
 
 export LC_ALL="C"
 DEBIAN_MIRROR="http://ftp.at.debian.org/debian/"
-EMDEBIAN_MIRROR="http://ftp.uk.debian.org/emdebian/grip"
-DEBIAN_MULTIMEDIA_MIRROR="http://www.debian-multimedia.org/"
+EMDEBIAN_MIRROR="http://ftp.at.debian.org/debian/"
+DEBIAN_MULTIMEDIA_MIRROR="http://www.deb-multimedia.org/"
 
 dir="`dirname $0`"
 BOOTSTRAP_DIR="`cd $dir; pwd`"
