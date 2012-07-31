@@ -18,18 +18,17 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 
+KERNEL="linux-image-686"
 
-#KERNEL="linux-image-686"
+VIDEO_DRIVERS="xserver-xorg-video-all xserver-xorg-video-ati xserver-xorg-video-radeon xserver-xorg-video-nv xserver-xorg-video-intel xserver-xorg-video-geode xserver-xorg-video-glide xserver-xorg-video-glint xserver-xorg-video-i128 xserver-xorg-video-i740 xserver-xorg-video-mach64 xserver-xorg-video-geode xserver-xorg-video-cirrus xserver-xorg-video-mga xserver-xorg-video-openchrome xserver-xorg-video-via xserver-xorg-video-fbdev xserver-xorg-video-dummy xserver-xorg-video-glamo xserver-xorg-video-apm  xserver-xorg-video-ark  xserver-xorg-video-chips xserver-xorg-video-neomagic xserver-xorg-video-nouveau xserver-xorg-video-qxl  xserver-xorg-video-r128 xserver-xorg-video-radeonhd xserver-xorg-video-rendition xserver-xorg-video-s3 xserver-xorg-video-s3virge xserver-xorg-video-savage xserver-xorg-video-siliconmotion xserver-xorg-video-sis  xserver-xorg-video-sisusb xserver-xorg-video-tdfx xserver-xorg-video-tga xserver-xorg-video-trident xserver-xorg-video-tseng xserver-xorg-video-vesa xserver-xorg-video-vmware xserver-xorg-video-voodoo"
 
-VIDEO_DRIVERS="xserver-xorg-video-fbdev xserver-xorg-video-vesa"
-
-PKG_WHITE="debian-multimedia-keyring keyboard-configuration debconf-english sudo dialog mplayer thttpd feh mpd mpc xdotool alsa-utils awesome psmisc clive midori dos2unix curl dropbear xinit autofs smbfs mingetty xserver-xorg xserver-xorg-input-kbd xserver-xorg-input-mouse x11-xserver-utils locate xfonts-intl-european gifsicle kbd"
+PKG_WHITE="debian-multimedia-keyring keyboard-configuration debconf-english sudo dialog mplayer-nogui thttpd feh mpd mpc xdotool alsa-utils awesome psmisc clive midori dos2unix curl dropbear xinit autofs smbfs mingetty xserver-xorg xserver-xorg-input-kbd xserver-xorg-input-mouse x11-xserver-utils locate plymouth xfonts-intl-european gifsicle kbd"
 
 PKG_EXTRA="rsyslogd vim rsync less"
 
 PKG_BLACK="info manpages rsyslog tasksel tasksel-data aptitude locales man-db whiptail iptables wmctrl vim-tiny vim-common traceroute netcat-traditional iputils-ping dmidecode libboost-iostreams1.42.0 libcwidget3 libept1 libnewt0.52 libnfnetlink0 libsigc++-2.0-0c2a"
 
-FILES_BLACK="/var/cache/apt/pkgcache.bin /var/cache/apt/srcpkgcache.bin /usr/share/man/* /usr/share/locale/* /usr/share/doc/* /usr/share/zoneinfo/* /usr/share/icons/* /root/.bash_history /lib/modules/*/kernel/drivers/infiniband/* /lib/modules/*/kernel/drivers/bluetooth/* /lib/modules/*/kernel/drivers/media/* /lib/modules/*/kernel/drivers/net/wireless/* /var/cache/debconf* /usr/share/doc-base/* /var/lib/apt/* /var/lib/dpkg/*"
+FILES_BLACK="/var/cache/apt/pkgcache.bin /var/cache/apt/srcpkgcache.bin /usr/share/man/* /usr/share/locale/* /usr/share/doc/* /usr/share/zoneinfo/* /usr/share/icons/* /root/.bash_history /lib/modules/*/kernel/drivers/infiniband/* /lib/modules/*/kernel/drivers/bluetooth/* /lib/modules/*/kernel/drivers/media/* /lib/modules/*/kernel/drivers/net/wireless/* /var/cache/debconf* /usr/share/doc-base/*"
 
 export LC_ALL="C"
 DEBIAN_MIRROR="http://ftp.at.debian.org/debian/"
@@ -39,7 +38,7 @@ DEBIAN_MULTIMEDIA_MIRROR="http://www.debian-multimedia.org/"
 dir="`dirname $0`"
 BOOTSTRAP_DIR="`cd $dir; pwd`"
 BOOTSTRAP_LOG="$BOOTSTRAP_DIR/bootstrap.log"
-ARCH=armel
+ARCH=i386
 APTCACHER_PORT=
 NOINSTALL=
 NODEBOOT=
@@ -134,9 +133,8 @@ function doDebootstrap() {
     echo "http://127.0.0.1:$APTCACHER_PORT/$HOST/debian"
   )
 
-set -x
   check "Bootstrap debian" \
-    "debootstrap --foreign --arch $ARCH squeeze "$CHROOT_DIR" $BOOTSTRAP_MIRROR"
+    "debootstrap --arch $ARCH squeeze "$CHROOT_DIR" $BOOTSTRAP_MIRROR"
 }
 
 function doPackageConf() {
@@ -158,6 +156,9 @@ function doPackageConf() {
   check "Install white listed packages" \
     "$CHRT $aptni install $PKG_WHITE"
 
+  check "Install kernel" \
+    "$CHRT $aptni install $KERNEL"
+
   check "Remove black listed packages" \
     "$CHRT $aptni purge $PKG_BLACK"
 
@@ -175,14 +176,21 @@ function doCopy() {
   check "Sync setup data" \
     "cd $BOOTSTRAP_DIR/; rsync -axh --delete setup $CHROOT_DIR/"
 
-#  check "Copy xosd lib" \
-#    "cp -a $BOOTSTRAP_DIR/build/xosd-2.2.14/src/libxosd/.libs/libxosd.so.2.2.14 $CHROOT_DIR/usr/lib/"
+  check "Copy plymouth theme" \
+    "cp -a $BOOTSTRAP_DIR/themes/screeninvader $CHROOT_DIR/usr/share/plymouth/themes/"
+
+  check "Copy xosd lib" \
+    "cp -a $BOOTSTRAP_DIR/build/xosd-2.2.14/src/libxosd/.libs/libxosd.so.2.2.14 $CHROOT_DIR/usr/lib/"
 
   check "ldconfig" \
     "$CHRT ldconfig"
 
-#  check "Copy osd binary"  \
-#    "cp -a $BOOTSTRAP_DIR/build/xosd-2.2.14/src/xmms_plugin/osd $CHROOT_DIR/lounge/bin/"
+  check "Copy osd binary"  \
+    "cp -a $BOOTSTRAP_DIR/build/xosd-2.2.14/src/xmms_plugin/osd $CHROOT_DIR/lounge/bin/"
+
+  check "Update plymouth theme" \
+    "$CHRT plymouth-set-default-theme -R screeninvader"
+
 }
 
 function doCleanup() {
