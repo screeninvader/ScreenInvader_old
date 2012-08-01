@@ -1,6 +1,5 @@
-ScreenInvader - A shared media experience. Instant and seamlessly.
-=================================================================
-
+# ScreenInvader
+## A shared media experience. Instant and seamlessly.
 
 From a more techie perspective: the ScreenInvader is a media player with the attitude of a KVM switch.
 
