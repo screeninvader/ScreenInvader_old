@@ -1,31 +1,27 @@
-ScreenInvader - A content centered media center 
-=========================================
+ScreenInvader - A shared media experience. Instant and seamlessly.
+=================================================================
 
-#### Install Image #####
 
-Download the image from https://github.com/downloads/kallaballa/ScreenInvader/screeninvader.dd.xz and write it to an external storage device.
+From a more techie perspective: the ScreenInvader is a media player with the attitude of a KVM switch.
 
-    # as root user
-    wget https://github.com/downloads/kallaballa/ScreenInvader/screeninvader.dd.xz
-    xzcat screeninvader.dd.xz > /dev/sdX
 
-#### Build the ScreenInvader system from scratch ####
+#### Get it! #####
 
-##### Prepare an external boot device ######
+Please have a look at the [Getting Started](https://github.com/Metalab/ScreenInvader/wiki/Getting-Started) guide.
 
-    # makestick.sh prepares an external boot device to install
-    cd ScreenInvader/
-    ./makestick.sh /dev/sdX 500
+#### Contribute #####
 
-    # Mount the created partition
-    mount /dev/sdX1 /media/stick
-
-    # Run bootstrap.sh to create the file system.
-    ./bootstrap.sh /media/stick
+You can find a guide on how to build images and hack custom features [Here](https://github.com/Metalab/ScreenInvader/wiki/Hacking)
 
 -------
 
 GPL V2
+
+
+Contributors
+-----------
+
+Amir Hassan: <amir@viel-zu.org>
 
 Contact
 -------
