@@ -1,8 +1,11 @@
 # ScreenInvader
 ## A shared media experience. Instant and seamlessly.
 
-From a more techie perspective: the ScreenInvader is a media player with the attitude of a KVM switch.
+Ever wished you could play media content from your notebook or smart phone on a TV/screen/projector in an instance?
+Just surf the web, watch video tubes or browse images the way you usually do while being just a click away from presenting it on your TV?
+That's what the ScreenInvader is doing for you and you're friends.
 
+From a more techie perspective: the ScreenInvader is a media player with the attitude of a KVM switch.
 
 #### Get it! #####
 
