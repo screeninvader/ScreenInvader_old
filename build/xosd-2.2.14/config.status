@@ -473,7 +473,7 @@ s,@datadir@,${prefix}/share,;t t
 s,@sysconfdir@,${prefix}/etc,;t t
 s,@sharedstatedir@,${prefix}/com,;t t
 s,@localstatedir@,${prefix}/var,;t t
-s,@libdir@,${exec_prefix}/lib64,;t t
+s,@libdir@,${exec_prefix}/lib,;t t
 s,@includedir@,${prefix}/include,;t t
 s,@oldincludedir@,/usr/include,;t t
 s,@infodir@,${prefix}/info,;t t
@@ -485,19 +485,19 @@ s,@DEFS@,-DPACKAGE_NAME=\"xosd\" -DPACKAGE_TARNAME=\"xosd\" -DPACKAGE_VERSION=\"
 s,@ECHO_C@,,;t t
 s,@ECHO_N@,-n,;t t
 s,@ECHO_T@,,;t t
-s,@LIBS@,-lpthread -lXext -lX11   -L/usr/lib64 ,;t t
+s,@LIBS@,-lpthread -lXext -lX11   ,;t t
 s,@INSTALL_PROGRAM@,${INSTALL},;t t
 s,@INSTALL_SCRIPT@,${INSTALL},;t t
 s,@INSTALL_DATA@,${INSTALL} -m 644,;t t
 s,@CYGPATH_W@,echo,;t t
 s,@PACKAGE@,xosd,;t t
 s,@VERSION@,2.2.14,;t t
-s,@ACLOCAL@,${SHELL} /home/elchaschab/devel/ScreenInvader/build/xosd-2.2.14/missing --run aclocal-1.9,;t t
-s,@AUTOCONF@,${SHELL} /home/elchaschab/devel/ScreenInvader/build/xosd-2.2.14/missing --run autoconf,;t t
-s,@AUTOMAKE@,${SHELL} /home/elchaschab/devel/ScreenInvader/build/xosd-2.2.14/missing --run automake-1.9,;t t
-s,@AUTOHEADER@,${SHELL} /home/elchaschab/devel/ScreenInvader/build/xosd-2.2.14/missing --run autoheader,;t t
-s,@MAKEINFO@,${SHELL} /home/elchaschab/devel/ScreenInvader/build/xosd-2.2.14/missing --run makeinfo,;t t
-s,@install_sh@,/home/elchaschab/devel/ScreenInvader/build/xosd-2.2.14/install-sh,;t t
+s,@ACLOCAL@,${SHELL} /home/elchaschab/xosd-2.2.14/missing --run aclocal-1.9,;t t
+s,@AUTOCONF@,${SHELL} /home/elchaschab/xosd-2.2.14/missing --run autoconf,;t t
+s,@AUTOMAKE@,${SHELL} /home/elchaschab/xosd-2.2.14/missing --run automake-1.9,;t t
+s,@AUTOHEADER@,${SHELL} /home/elchaschab/xosd-2.2.14/missing --run autoheader,;t t
+s,@MAKEINFO@,${SHELL} /home/elchaschab/xosd-2.2.14/missing --run makeinfo,;t t
+s,@install_sh@,/home/elchaschab/xosd-2.2.14/install-sh,;t t
 s,@STRIP@,strip,;t t
 s,@ac_ct_STRIP@,strip,;t t
 s,@INSTALL_STRIP_PROGRAM@,${SHELL} $(install_sh) -c -s,;t t
@@ -505,7 +505,7 @@ s,@mkdir_p@,mkdir -p --,;t t
 s,@AWK@,gawk,;t t
 s,@SET_MAKE@,,;t t
 s,@am__leading_dot@,.,;t t
-s,@AMTAR@,${SHELL} /home/elchaschab/devel/ScreenInvader/build/xosd-2.2.14/missing --run tar,;t t
+s,@AMTAR@,${SHELL} /home/elchaschab/xosd-2.2.14/missing --run tar,;t t
 s,@am__tar@,${AMTAR} chof - "$$tardir",;t t
 s,@am__untar@,${AMTAR} xf -,;t t
 s,@LT_CURRENT@,4,;t t
@@ -531,13 +531,13 @@ s,@CCDEPMODE@,depmode=gcc3,;t t
 s,@am__fastdepCC_TRUE@,,;t t
 s,@am__fastdepCC_FALSE@,#,;t t
 s,@LN_S@,ln -s,;t t
-s,@build@,x86_64-unknown-linux-gnu,;t t
-s,@build_cpu@,x86_64,;t t
-s,@build_vendor@,unknown,;t t
+s,@build@,i686-pc-linux-gnu,;t t
+s,@build_cpu@,i686,;t t
+s,@build_vendor@,pc,;t t
 s,@build_os@,linux-gnu,;t t
-s,@host@,x86_64-unknown-linux-gnu,;t t
-s,@host_cpu@,x86_64,;t t
-s,@host_vendor@,unknown,;t t
+s,@host@,i686-pc-linux-gnu,;t t
+s,@host_cpu@,i686,;t t
+s,@host_vendor@,pc,;t t
 s,@host_os@,linux-gnu,;t t
 s,@EGREP@,grep -E,;t t
 s,@ECHO@,echo,;t t
@@ -559,7 +559,7 @@ s,@ac_ct_F77@,,;t t
 s,@LIBTOOL@,$(SHELL) $(top_builddir)/libtool,;t t
 s,@X_CFLAGS@,,;t t
 s,@X_PRE_LIBS@, -lSM -lICE,;t t
-s,@X_LIBS@, -L/usr/lib64 -lXinerama,;t t
+s,@X_LIBS@, -lXinerama,;t t
 s,@X_EXTRA_LIBS@,,;t t
 s,@M4DATADIR@,${prefix}/share/aclocal,;t t
 s,@GTK_CONFIG@,no,;t t
