@@ -53,7 +53,7 @@ Bootstrap a ScreenInvader file system.
 
 $0 [-a <arch>][-l <logfile>][-c <apt-cacher-port>][-i -d -u ] <bootstrapdir>
 Options:
-  -a <arch> Bootstrap a system with of the given architecture
+  -a <arch> Bootstrap a system of the given architecture
   -g <num>  Build with selected graphics card
   -l <file> Specify the log file
   -p <port> Enables using apt-cacher-ng on the specified port
