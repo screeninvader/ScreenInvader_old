@@ -26,7 +26,7 @@ SIZE="$2"
 
 function printUsage() {
   cat 1>&2 <<EOUSAGE
-makestick - Prepare a file system for installation of the Lounge Media Center
+makestick.sh - Prepare a file system for installation of the ScreenInvader system.
 
 Usage: $0 <device-file> [<sizeInM>]
 
