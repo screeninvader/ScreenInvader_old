@@ -21,8 +21,8 @@ GPL V2
 Contributors
 -----------
 
-Amir Hassan: <amir@viel-zu.org>
-Jascha Ehrenreich <jascha@jaeh.at>
+* Amir Hassan: <amir@viel-zu.org>
+* Jascha Ehrenreich <jascha@jaeh.at>
 
 Contact
 -------
