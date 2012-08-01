@@ -25,7 +25,7 @@ xset s off &
 xhost + &
 #nice -n19 midori -c /lounge/.config/midori_mpdstat/ --class="MPDstat" --name="MPDstat" http://localhost/mpdstat.html &
 sudo -u lounge awsetbg -c /lounge/www/_inc/img/logo.png &
-sudo -u lounge bash -c "while [ -z \`/lounge/bin/getip\` ]; do sleep 1; done; /lounge/bin/showip;" &>/dev/null &
+sudo -u lounge /lounge/bin/showip &>/dev/null &
 sudo -u lounge /lounge/bin/player mplayer_start &
 sudo -u lounge awesome
 

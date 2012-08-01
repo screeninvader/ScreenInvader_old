@@ -19,5 +19,17 @@
 #
 
 export DISPLAY=:0
-/lounge/bin/osd "                   `/lounge/bin/getip`"
+
+while [ 0 ]; do
+  sleep 1;
+  ADDR="`/lounge/bin/getip`"
+  killall osd
+  if [ -z "$ADDR" ]; then
+    /lounge/bin/osd "                    No Network" &>/dev/null &
+  else
+    /lounge/bin/osd "                   $ADDR" &>/dev/null &
+    exit
+  fi
+  ADDR=""
+done;
 
