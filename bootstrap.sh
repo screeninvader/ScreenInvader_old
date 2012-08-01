@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# LoungeMC - A content centered media center 
+# ScreenInvader - A content centered media center 
 #  Copyright (C) 2012 Amir Hassan <amir@viel-zu.org>
 #
 # This program is free software; you can redistribute it and/or modify
@@ -49,7 +49,7 @@ GIDX=
 
 function printUsage() {
   cat 1>&2 <<EOUSAGE
-Bootstrap a Lounge Media Center installation.
+Bootstrap a ScreenInvader file system.
 
 $0 [-a <arch>][-l <logfile>][-c <apt-cacher-port>][-i -d -u ] <bootstrapdir>"
 Options:"
