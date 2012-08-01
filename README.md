@@ -24,6 +24,7 @@ Contributors
 -----------
 
 Amir Hassan: <amir@viel-zu.org>
+Jascha Ehrenreich <jascha@jaeh.at>
 
 Contact
 -------
