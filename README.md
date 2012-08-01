@@ -3,9 +3,9 @@ ScreenInvader - A content centered media center
 
 #### Install Image #####
 
-Download the image from http://tbd/screeninvader.lzma and write it to an external storage device.
-
-    wget -O - http://tbd/screeninvader.lzma > lzcat /dev/sdX
+Download the image from http://tbd/screeninvader.dd.xz and write it to an external storage device.
+    # as root user
+    wget -O - https://github.com/downloads/kallaballa/ScreenInvader/screeninvader.dd.xz > xzcat /dev/sdX
 
 #### Build the ScreenInvader system from scratch ####
 
@@ -13,10 +13,10 @@ Download the image from http://tbd/screeninvader.lzma and write it to an externa
 
     # makestick.sh prepares an external boot device to install
     cd ScreenInvader/
-    ./makestick.sh /dev/sdX 400
+    ./makestick.sh /dev/sdX 500
 
-    # Mount the boot device
-    mount /dev/sdX /media/stick
+    # Mount the created partition
+    mount /dev/sdX1 /media/stick
 
     # Run bootstrap.sh to create the file system.
     ./bootstrap.sh /media/stick
