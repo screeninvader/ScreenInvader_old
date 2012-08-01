@@ -186,7 +186,7 @@ function doCopy() {
     "$CHRT ldconfig"
 
   check "Copy osd binary"  \
-    "cp -a $BOOTSTRAP_DIR/build/xosd-2.2.14/src/xmms_plugin/osd $CHROOT_DIR/lounge/bin/"
+    "cp -a $BOOTSTRAP_DIR/build/xosd-2.2.14/src/screeninvader_plugin/osd $CHROOT_DIR/lounge/bin/"
 
   check "Update plymouth theme" \
     "$CHRT plymouth-set-default-theme -R screeninvader"
