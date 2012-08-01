@@ -4,6 +4,7 @@ ScreenInvader - A content centered media center
 #### Install Image #####
 
 Download the image from http://tbd/screeninvader.dd.xz and write it to an external storage device.
+
     # as root user
     wget -O - https://github.com/downloads/kallaballa/ScreenInvader/screeninvader.dd.xz > xzcat /dev/sdX
 
