@@ -23,6 +23,7 @@ Contributors
 
 * Amir Hassan: <amir@viel-zu.org>
 * Jascha Ehrenreich <jascha@jaeh.at>
+* Bernd Forstner <red667@gmail.com>
 
 Contact
 -------
