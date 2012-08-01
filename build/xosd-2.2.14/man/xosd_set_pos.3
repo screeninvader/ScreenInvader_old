@@ -1,0 +1,30 @@
+.\" Hey Emacs! This file is -*- nroff -*- source.
+.TH xosd_set_pos 3xosd "2002-06-25" "X OSD Library"
+.SH NAME
+xosd_set_pos \- Change the position of the XOSD window
+.SH SYNOPSIS
+.B #include <xosd.h>
+.sp
+.BI "int xosd_set_pos (xosd* " osd ", xosd_pos " pos );
+.fi
+.SH DESCRIPTION
+.B xosd_set_pos
+changes the position of the XOSD window, which was initially set when
+.BR xosd_init (3xosd)
+was called.
+
+.SH ARGUMENTS
+.IP \fIosd\fP 1i
+The on-screen display object to act on.
+.IP \fIpos\fP 1i
+One of
+.B XOSD_top
+or
+.B XOSD_bottom
+(for the top or the bottom of the screen respectively).
+.SH "RETURN VALUE"
+On success, a zero is returned.
+On error, \-1 is returned.
+.SH "SEE ALSO"
+.BR xosd_init (3xosd)
+.BR xosd_set_offset (3xosd)

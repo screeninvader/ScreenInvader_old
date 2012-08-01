@@ -1,0 +1,92 @@
+.\" Emacs, -*- nroff -*- please
+.TH XOSD 1xosd "January 2001" "X OSD cat"
+.SH NAME
+osd_cat \- X on-screen file displayer
+.SH SYNOPSIS
+.B osd_cat
+[\fIOPTION\fP] [\fIFILE\fP]...
+.br
+.B osd_cat
+.BR \-b\ percentage | slider
+[\fIOPTION\fP]
+.SH DESCRIPTION
+.PP
+.\" Add any additional description here
+.PP
+Display FILE, or standard input, on X screen.
+.TP
+\fB\-p\fP, \fB\-\-pos\fP=\fIPOS\fP
+This option tells \fBosd_cat\fP where to display the text. \fIPOS\fP can be \fBtop\fP, \fBmiddle\fP, or \fBbottom\fP. The 
+default is \fBtop\fP.
+.TP
+\fB\-o\fP, \fB\-\-offset\fP=\fIOFFSET\fP
+This option specifies the \fIoffset\fP from the top or bottom of screen the text is 
+displayed. The default is \fB0\fP.
+.TP
+\fB\-A\fP, \fB\-\-align\fP=\fIALIGN\fP
+This option tells \fBosd_cat\fP where to display the text. \fIALIGN\fP can be \fBleft\fP, \fBright\fP or \fBcenter\fP. The 
+default is \fBleft\fP.
+.TP
+\fB\-i\fP, \fB\-\-indent\fP=\fIOFFSET\fP
+This option specifies the \fIINDENT\fP from the left of screen the text is displayed. The default is \fB0\fP.
+.TP
+\fB\-f\fP, \fB\-\-font\fP=\fIFONT\fP
+This option specifies the \fIFONT\fP to be used for displaying the text. The default is \fBfixed\fP.
+.TP
+\fB\-c\fP, \fB\-\-color\fP=\fICOLOR\fP
+This option specifies the \fICOLOR\fP to be used for displaying the text. The default is \fBred\fP. 
+.TP
+\fB\-d\fP, \fB\-\-delay\fP=\fITIME\fP
+This option specifies the number of seconds the text is displayed. The default is \fB5\fP seconds.
+.TP
+\fB\-l\fP, \fB\-\-lines\fP=\fILINES\fP
+This option specifies the number of \fILINES\fP to scroll the display over. The default is \fB5\fP.
+.TP
+\fB\-s\fP, \fB\-\-shadow\fP=\fIOFFSET\fP
+This option specifies the \fIOFFSET\fP of the text shadow. The default is \fB0\fP, which means no text shadow is created.
+.TP
+\fB\-a\fP, \fB\-\-age\fP[=\fISCROLL_AGE\fP]
+This option affects screen redrawing. If \fISCROLL_AGE\fP seconds pass
+before a new line is ready (for example, you're reading from a pipe),
+all lines are cleared at once instead of being scrolled off as new lines
+replace old lines. The default is \fB0\fP.
+.br
+When no \fISCROLL_AGE\fP is explicitly given, the current value from
+\fIDELAY\fP is used.
+.TP
+\fB\-w\fP, \fB\-\-wait 
+This option also affects screen redrawing. When there is data ready to
+be put on screen, this option will cause \fBosd_cat\fP to wait until the
+display is clear. An alternative to scrolling.
+.TP
+\fB\-b\fP, \fB\-\-barmode\fP=\fITYPE\fP
+Lets you display a percentage or slider bar instead of just text.
+\fITYPE\fP may be \fBpercentage\fP or \fBslider\fP.
+In this mode no text is read from any file, but the following options can be used:
+.TP
+\fB\-P\fP, \fB\-\-percentage\fP=\fIPERCENTAGE\fP
+This option specified the position of the percentage / slider bar.
+\fIPERCENTAGE\fP may be in the range from \fB0\fP to \fB100\fP, the default is \fB50\fP.
+.TP
+\fB\-T\fP, \fB\-\-text\fP=\fITEXT\fP
+This option specifies an optional \fITEXT\fP which gets displayed above the percentage bar.
+The default is empty, so no additional text is displayed.
+.TP
+\fB\-h\fP, \fB\-\-help\fP
+display help (which is often more up to date) and exit
+.PP
+With no \fIFILE\fP, or when \fIFILE\fP is \fB\-\fP, read standard input.
+.SH AUTHOR
+Martijn van de Streek <martijn@foodfight.org>, Some patching done by
+Malcolm Valentine <farkit@iprimus.com.au> and Tim Wright
+<tim@ignavus.net>.
+.br
+xosd was written by Andre Renaud <andre@ignavus.net> and is maintained
+by Tim Wright <tim@ignavus.net>
+.SH SEE ALSO
+More information on the X OSD Library and its author can be found on
+.UR http://www.ignavus.net/software.html
+http://www.ignavus.net/software.html
+.UE
+.SH COPYRIGHT
+It is distributed under the GNU General Public License.

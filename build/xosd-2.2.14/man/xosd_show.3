@@ -1,0 +1,26 @@
+.\" Hey Emacs! This file is -*- nroff -*- source.
+.TH xosd_show 3xosd "2002-06-25" "X OSD Library"
+.SH NAME
+xosd_show \- make the XOSD window visible
+.SH SYNOPSIS
+.B #include <xosd.h>
+.sp
+.BI "int xosd_show (xosd* " osd );
+.fi
+.SH DESCRIPTION
+Call
+.B xosd_show
+to redisplay the data that has been previously displayed using 
+.BI xosd_display (3xosd).
+
+.SH ARGUMENTS
+.IP \fIosd\fP 1i
+The on-screen display object to act on.
+.SH "RETURN VALUE"
+On success, a zero is returned.
+On error, \-1 is returned.
+.SH "SEE ALSO"
+.BR xosd_init (3xosd),
+.BR xosd_display (3xosd),
+.BR xosd_hide (3xosd)
+

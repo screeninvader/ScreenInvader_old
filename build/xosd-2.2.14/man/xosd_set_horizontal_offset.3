@@ -1,0 +1,23 @@
+.\" Hey Emacs! This file is -*- nroff -*- source.
+.TH xosd_set_horizontal_offset 3xosd "2002-06-25" "X OSD Library"
+.SH NAME
+xosd_set_horizontal_offset \- Change the indent of the XOSD window
+.SH SYNOPSIS
+.B #include <xosd.h>
+.sp
+.BI "int xosd_set_horizontal_offset (xosd* " osd ", int " offset );
+.fi
+.SH DESCRIPTION
+.B xosd_set_horizontal_offset 
+changes the number of pixels the XOSD window is indent from the left of the screen.
+.SH ARGUMENTS
+.IP \fIosd\fP 1i
+The on-screen display object to act on.
+.IP \fIoffset\fP 1i
+Indent from the left of the screen, in pixels.
+.SH "RETURN VALUE"
+On success, a zero is returned.
+On error, \-1 is returned.
+.SH "SEE ALSO"
+.BR xosd_create (3xosd),
+.BR xosd_set_align (3xosd)

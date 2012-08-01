@@ -1,0 +1,36 @@
+.\" Hey Emacs! This file is -*- nroff -*- source.
+.TH xosd_hide 3xosd "2002-06-25" "X OSD Library"
+.SH NAME
+xosd_hide \- hide the XOSD window
+.SH SYNOPSIS
+.B #include <xosd.h>
+.sp
+.BI "int xosd_hide (xosd* " osd );
+.fi
+.SH DESCRIPTION
+.B xosd_hide
+hides (unmaps) the
+.I xosd
+window.
+Call 
+.BI xosd_show (3xosd)
+to make the window visible again.
+
+When 
+.BI xosd_display (3xosd)
+is called data will be shown until the pre-set time has
+elapsed.
+By calling
+.B xosd_hide
+the window is prematurely removed from the display.
+.SH ARGUMENTS
+.IP \fIosd\fP 1i
+The on-screen display object to act on.
+.SH "RETURN VALUE"
+On success, a zero is returned.
+On error, \-1 is returned.
+.SH "SEE ALSO"
+.BR xosd_init (3xosd),
+.BR xosd_display (3xosd),
+.BR xosd_show (3xosd)
+
