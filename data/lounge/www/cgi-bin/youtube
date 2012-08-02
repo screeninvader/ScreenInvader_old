@@ -18,9 +18,6 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 
-
-
-set -x
 . /lounge/bin/initcgi "text/html"
 
 ./reset
@@ -30,37 +27,77 @@ notify "loading youtube..." 1
 [ -z "$QUERY_STRING" ] && QUERY_STRING="$@"
 
 (
-function getCliveCSV() {
-  /usr/bin/clive -f mp4 --filename-format="%t" --emit-csv "$1" | grep "^csv:"
+function urldecode () {
+	local bf=
+	local cb=
+	local hi=0
+	local le=0
+	local x=-1
+
+	for p in  "$@"; do
+		le="${#p}"
+		while (( x++ < le )); do
+		case  "${p:${x}:1}" in
+			"%")
+				if (( hi == 0 )); then
+					(( hi++ ))	
+				else
+					bf="${bf}${p:${x}:1}"
+					hi=0
+				fi
+				;;
+
+			"+")
+				bf="${bf} "
+				;;
+			*)
+
+				if (( hi == 0 )); then
+					bf="${bf}${p:${x}:1}"
+				fi
+
+				if (( hi == 2 )); then
+					cb="${cb}${p:${x}:1}"
+					bf="${bf}$(echo -e "\\x${cb}")"
+					hi=0
+				fi
+				if (( hi == 1 )); then
+					cb=${p:${x}:1}
+					(( hi++ ))
+				fi
+				;;
+		esac
+		done
+	done
+	echo -n "$bf";
 }
 
-function playVideoFromCSV() {
-  TITLE="`echo "$1" | cut -d'"' -f2`"
-  URL="`echo "$1" | cut -d'"' -f6`"
+function getInfo() {
+  ID="$1"
+  wget -O - "http://www.youtube.com/get_video_info?&video_id=$1&el=detailpage&ps=default&eurl=&gl=US&hl=en" | sed -e's/%\([0-9A-F][0-9A-F]\)/\\\\\x\1/g' | xargs echo -e
+}
+
+function getVideoUrl {
+  INFO="$1"
+  urldecode "`echo "$INFO" | sed 's/.*url_encoded_fmt_stream_map//g' | sed 's/&quality.*//g' | sed 's/^=url=//g'`"
+}
+
+function getVideoTitle {
+  INFO="$1"
+  urldecode "`echo "$INFO" | sed 's/.*url_encoded_fmt_stream_map//g' | sed 's/.*title=//g' | sed 's/&.*$//g'`" | tr -s " "
+}
+
+function playVideo() {
+  INFO="`getInfo $1`"
+  TITLE="`getVideoTitle $INFO`"
+  URL="`getVideoUrl "$INFO"`"
   notify "playing: $TITLE"
-#  addToHistory
   player loadVideo "$URL" "$TITLE"
   disown
 }
 
-CSV="`getCliveCSV "$QUERY_STRING"`"
+ID="`echo $QUERY_STRING | sed 's/.*v=//g' | sed 's/&.*$//g'`"
+playVideo "$ID"
 
-function play() {
-CSV="`getCliveCSV "$1"`"
-
-if [ -n "$CSV" ]; then
-  playVideoFromCSV "$CSV"
-else
-  notify "failed"
-fi
-
-}
-
-#if [ -n "`echo "$QUERY_STRING" | fgrep "list="`" ]; then
-#  notify "loading youtube playlist.." 8
-#  urls="`clivescan -an "$QUERY_STRING" | grep "^fetch" | awk '{ print $2 }'`" 
-#  playB "`echo $urls | sed 's/ /\n/g' | sed '1d'`"
-#else
- play "$QUERY_STRING"
-#fi
-) &> /dev/null
+) 
+#&> /dev/null
