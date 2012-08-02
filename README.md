@@ -1,3 +1,5 @@
+![The mighty ScreenInvader](http://metalab.github.com/ScreenInvader/images/logo.png)
+
 # ScreenInvader
 ## A shared media experience. Instant and seamless.
 
