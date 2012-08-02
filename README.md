@@ -25,7 +25,7 @@ Contributors
 * Jascha Ehrenreich <jascha@jaeh.at>
 * Bernd Forstner <red667@gmail.com>
 
-Contact
+Authors
 -------
 
 Amir Hassan: <amir@viel-zu.org>
