@@ -9,7 +9,7 @@ That's what the ScreenInvader is doing for you and your friends.
 
 Please have a look at the [Getting Started](https://github.com/Metalab/ScreenInvader/wiki/Getting-Started) guide.
 
-#### Contribute #####
+#### Contribute! #####
 
 You can find a guide on how to build images and hack custom features [Here](https://github.com/Metalab/ScreenInvader/wiki/Hacking)
 
