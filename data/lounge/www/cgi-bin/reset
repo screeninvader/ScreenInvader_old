@@ -21,8 +21,6 @@
 
 
 . /lounge/bin/initcgi "text/plain"
-awsetbg -c /lounge/www/_inc/img/blank.png
-awsetbg -c /lounge/www/_inc/img/logo.png
 killall feh
 killall midori
 killall gifview

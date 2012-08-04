@@ -21,7 +21,8 @@
 
 . /lounge/bin/initcgi "text/html"
 ./reset
-
 [ -z "$QUERY_STRING" ] && QUERY_STRING="$@";
+
 notify "playling video... `basename "$QUERY_STRING"`"
+/lounge/bin/player refresh
 cat | sed "1,4d" | player loadStdin

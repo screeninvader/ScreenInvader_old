@@ -88,18 +88,22 @@ function hideText() {
 }
 
 function jump() {
-(
-  flock -x 300
+  killall osd
+  /lounge/bin/osd "                   loading ..." & 
   (
-    flock -x 200
-    file="`sed -n "$1p" $PLAYLIST`"
-    mplayer_cmd "loadfile $file"
-    echo "$1" >  "$PLAYLIST_IDX"
-    touch $PLAYLIST
-    killall osd
+    flock -x 300
+    idx=$1
+    PLLEN="`wc -l "$PLAYLIST" | cut -d" " -f1`"
+    
+    [ $idx -gt $PLLEN ] && idx=$PLLEN
+    
+    file="`sed -n "${idx}p" $PLAYLIST`"
+    mplayer_cmd "pause"
     refresh
-  ) 200>$CMD_LOCK
-) 300>$PLAYLIST_LOCK
+    mplayer_cmd "loadfile $file"
+    echo "$idx" >  "$PLAYLIST_IDX"
+    touch $PLAYLIST
+  ) 300>$PLAYLIST_LOCK
 }
 
 function isQueueMode() {
@@ -116,7 +120,8 @@ function toggleQueueMode() {
 }
 
 function playlistAdd() {
-(  playlistEnqueue "$1" "$2"
+(
+  playlistEnqueue "$1" "$2"
 
   if ! isQueueMode; then
     lines="`wc -l "$PLAYLIST" | cut -d" " -f1`"
@@ -175,27 +180,23 @@ function loadAudio() {
 }
 
 function previous() {
-(
-  flock -x 200
   (
     flock -x 200
     idx=$[ `cat $PLAYLIST_IDX` - 1 ]
     [ -z "$idx" ] && idx=0
-    jump "$idx"
-  ) 200>$CMD_LOCK
-) 200> /var/run/player/playlist_lock
+  ) 200> /var/run/player/playlist_lock
+
+  jump "$idx"
 }
 
 function next() {
-(   
-  flock -x 200
   (
     flock -x 200
     idx=$[ `cat $PLAYLIST_IDX` + 1 ]
-    [ -z "$idx" ] && idx=0
-    jump "$idx"
-  ) 200>$CMD_LOCK
-) 200> /var/run/player/playlist_lock
+    [ -z "$idx" ] && idx="0"
+  ) 200> /var/run/player/playlist_lock
+
+  jump "$idx"
 }
 
 function forward() {
@@ -270,11 +271,11 @@ function contains() {
 }
 
 function eotrack() {
-  idx="`cat "/var/run/player/playlist_idx"`"
+(  idx="`cat "/var/run/player/playlist_idx"`"
   [ -z "$idx" ] && idx=0
   len="`wc -l /var/run/player/playlist | cut -d\" \" -f1`"
 
-  if [ $idx -lt $[ $len ] ]; then
+  if [ $idx -lt $len ]; then
     jump $[ $idx + 1 ]
   else
     /lounge/bin/showip
@@ -282,12 +283,13 @@ function eotrack() {
     mpc play
   fi
 
-  mplayer_cmd "get_property path"
+  mplayer_cmd "get_property path") &> /tmp/eotrack
 }
 
 function sotrack() {
   mpc pause
   mplayer_cmd "get_property path"
+  killall osd
 }
 
 function callback() {
