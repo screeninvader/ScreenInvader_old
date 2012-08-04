@@ -1,5 +1,0 @@
-#!/bin/bash
-
-. /lounge/bin/initcgi "text/plain"
-
-./requests/treble "$1" | ./post > /dev/null
