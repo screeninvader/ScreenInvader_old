@@ -20,7 +20,7 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 #include <ctype.h>
 #include <gtk/gtk.h>
 
-#include "xmms_osd.h"
+#include "osd.h"
 
 static void init(void);
 static void cleanup(void);
@@ -162,40 +162,6 @@ read_config(void)
   DEBUG("done");
 }
 
-/*
- * Write configuration.
- */
-void
-write_config(void)
-{
-  DEBUG("write_config");
-/*
-  if ((cfgfile = xmms_cfg_open_default_file()) != NULL) {
-    xmms_cfg_write_string(cfgfile, "osd", "colour", colour);
-    xmms_cfg_write_string(cfgfile, "osd", "font", font);
-    xmms_cfg_write_int(cfgfile, "osd", "timeout", timeout);
-    xmms_cfg_write_int(cfgfile, "osd", "offset", offset);
-    xmms_cfg_write_int(cfgfile, "osd", "h_offset", h_offset);
-    xmms_cfg_write_int(cfgfile, "osd", "shadow_offset", shadow_offset);
-    xmms_cfg_write_int(cfgfile, "osd", "outline_offset", outline_offset);
-    xmms_cfg_write_int(cfgfile, "osd", "pos", pos);
-    xmms_cfg_write_int(cfgfile, "osd", "align", align);
-
-    xmms_cfg_write_int(cfgfile, "osd", "show_volume", show.volume);
-    xmms_cfg_write_int(cfgfile, "osd", "show_balance", show.balance);
-    xmms_cfg_write_int(cfgfile, "osd", "show_pause", show.pause);
-    xmms_cfg_write_int(cfgfile, "osd", "show_trackname", show.trackname);
-    xmms_cfg_write_int(cfgfile, "osd", "show_stop", show.stop);
-    xmms_cfg_write_int(cfgfile, "osd", "show_repeat", show.repeat);
-    xmms_cfg_write_int(cfgfile, "osd", "show_shuffle", show.shuffle);
-
-    xmms_cfg_write_default_file(cfgfile);
-    xmms_cfg_free(cfgfile);
-  }
-*/
-  DEBUG("done");
-}
-
 void
 apply_config(void)
 {
@@ -216,39 +182,6 @@ apply_config(void)
   DEBUG("done");
 }
 
-/*
- * Convert hexcode to ASCII.
- */
-/*
-static void
-replace_hexcodes(gchar * text)
-{
-  gchar *head, *tail;
-  int conv_underscore, c;
-  ConfigFile *cfgfile;
-  DEBUG("replace_hexcodes");
-
-  if ((cfgfile = xmms_cfg_open_default_file()) != NULL) {
-    xmms_cfg_read_boolean(cfgfile, "xmms", "convert_underscore",
-                          &conv_underscore);
-    xmms_cfg_free(cfgfile);
-  }
-
-  for (head = tail = text; *head; head++, tail++) {
-    if (conv_underscore && *head == '_') {
-      *tail = ' ';
-      continue;
-    }
-    if (*head == '%' && isxdigit(head[1]) && isxdigit(head[2])) {
-      sscanf(head + 1, "%2x", &c);
-      *tail = (char) c;
-      head += 2;
-      continue;
-    }
-    *tail = *head;
-  }
-  *tail = '\0';
-}*/
 
 /*
  * Callback funtion to handle delayed display.
@@ -263,10 +196,6 @@ timeout_func(char* text)
     xosd_display(osd, 1, XOSD_string, text);
 
 skip:
-  /* copy current state (including title) for future comparison. Free old
-   * title first. */
-/*  if (previous.title)
-    g_free(previous.title);*/
 
   GDK_THREADS_LEAVE();
 

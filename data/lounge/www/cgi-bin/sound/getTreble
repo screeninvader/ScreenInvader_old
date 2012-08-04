@@ -1,9 +1,0 @@
-#!/bin/bash
-
-. /lounge/bin/initcgi "text/plain"
-
-volume=`cat "./requests/getstatus" | ./post | grep "^<" | sed 's/.*<Treble><Val>//' | sed 's/<\/Val><Exp>.*//'`
-
-echo $volume
-
-

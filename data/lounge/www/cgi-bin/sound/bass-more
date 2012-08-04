@@ -1,8 +1,0 @@
-#!/bin/bash
-
-. /lounge/bin/initcgi "text/plain"
-
-bass=`sound/getBass | sed '1,2d'`
-newbass=$[ $bass + 5 ];
-sound/setBass "$newbass" &> /dev/null
-echo $newbass

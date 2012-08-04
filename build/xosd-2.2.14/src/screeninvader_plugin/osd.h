@@ -46,7 +46,6 @@ extern int colour_dialog_window(GtkButton * button, gpointer user_data);
 /* xmms_osd.c */
 extern xosd *osd;
 extern void read_config(void);
-extern void write_config(void);
 extern void apply_config(void);
 
 /* vim: tabstop=8 shiftwidth=8 noexpandtab
