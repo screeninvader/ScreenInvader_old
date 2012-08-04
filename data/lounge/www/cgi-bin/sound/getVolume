@@ -1,0 +1,7 @@
+#!/bin/bash
+
+. /lounge/bin/initcgi "text/plain"
+
+cat "/lounge/www/cgi-bin/requests/getstatus" | ./post | grep "^<" | sed 's/.*<Lvl><Val>//' | sed 's/<\/Val><Exp>.*//'
+
+
