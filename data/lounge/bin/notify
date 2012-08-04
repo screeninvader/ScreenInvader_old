@@ -24,6 +24,5 @@ timeout=$2
 
 [ -z "$timeout" ] && timeout=2
 
-
-echo "naughty.notify({title = \"$1\", ontop = false, timeout = $timeout})" | awesome-client -
-
+killall osd
+/lounge/bin/osd -t $timeout "$1"

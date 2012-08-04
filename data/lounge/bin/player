@@ -88,8 +88,7 @@ function hideText() {
 }
 
 function jump() {
-  killall osd
-  /lounge/bin/osd "                   loading ..." & 
+  /lounge/bin/notify "loading ..." 0 & 
   (
     flock -x 300
     idx=$1

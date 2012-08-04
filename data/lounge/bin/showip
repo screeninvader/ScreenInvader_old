@@ -19,15 +19,16 @@
 #
 
 export DISPLAY=:0
+export PATH="$PATH:/lounge/bin"
 
 while [ 0 ]; do
   sleep 1;
-  ADDR="`/lounge/bin/getip`"
-  killall osd
+  ADDR="`getip`"
+
   if [ -z "$ADDR" ]; then
-    /lounge/bin/osd "                    No Network" &>/dev/null &
+    notify "No Network" 0 &>/dev/null &
   else
-    /lounge/bin/osd "                   $ADDR" &>/dev/null &
+    notify "$ADDR" 0 &>/dev/null &
     exit
   fi
   ADDR=""
