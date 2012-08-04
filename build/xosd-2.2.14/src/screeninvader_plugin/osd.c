@@ -75,14 +75,14 @@ int main(int argc, char *argv[])
   apply_config();
   DEBUG("osd initialized");
    
-	if (osd) {
-					DEBUG("osd initialized");
-      while(1) {
-				timeout_func(argv[1]);
-			}
-			timeout_tag = gtk_timeout_add(100, timeout_func, NULL);
-	}
-	return 0;
+  if (osd) {
+    DEBUG("osd initialized");
+    while(1) {
+      timeout_func(argv[1]);
+      sleep(3);
+    }
+  }
+  return 0;
 }
 
 /*
