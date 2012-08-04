@@ -21,17 +21,19 @@
 
 dir="`dirname $0`"
 MAKEPARTITION_DIR="`cd $dir; pwd`"
-DEVICE="$1"
-SIZE="$2"
 
 function printUsage() {
   cat 1>&2 <<EOUSAGE
 makestick.sh - Prepare a file system for installation of the ScreenInvader system.
 
-Usage: $0 <device-file> [<sizeInM>]
+Usage: $0 [-z] <device-file> [<sizeInM>]
 
-<device-file>    a block special device.
-<sizeInM>        the size of the resulting file system in megabytes.
+  <device-file>    a block special device.
+  <sizeInM>        the size of the resulting file system in megabytes.
+
+Options:
+  -z               write zeroes to the device before creating the partition
+
 EOUSAGE
   exit 1
 }
@@ -44,13 +46,30 @@ function makeSyslinuxConf() {
 export BOOTSTRAP_LOG="makestick.log"
 source "$MAKEPARTITION_DIR/.functions.sh"
 
+WRITE_ZEROES=""
+
+while getopts 'z' c
+do
+  case $c in
+    z) WRITE_ZEROES="YES";;
+    \?) printUsage;;
+  esac
+done
+
+shift $(($OPTIND - 1))
+
+DEVICE="$1"
+SIZE="$2"
+
 [ $# -eq 0 -o $# -gt 2 ] && printUsage;
 [ ! -b "$DEVICE" ] &&  error "Not a block device: $DEVICE";
-[ -z "$SIZE" ] && SIZE=400
+[ -z "$SIZE" ] && SIZE=500
 [ printf "%d" $SIZE &> /dev/null -o $SIZE -lt 100 ] && error "Invalid size: $SIZE"
 
-check "Write zeros to device" \
-  "dd if=/dev/zero of=$DEVICE bs=1M count=$[$SIZE + 1]" 
+if [ -n "$WRITE_ZEROES" ]; then
+  check "Write zeros to device" \
+    "dd if=/dev/zero of=$DEVICE bs=1M count=$[$SIZE + 1]" 
+fi
 
 check "Make disk label" \
   "parted -s $DEVICE mklabel msdos"
