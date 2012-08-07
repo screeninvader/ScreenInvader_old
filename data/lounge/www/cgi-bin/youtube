@@ -27,74 +27,19 @@ notify "loading youtube..." 1
 [ -z "$QUERY_STRING" ] && QUERY_STRING="$@"
 
 (
-function urldecode () {
-	local bf=
-	local cb=
-	local hi=0
-	local le=0
-	local x=-1
-
-	for p in  "$@"; do
-		le="${#p}"
-		while (( x++ < le )); do
-		case  "${p:${x}:1}" in
-			"%")
-				if (( hi == 0 )); then
-					(( hi++ ))	
-				else
-					bf="${bf}${p:${x}:1}"
-					hi=0
-				fi
-				;;
-
-			"+")
-				bf="${bf} "
-				;;
-			*)
-
-				if (( hi == 0 )); then
-					bf="${bf}${p:${x}:1}"
-				fi
-
-				if (( hi == 2 )); then
-					cb="${cb}${p:${x}:1}"
-					bf="${bf}$(echo -e "\\x${cb}")"
-					hi=0
-				fi
-				if (( hi == 1 )); then
-					cb=${p:${x}:1}
-					(( hi++ ))
-				fi
-				;;
-		esac
-		done
-	done
-	echo -n "$bf";
-}
-
-function getInfo() {
-  wget -O - "http://www.youtube.com/get_video_info?&video_id=$ID&el=detailpage&ps=default&eurl=&gl=US&hl=en" | sed -e's/%\([0-9A-F][0-9A-F]\)/\\\\\x\1/g' | xargs echo -e
-}
-
-function getVideoUrl {
-  urldecode "`echo "$INFO" | sed 's/.*url_encoded_fmt_stream_map//g' | sed 's/&quality.*//g' | sed 's/^=url=//g'`"
-}
-
-function getVideoTitle {
-  urldecode "`echo "$INFO" | sed 's/.*title=//g' | sed 's/&[^+].*$//g'`"
-}
-
-function playVideo() {
-  INFO="`getInfo $ID`"
-  TITLE="`getVideoTitle $INFO`"
-  URL="`getVideoUrl "$INFO"`"
-  notify "playing: $TITLE"
-  player loadVideo "$URL" "$TITLE"
-  disown
+function urldecode() {
+  echo $1 | sed -e's/%\([0-9A-F][0-9A-F]\)/\\\\\x\1/g' | xargs echo -e | sed 's/+/ /g'
 }
 
 ID="`echo $QUERY_STRING | sed 's/.*v=//g' | sed 's/&.*$//g'`"
-playVideo
+INFO=$(wget -qO- "http://www.youtube.com/get_video_info?&video_id=$ID&el=detailpage")
+TITLE=$(urldecode "`echo "$INFO" | sed -n 's/\([^&]*&\)*title=\([^&]*\).*/\2/p'`")
+URL=$(urldecode "`echo "$INFO" | sed 's/.*url_encoded_fmt_stream_map//g' | sed 's/%26quality.*//g' | sed 's/^=url%3D//g'`")
+URL=$(urldecode $URL)
+
+notify "playing: $TITLE"
+player loadVideo "$URL" "$TITLE"
+disown
 
 ) 
 #&> /dev/null
