@@ -73,22 +73,19 @@ function urldecode () {
 }
 
 function getInfo() {
-  ID="$1"
-  wget -O - "http://www.youtube.com/get_video_info?&video_id=$1&el=detailpage&ps=default&eurl=&gl=US&hl=en" | sed -e's/%\([0-9A-F][0-9A-F]\)/\\\\\x\1/g' | xargs echo -e
+  wget -O - "http://www.youtube.com/get_video_info?&video_id=$ID&el=detailpage&ps=default&eurl=&gl=US&hl=en" | sed -e's/%\([0-9A-F][0-9A-F]\)/\\\\\x\1/g' | xargs echo -e
 }
 
 function getVideoUrl {
-  INFO="$1"
   urldecode "`echo "$INFO" | sed 's/.*url_encoded_fmt_stream_map//g' | sed 's/&quality.*//g' | sed 's/^=url=//g'`"
 }
 
 function getVideoTitle {
-  INFO="$1"
-  urldecode "`echo "$INFO" | sed 's/.*url_encoded_fmt_stream_map//g' | sed 's/.*title=//g' | sed 's/&.*$//g'`" | tr -s " "
+  urldecode "`echo "$INFO" | sed 's/.*title=//g' | sed 's/&[^+].*$//g'`"
 }
 
 function playVideo() {
-  INFO="`getInfo $1`"
+  INFO="`getInfo $ID`"
   TITLE="`getVideoTitle $INFO`"
   URL="`getVideoUrl "$INFO"`"
   notify "playing: $TITLE"
@@ -97,7 +94,7 @@ function playVideo() {
 }
 
 ID="`echo $QUERY_STRING | sed 's/.*v=//g' | sed 's/&.*$//g'`"
-playVideo "$ID"
+playVideo
 
 ) 
 #&> /dev/null
