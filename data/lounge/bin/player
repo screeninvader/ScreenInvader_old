@@ -266,7 +266,7 @@ function contains() {
 }
 
 function eotrack() {
-(  idx="`cat "/var/run/player/playlist_idx"`"
+  idx="`cat "/var/run/player/playlist_idx"`"
   [ -z "$idx" ] && idx=0
   len="`wc -l /var/run/player/playlist | cut -d\" \" -f1`"
 
@@ -279,7 +279,7 @@ function eotrack() {
     mpc play
   fi
 
-  mplayer_cmd "get_property path") &> /tmp/eotrack
+  mplayer_cmd "get_property path"
 }
 
 function sotrack() {
