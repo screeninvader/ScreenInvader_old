@@ -40,5 +40,4 @@ URL=$(urldecode $URL)
 player loadVideo "$URL" "$TITLE"
 disown
 
-) 
-#&> /dev/null
+) &> /dev/null
