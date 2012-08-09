@@ -24,13 +24,12 @@
 
 #./reset
 
-notify "loading arte+7..."
+notify "Loading arte+7..."
 
 [ -z "$QUERY_STRING" ] && QUERY_STRING="$@"
 
 (
 function playUrl() {
-  notify "playing arte+7"
   player loadVideo "$1" "arte+7"
   disown
 }

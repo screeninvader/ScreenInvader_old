@@ -26,3 +26,5 @@ echo "Content-type: $1"
 echo ""
 
 cd $HOME/www/cgi-bin/
+rm /tmp/tmp.*
+

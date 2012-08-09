@@ -24,7 +24,7 @@ set -x
 
 ./reset
 
-notify "loading soundcloud..." 1
+notify "Loading soundcloud..." 1
 
 url=$1
 

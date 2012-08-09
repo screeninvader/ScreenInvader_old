@@ -21,5 +21,5 @@
 
 export HOME="/lounge"
 export DISPLAY=:0
-/lounge/bin/notify "forward" 1 &> /dev/null &
+/lounge/bin/notify ">" 1 &> /dev/null &
 /lounge/bin/player forward

@@ -24,7 +24,7 @@
 
 set -x
 [ -z "$QUERY_STRING" ] && QUERY_STRING="$@"
-notify "loading image... `basename "$QUERY_STRING"`"
+notify "Loading image... `basename "$QUERY_STRING"`"
 tmpimg=`mktemp`
 wget -O "$tmpimg" "$QUERY_STRING"
 feh -F --image-bg black --auto-zoom "$tmpimg" &

@@ -27,7 +27,7 @@ killall -9 feh
 killall -9 midori
 
 [ -z "$QUERY_STRING" ] && QUERY_STRING="$@";
-notify "playling gif... `basename "$QUERY_STRING"`"
+notify "Loading gif... `basename "$QUERY_STRING"`"
 wget -q -O - "$QUERY_STRING" | gifview -a &>/dev/null
 disown
 

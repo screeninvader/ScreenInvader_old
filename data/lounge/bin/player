@@ -17,6 +17,8 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
+
+
 set -x
 function printUsage() {
   cat 1>&2 <<EOUSAGE
@@ -36,6 +38,7 @@ EOUSAGE
 RUN_DIR="/var/run/player"
 CMD_FIFO="$RUN_DIR/cmdfifo"
 CMD_LOCK="$RUN_DIR/cmdlock"
+PLAYER_STATE="$RUN_DIR/state"
 PLAYLIST="$RUN_DIR/playlist"
 PLAYLIST_CACHE="$RUN_DIR/playlist_cache"
 PLAYLIST_TITLES="$RUN_DIR/playlist_titles"
@@ -75,7 +78,7 @@ function showText() {
     flock -x 200
     text="$1"
     duration="$2"
-    [ -z "$duration" ] && duration=1000000000 
+    [ -z "$duration" ] && duration=1000000000
     mplayer_cmd "osd_show_text \"$text\" $duration 1"
   ) 200>$CMD_LOCK
 }
@@ -88,14 +91,14 @@ function hideText() {
 }
 
 function jump() {
-  /lounge/bin/notify "loading ..." 0 & 
+  /lounge/bin/notify "loading ..." 0 &
   (
     flock -x 300
     idx=$1
     PLLEN="`wc -l "$PLAYLIST" | cut -d" " -f1`"
-    
+
     [ $idx -gt $PLLEN ] && idx=$PLLEN
-    
+
     file="`sed -n "${idx}p" $PLAYLIST`"
     mplayer_cmd "pause"
     refresh
@@ -121,11 +124,12 @@ function toggleQueueMode() {
 function playlistAdd() {
 (
   playlistEnqueue "$1" "$2"
+  MODE=post
+  isQueueMode && MODE=queue
 
-  if ! isQueueMode; then
+  if [ "`cat $PLAYER_STATE`" == "stopped" -o "$mode" == "post" ]; then
     lines="`wc -l "$PLAYLIST" | cut -d" " -f1`"
-    idx="$[ $lines ]"
-    jump "$idx" 
+    jump "$lines"
   fi
 )
 }
@@ -142,6 +146,7 @@ function playlistEnqueue() {
 }
 
 function loadStdin() {
+    /lounge/bin/notify "Playing live upload"
     rm -f "$MPLAYERSTDIN"
     mkfifo "$MPLAYERSTDIN"
     mplayer_cmd "loadfile \"$MPLAYERSTDIN\""
@@ -150,6 +155,7 @@ function loadStdin() {
 }
 
 function loadVideo() {
+    /lounge/bin/notify "Playing $2"
     playlistAdd "$1" "$2"
 }
 
@@ -179,22 +185,12 @@ function loadAudio() {
 }
 
 function previous() {
-  (
-    flock -x 200
-    idx=$[ `cat $PLAYLIST_IDX` - 1 ]
-    [ -z "$idx" ] && idx=0
-  ) 200> /var/run/player/playlist_lock
-
+  idx=$(fock -x 200; echo $[ `cat $PLAYLIST_IDX` - 1 ];) 200> /var/run/player/playlist_lock
   jump "$idx"
 }
 
 function next() {
-  (
-    flock -x 200
-    idx=$[ `cat $PLAYLIST_IDX` + 1 ]
-    [ -z "$idx" ] && idx="0"
-  ) 200> /var/run/player/playlist_lock
-
+  idx=$(fock -x 200; echo $[ `cat $PLAYLIST_IDX` + 1 ];) 200> /var/run/player/playlist_lock
   jump "$idx"
 }
 
@@ -277,6 +273,7 @@ function eotrack() {
   if [ $idx -lt $len ]; then
     jump $[ $idx + 1 ]
   else
+    echo "stopped" > /var/run/player/state
     /lounge/bin/showip
     stop
     mpc play
@@ -286,6 +283,7 @@ function eotrack() {
 }
 
 function sotrack() {
+  echo "playing" > /var/run/player/state
   mpc pause
   mplayer_cmd "get_property path"
   killall osd
@@ -299,3 +297,4 @@ function callback() {
 }
 
 "$1" "$2" "$3" "$4" "$5"
+

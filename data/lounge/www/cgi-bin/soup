@@ -24,7 +24,7 @@ set -x
 
 ./reset
 
-/var/www/bin/notify "loading soup..." 1
+/var/www/bin/notify "Loading soup..." 1
 
 echo "$QUERY_STRING"
 [ -z "$QUERY_STRING" ] && QUERY_STRING="$@"

@@ -24,15 +24,15 @@
 ./reset
 
 [ -z "$QUERY_STRING" ] && QUERY_STRING=$1;
-notify "loading pdf..."
+notify "Loading pdf..."
 
 if [ -n "`echo "$QUERY_STRING" | grep "^http"`" ]; then
  tmpfile=`mktemp`
  wget "$QUERY_STRING" -O $tmpfile
  QUERY_STRING=$tmpfile
- 
 fi
 
 evince "$QUERY_STRING"
 
-  
+
+

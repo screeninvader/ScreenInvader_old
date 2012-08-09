@@ -21,7 +21,7 @@
 
 . /lounge/bin/initcgi "text/html"
 
-notify "showing web page: $@" 3
+notify "Loading web page: $@" 3
 ./reset
 export MOZ_PLUGIN_PATH="/usr/lib/flashplugin-nonfree/"
 

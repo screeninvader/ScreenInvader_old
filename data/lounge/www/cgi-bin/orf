@@ -24,14 +24,13 @@ set -x
 
 #./reset
 
-notify "loading orf live stream..."
+notify "Loading orf stream..."
 
 [ -z "$QUERY_STRING" ] && QUERY_STRING="$@"
 
 (
 function playUrl() {
-  notify "playing"
-  player loadVideo "$1" "orf live stream"
+  player loadVideo "$1" "orf stream"
   disown
 }
 

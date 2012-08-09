@@ -7,7 +7,7 @@ MEDIA_EXT="svg avi mpeg mpg mov wmv mp4 3gp ogm mkv jpg jpeg gif png"
 
 [ -z "$QUERY_STRING" ] && QUERY_STRING="$@";
 TERMS="`prepareTerms "$QUERY_STRING"`"
-notify "searching for $TERMS"
+notify "Searching for $TERMS"
 LOCATEARGS="`makeLocateArgs "$TERMS" $MEDIA_EXT`"
 locate="locate.findutils $LOCATEARGS"
 echo $locate
