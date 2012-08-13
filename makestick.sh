@@ -43,6 +43,14 @@ function makeSyslinuxConf() {
   templates/syslinux_cfg "$uuid" > "$1/boot/syslinux/syslinux.cfg" 
 }
 
+function doCheckPreCond() {
+  check "'extlinux' installed" \
+    "which extlinux"
+
+  check "'parted' installed" \
+    "which parted"
+}
+
 export BOOTSTRAP_LOG="makestick.log"
 source "$MAKEPARTITION_DIR/.functions.sh"
 
@@ -65,6 +73,8 @@ SIZE="$2"
 [ ! -b "$DEVICE" ] &&  error "Not a block device: $DEVICE";
 [ -z "$SIZE" ] && SIZE=500
 [ printf "%d" $SIZE &> /dev/null -o $SIZE -lt 100 ] && error "Invalid size: $SIZE"
+
+doCheckPreCond
 
 if [ -n "$WRITE_ZEROES" ]; then
   check "Write zeros to device" \
