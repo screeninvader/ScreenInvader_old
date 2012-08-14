@@ -34,7 +34,7 @@ function urldecode() {
 
 function selectVideo() {
   info="`echo $1 |  sed 's/%2Curl%3D/\n/g'`"
-  prefered="small medium large"
+  prefered="large medium small"
   nonflv="`echo "$info" | fgrep -v video%252Fx-flv`"
   [ -n "$nonflv" ] && info="$nonflv"
 
