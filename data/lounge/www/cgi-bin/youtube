@@ -18,6 +18,7 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 
+set -x
 . /lounge/bin/initcgi "text/html"
 
 ./reset
@@ -31,13 +32,32 @@ function urldecode() {
   echo $1 | sed -e's/%\([0-9A-F][0-9A-F]\)/\\\\\x\1/g' | xargs echo -e | sed 's/+/ /g'
 }
 
+function selectVideo() {
+  info="`echo $1 |  sed 's/%2Curl%3D/\n/g'`"
+  prefered="small medium large"
+  nonflv="`echo "$info" | fgrep -v video%252Fx-flv`"
+  [ -n "$nonflv" ] && info="$nonflv"
+
+  for q in $prefered; do 
+    quality="`echo "$info" | grep "quality%3D${q}"`"
+
+    if [ -n "$quality" ]; then
+       echo $quality
+       break;
+    fi
+  done
+}
+
 ID="`echo $QUERY_STRING | sed 's/.*v=//g' | sed 's/&.*$//g'`"
 INFO=$(wget -qO- "http://www.youtube.com/get_video_info?&video_id=$ID&el=detailpage")
+SELECT="`selectVideo $INFO`"
+echo "$SELECT"
 TITLE=$(urldecode "`echo "$INFO" | sed -n 's/\([^&]*&\)*title=\([^&]*\).*/\2/p'`")
-URL=$(urldecode "`echo "$INFO" | sed 's/.*url_encoded_fmt_stream_map//g' | sed 's/%26quality.*//g' | sed 's/^=url%3D//g'`")
+URL=$(urldecode "`echo "$SELECT" |  sed 's/.*url_encoded_fmt_stream_map//g' | sed 's/%26quality.*//g' `")
 URL=$(urldecode $URL)
 
 player loadVideo "$URL" "$TITLE"
 disown
 
-) &> /dev/null
+)
+# &> /dev/null
