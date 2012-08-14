@@ -239,6 +239,11 @@ function doFreeChroot() {
   exit
 }
 
+function doCheckPreCond() {
+  check "'debootstrap' installed" \
+    "which debootstrap"
+}
+
 ###### main
 
 while getopts 'a:l:p:g:idux' c
@@ -267,6 +272,8 @@ export CHRT="chroot \"$CHROOT_DIR\" "
 if [ $# -ne 1 ]; then
   printUsage
 else
+  doCheckPreCond
+
   printVideoDrivers
   
   if [ -z "$GIDX" ]; then
