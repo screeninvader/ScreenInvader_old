@@ -18,6 +18,8 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 
+KERNEL="linux-image-686"
+
 VIDEO_DRIVERS="xserver-xorg-video-fbdev xserver-xorg-video-vesa"
 
 PKG_WHITE="deb-multimedia-keyring keyboard-configuration debconf-english sudo dialog mplayer-nogui thttpd feh mpd mpc xdotool alsa-utils awesome psmisc clive midori dos2unix curl dropbear xinit autofs smbfs mingetty xserver-xorg xserver-xorg-input-kbd xserver-xorg-input-mouse x11-xserver-utils locate plymouth xfonts-intl-european gifsicle kbd libgl1-mesa-dri"
@@ -36,7 +38,7 @@ DEBIAN_MULTIMEDIA_MIRROR="http://www.deb-multimedia.org/"
 dir="`dirname $0`"
 BOOTSTRAP_DIR="`cd $dir; pwd`"
 BOOTSTRAP_LOG="$BOOTSTRAP_DIR/bootstrap.log"
-ARCH=armel
+ARCH=i386
 APTCACHER_PORT=
 NOINSTALL=
 NODEBOOT=
