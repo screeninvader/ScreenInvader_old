@@ -28,7 +28,7 @@ PKG_EXTRA="rsyslogd vim rsync less"
 
 PKG_BLACK="info manpages rsyslog tasksel tasksel-data aptitude locales man-db whiptail iptables wmctrl vim-tiny vim-common traceroute netcat-traditional iputils-ping dmidecode libboost-iostreams1.42.0 libcwidget3 libept1 libnewt0.52 libnfnetlink0 libsigc++-2.0-0c2a"
 
-FILES_BLACK="/var/cache/apt/pkgcache.bin /var/cache/apt/srcpkgcache.bin /usr/share/man/* /usr/share/locale/* /usr/share/doc/* /usr/share/zoneinfo/* /usr/share/icons/* /root/.bash_history /lib/modules/*/kernel/drivers/infiniband/* /lib/modules/*/kernel/drivers/bluetooth/* /lib/modules/*/kernel/drivers/media/* /lib/modules/*/kernel/drivers/net/wireless/* /var/cache/debconf* /usr/share/doc-base/*"
+FILES_BLACK="/var/cache/apt/pkgcache.bin /var/cache/apt/srcpkgcache.bin /usr/share/man/* /usr/share/locale/* /usr/share/doc/* /usr/share/zoneinfo/* /usr/share/icons/* /root/.bash_history /lib/modules/*/kernel/drivers/infiniband/* /lib/modules/*/kernel/drivers/bluetooth/* /lib/modules/*/kernel/drivers/media/* /lib/modules/*/kernel/drivers/net/wireless/* /var/cache/debconf* /usr/share/doc-base/* /usr/share/fonts/truetype/ /usr/share/info/* /usr/share/sounds/alsa/* /usr/share/pixmaps/debian-logo.png"
 
 export LC_ALL="C"
 DEBIAN_MIRROR="http://ftp.at.debian.org/debian/"
