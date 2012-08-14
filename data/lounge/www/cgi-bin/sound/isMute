@@ -22,7 +22,7 @@
 
 . /lounge/bin/initcgi "text/plain"
 
-mute=`amixer sget Master | grep "Mono:" | awk '{ print $6 }'`
+mute=`amixer sget PCM | grep "Mono:" | awk '{ print $6 }'`
 
 [ "$mute" == "[on]" ] && echo false || echo true
 

@@ -22,8 +22,7 @@
 
 . /lounge/bin/initcgi "text/plain"
 (
-NAME="`amixer | sed '1!d' | cut -d"'" -f2`" 
-amixer -D1 -c0 -d sget "$NAME" | fgrep "%" | sed '1!d' | awk '{ print $4 }' | cut -d"[" -f2 | cut -d"%" -f1 
+amixer -d sget "PCM" | fgrep "%" | sed '1!d' | awk '{ print $5 }' | cut -d"[" -f2 | cut -d"%" -f1 
 ) 2>&1
  
 

@@ -24,4 +24,4 @@
 
 VOL="$1"
 
-amixer sset Master "${VOL}%" &> /dev/null
+amixer sset PCM "${VOL}%" &> /dev/null

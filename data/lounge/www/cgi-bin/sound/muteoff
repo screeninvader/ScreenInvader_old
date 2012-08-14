@@ -20,4 +20,4 @@
 
 
 
-amixer sset Master on  &> /dev/null
+amixer sset PCM on  &> /dev/null
