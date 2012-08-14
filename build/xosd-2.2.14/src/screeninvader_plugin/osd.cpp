@@ -97,7 +97,7 @@ int main(int argc, char *argv[])
   int h_align = 1;
   int v_align = 2;
   string colour = "white";
-  string font = "-misc-topaz a500a1000a2000-medium-r-normal--0-260-0-0-c-0-iso8859-1";
+  string font = "-misc-topaz a500a1000a2000-medium-r-normal--0-240-0-0-c-0-iso8859-1";
   string text;
   
   while (optind < argc) {
