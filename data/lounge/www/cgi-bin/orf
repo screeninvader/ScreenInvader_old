@@ -24,7 +24,7 @@ set -x
 
 #./reset
 
-notify "Loading orf stream..."
+notify "Loading orf..."
 
 [ -z "$QUERY_STRING" ] && QUERY_STRING="$@"
 

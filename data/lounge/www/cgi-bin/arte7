@@ -24,7 +24,7 @@
 
 #./reset
 
-notify "Loading arte+7..."
+notify "Load arte+7..."
 
 [ -z "$QUERY_STRING" ] && QUERY_STRING="$@"
 

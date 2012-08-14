@@ -24,13 +24,13 @@ set -x
 
 ./reset
 
-notify "Loading soundcloud..." 1
-
 url=$1
 
 artist=`echo $url | cut -d'/' -f4`
 song=`echo $url | cut -d'/' -f5`
 title=$artist" - "$song
+notify "Loading soundcloud: $title" 1
+
 
 client_id="2dcf4e12afd6ed5119741f888260fc85"
 resolve="http://api.soundcloud.com/resolve.json?url=$url&client_id=$client_id"

@@ -24,7 +24,7 @@
 ./reset
 
 [ -z "$QUERY_STRING" ] && QUERY_STRING=$1;
-notify "Loading pdf..."
+notify "Loading pdf.."
 
 if [ -n "`echo "$QUERY_STRING" | grep "^http"`" ]; then
  tmpfile=`mktemp`
