@@ -38,7 +38,7 @@ function selectVideo() {
   nonflv="`echo "$info" | fgrep -v video%252Fx-flv`"
   [ -n "$nonflv" ] && info="$nonflv"
 
-  for q in $prefered; do 
+  for q in $prefered; do
     quality="`echo "$info" | grep "quality%3D${q}"`"
 
     if [ -n "$quality" ]; then
@@ -53,11 +53,10 @@ INFO=$(wget -qO- "http://www.youtube.com/get_video_info?&video_id=$ID&el=detailp
 SELECT="`selectVideo $INFO`"
 echo "$SELECT"
 TITLE=$(urldecode "`echo "$INFO" | sed -n 's/\([^&]*&\)*title=\([^&]*\).*/\2/p'`")
-URL=$(urldecode "`echo "$SELECT" |  sed 's/.*url_encoded_fmt_stream_map//g' | sed 's/%26quality.*//g' `")
+URL=$(urldecode "`echo "$SELECT" |  sed 's/.*url_encoded_fmt_stream_map//g' | sed 's/%26quality.*//g' | sed 's/^=url%3D//g'`")
 URL=$(urldecode $URL)
 
 player loadVideo "$URL" "$TITLE"
 disown
 
-)
-# &> /dev/null
+) &> /dev/null
