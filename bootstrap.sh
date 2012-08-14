@@ -20,11 +20,10 @@
 
 KERNEL="linux-image-686"
 
-VIDEO_DRIVERS="xserver-xorg-video-fbdev xserver-xorg-video-vesa"
-
+VIDEO_DRIVERS="xserver-xorg-video-all xserver-xorg-video-ati xserver-xorg-video-radeon xserver-xorg-video-nv xserver-xorg-video-intel xserver-xorg-video-geode xserver-xorg-video-glide xserver-xorg-video-glint xserver-xorg-video-i128 xserver-xorg-video-i740 xserver-xorg-video-mach64 xserver-xorg-video-geode xserver-xorg-video-cirrus xserver-xorg-video-mga xserver-xorg-video-openchrome xserver-xorg-video-via xserver-xorg-video-fbdev xserver-xorg-video-dummy xserver-xorg-video-glamo xserver-xorg-video-apm  xserver-xorg-video-ark  xserver-xorg-video-chips xserver-xorg-video-neomagic xserver-xorg-video-nouveau xserver-xorg-video-qxl  xserver-xorg-video-r128 xserver-xorg-video-radeonhd xserver-xorg-video-rendition xserver-xorg-video-s3 xserver-xorg-video-s3virge xserver-xorg-video-savage xserver-xorg-video-siliconmotion xserver-xorg-video-sis  xserver-xorg-video-sisusb xserver-xorg-video-tdfx xserver-xorg-video-tga xserver-xorg-video-trident xserver-xorg-video-tseng xserver-xorg-video-vesa xserver-xorg-video-vmware xserver-xorg-video-voodoo"
 PKG_WHITE="deb-multimedia-keyring keyboard-configuration debconf-english sudo dialog mplayer-nogui thttpd feh mpd mpc xdotool alsa-utils awesome psmisc clive midori dos2unix curl dropbear xinit autofs smbfs mingetty xserver-xorg xserver-xorg-input-kbd xserver-xorg-input-mouse x11-xserver-utils locate plymouth xfonts-intl-european gifsicle kbd libgl1-mesa-dri"
 
-PKG_EXTRA="rsyslogd vim rsync less"
+PKG_EXTRA="rsyslog vim rsync less"
 
 PKG_BLACK="info manpages rsyslog tasksel tasksel-data aptitude locales man-db whiptail iptables wmctrl vim-tiny vim-common traceroute netcat-traditional iputils-ping dmidecode libboost-iostreams1.42.0 libcwidget3 libept1 libnewt0.52 libnfnetlink0 libsigc++-2.0-0c2a"
 
