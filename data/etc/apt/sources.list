@@ -1,3 +1,3 @@
 deb http://ftp.us.debian.org/debian squeeze main
-deb http://www.debian-multimedia.org squeeze main non-free
+deb http://www.deb-multimedia.org squeeze main non-free
 
