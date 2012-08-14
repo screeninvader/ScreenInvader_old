@@ -1,0 +1,2 @@
+echo "Please enter http://10.20.30.51 in your web browser." | ./catosd
+

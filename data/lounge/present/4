@@ -1,0 +1,6 @@
+#!/bin/bash
+set -x
+export QUERY_STRING="http://10.20.30.51"
+/lounge/www/cgi-bin/browse "$QUERY_STRING" &
+sleep 10
+killall midori
