@@ -3,7 +3,7 @@
     OBJS    := ${SRCS:.cpp=.o} 
     DEPS    := ${SRCS:.cpp=.dep} 
 
-    CXXFLAGS = -Wall -O3 `pkg-config --cflags gtk+-2.0`
+    CXXFLAGS = -I../ -O3 -Wall `pkg-config --cflags gtk+-2.0`
     LDFLAGS = -s 
     LIBS    = -lxosd  `pkg-config --libs gtk+-2.0`
 

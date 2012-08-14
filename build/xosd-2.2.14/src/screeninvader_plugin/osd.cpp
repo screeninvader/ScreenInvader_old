@@ -29,13 +29,9 @@ using boost::lexical_cast;
 
 xosd *osd = NULL;
 
-void initialize(int h_align, int v_align, int timeout)
+void initialize(int v_offset, int h_offset, int h_align, int v_align, int timeout, string colour, string font)
 {
   osd = xosd_create(2);
-  string colour = "white";
-  string font = "-*-*-*-*-*-*-40-*-*-*-*-*-*-*";
-  int offset = 50;
-  int h_offset = 0;
   int shadow_offset = 1;
   int outline_offset = 0;
   xosd_pos pos = XOSD_bottom;
@@ -75,28 +71,40 @@ void initialize(int h_align, int v_align, int timeout)
     xosd_set_outline_offset(osd, outline_offset);
     xosd_set_pos(osd, pos);
     xosd_set_align(osd, align);
-    xosd_set_vertical_offset(osd, offset);
+    xosd_set_vertical_offset(osd, v_offset);
     xosd_set_horizontal_offset(osd, h_offset);
   }
 }
 
 void printUsage() {
-  cerr << "Usage" << endl; 
+  cerr << "Usage: osd [options] text" << endl; 
+  cerr << "Options:" << endl;
+  cerr << "\t-v   vertical alignment: 0 = top, 1 = middle, 2 = bottom" << endl;
+  cerr << "\t-h   horizontal alignment: 0 = left, 1 = center, 2 = right" << endl;
+  cerr << "\t-l   vertical offset" << endl;
+  cerr << "\t-b   horizontal offset" << endl;
+  cerr << "\t-t   timeout: 0 = forever" << endl;
+  cerr << "\t-f   font string" << endl;
+  cerr << "\t-c   color name" << endl << endl;
 }
 
 int main(int argc, char *argv[])
 {
   int c = 0;
   int timeout = 0;
+  int v_offset = 0;
+  int h_offset = 50;
   int h_align = 1;
   int v_align = 2;
+  string colour = "white";
+  string font = "-*-*-*-*-*-*-40-*-*-*-*-*-*-*";
   string text;
   
   while (optind < argc) {
-    while ((c = getopt(argc, argv, "v:h:t:")) != -1) {
+    while ((c = getopt(argc, argv, "v:h:t:f:c:l:b:")) != -1) {
       switch (c) {
       case 'v':
-	v_align = lexical_cast<int>(optarg);
+   v_align = lexical_cast<int>(optarg);
 	break;
       case 'h':
 	h_align = lexical_cast<int>(optarg);
@@ -104,6 +112,18 @@ int main(int argc, char *argv[])
       case 't':
 	timeout = lexical_cast<int>(optarg);
 	break;
+      case 'f':
+  font = optarg;
+  break;
+      case 'c':
+  colour = optarg; 
+  break;
+       case 'l':
+  v_offset = lexical_cast<int>(optarg);
+  break;
+       case 'b':
+  h_offset = lexical_cast<int>(optarg);
+  break;
       case ':':
 	printUsage();
 	break;
@@ -121,7 +141,7 @@ int main(int argc, char *argv[])
     }
   }
  
-  initialize(h_align,v_align,timeout);
+  initialize(h_offset, v_offset, h_align,v_align,timeout,colour,font);
 
   if (osd) {
     xosd_display(osd, 1, XOSD_string, text.c_str());

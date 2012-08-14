@@ -1,1 +1,1 @@
-osd.o: osd.cpp osd.hpp
+osd.o: osd.cpp osd.hpp ../xosd.h
