@@ -1,7 +1,0 @@
-Ã#!in/bash
-
-set -m
-feh -F -Z /lounge/present/devices.png &
-sleep 3; 
-killall feh;
-
