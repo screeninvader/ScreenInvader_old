@@ -20,10 +20,10 @@
 
 export DISPLAY=:0
 export PATH="$PATH:/lounge/bin"
-
+set -x
 while [ 0 ]; do
   sleep 1;
-  ADDR="`getip`"
+  ADDR="`/lounge/bin/getip`"
 
   if [ -z "$ADDR" ]; then
     notify "No Network" 0 &>/dev/null &
