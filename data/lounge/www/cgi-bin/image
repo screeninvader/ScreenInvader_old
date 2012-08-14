@@ -26,7 +26,7 @@ set -x
 [ -z "$QUERY_STRING" ] && QUERY_STRING="$@"
 notify "Loading image... `basename "$QUERY_STRING"`"
 tmpimg=`mktemp`
-wget -O "$tmpimg" "$QUERY_STRING"
+wget --no-check-certificate -O "$tmpimg" "$QUERY_STRING"
 feh -F --image-bg black --auto-zoom "$tmpimg" &
 disown
 exit 0
