@@ -20,9 +20,9 @@
 
 export DISPLAY=:0
 sudo -u lounge bash -c "sleep 1; xdotool mousemove 1900 1200" &
-setterm -blank 0 -powersave off -powerdown 0 &
-xset s off &
-xhost + &
+sudo -u lounge setterm -blank 0 -powersave off -powerdown 0 &
+sudo -u lounge xset s off &
+sudo -u lounge xhost + &
 #nice -n19 midori -c /lounge/.config/midori_mpdstat/ --class="MPDstat" --name="MPDstat" http://localhost/mpdstat.html &
 sudo -u lounge awsetbg -c /lounge/www/_inc/img/logo.png &
 sudo -u lounge /lounge/bin/showip &>/dev/null &
