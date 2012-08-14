@@ -91,7 +91,6 @@ function hideText() {
 }
 
 function jump() {
-  /lounge/bin/notify "loading ..." 0 &
   (
     flock -x 300
     idx=$1
@@ -123,15 +122,17 @@ function toggleQueueMode() {
 
 function playlistAdd() {
 (
+  set -x
   playlistEnqueue "$1" "$2"
-  MODE=post
-  isQueueMode && MODE=queue
-
+  mode=post
+  action=Playing
+  isQueueMode && ( mode=queue; action=Queuing )
+  /lounge/bin/notify "$action: $2"
   if [ "`cat $PLAYER_STATE`" == "stopped" -o "$mode" == "post" ]; then
     lines="`wc -l "$PLAYLIST" | cut -d" " -f1`"
     jump "$lines"
   fi
-)
+) &>/tmp/add
 }
 
 function playlistEnqueue() {
@@ -146,7 +147,7 @@ function playlistEnqueue() {
 }
 
 function loadStdin() {
-    /lounge/bin/notify "Playing live upload"
+    /lounge/bin/notify "Play live upload"
     rm -f "$MPLAYERSTDIN"
     mkfifo "$MPLAYERSTDIN"
     mplayer_cmd "loadfile \"$MPLAYERSTDIN\""
@@ -155,7 +156,6 @@ function loadStdin() {
 }
 
 function loadVideo() {
-    /lounge/bin/notify "Playing $2"
     playlistAdd "$1" "$2"
 }
 
@@ -232,6 +232,7 @@ function pause() {
 function stop() {
   (
     flock -x 200
+    echo "stopped" > "$PLAYER_STATE"
     mplayer_cmd "stop"
     refresh
   ) 200>$CMD_LOCK
@@ -266,6 +267,7 @@ function contains() {
 }
 
 function eotrack() {
+  set -x 
   idx="`cat "/var/run/player/playlist_idx"`"
   [ -z "$idx" ] && idx=0
   len="`wc -l /var/run/player/playlist | cut -d\" \" -f1`"
@@ -273,7 +275,7 @@ function eotrack() {
   if [ $idx -lt $len ]; then
     jump $[ $idx + 1 ]
   else
-    echo "stopped" > /var/run/player/state
+    echo "stopped" > "$PLAYER_STATE"
     /lounge/bin/showip
     stop
     mpc play
