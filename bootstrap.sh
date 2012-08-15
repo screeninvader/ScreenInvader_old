@@ -306,8 +306,8 @@ else
   fi
 
   doCleanupPackages
-  doCopy
   doCleanupFiles
+  doCopy
 fi
 
 
