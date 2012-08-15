@@ -160,6 +160,8 @@ chmod a+rwx /var/run/mpd/
 chown -R lounge:lounge /lounge/
 
 usermod -s /bin/bash root
+makeInittabConf
+
 shutdown -r now
 
 
