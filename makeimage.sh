@@ -35,15 +35,9 @@ check "Setting up disk image file on loopback device $LOOPBACK_DEVICE" \
 
 ./makestick.sh "$LOOPBACK_DEVICE" "$@"
 
-CHROOT_PARTITION="${LOOPBACK_DEVICE}p1"
-check "Mounting screen invader parition $CHROOT_PARTITION on mountpoint $CHROOT_DIR" \
-  "mount $CHROOT_PARTITION $CHROOT_DIR"
+OFFSET=`parted -s -m $LOOPBACK_DEVICE unit B print | grep "^1:" | cut -f 2 -d ":" | tr B ' '`
 
-# create the cleanup script
-> cleanup.sh
-echo "#!/bin/bash" >> cleanup.sh
-echo >> cleanup.sh
-echo "umount $CHROOT_PARTITION" >> cleanup.sh
-echo "losetup -d $LOOPBACK_DEVICE" >> cleanup.sh
-chmod +x cleanup.sh
+sync
+losetup -d "$LOOPBACK_DEVICE"
 
+mount $IMAGE_FILE $CHROOT_DIR -o loop,offset=$OFFSET
