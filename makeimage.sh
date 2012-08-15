@@ -38,6 +38,9 @@ check "Setting up disk image file on loopback device $LOOPBACK_DEVICE" \
 OFFSET=`parted -s -m $LOOPBACK_DEVICE unit B print | grep "^1:" | cut -f 2 -d ":" | tr B ' '`
 
 sync
-losetup -d "$LOOPBACK_DEVICE"
 
-mount $IMAGE_FILE $CHROOT_DIR -o loop,offset=$OFFSET
+check "Detaching disk image file" \
+  "losetup -d $LOOPBACK_DEVICE"
+
+check "Mounting screen invader partition on $CHROOT_DIR" \
+  "mount $IMAGE_FILE $CHROOT_DIR -o loop,offset=$OFFSET"
