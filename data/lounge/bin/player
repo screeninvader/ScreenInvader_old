@@ -35,7 +35,7 @@ EOUSAGE
   exit 1
 }
 
-export PATH="$PATH;/lounge/bin"
+export PATH="$PATH:/lounge/bin"
 RUN_DIR="/var/run/player"
 CMD_FIFO="$RUN_DIR/cmdfifo"
 CMD_LOCK="$RUN_DIR/cmdlock"
@@ -48,6 +48,7 @@ PLAYLIST_LOCK="$RUN_DIR/playlist_lock"
 MPLAYERSTDIN="$RUN_DIR/mplayerstdin"
 
 function refresh() {
+  killall mplayer
   feh --bg-center /lounge/www/_inc/img/blank.png
   feh --bg-center /lounge/www/_inc/img/logo.png
 }
@@ -101,7 +102,6 @@ function jump() {
 
     file="`sed -n "${idx}p" $PLAYLIST`"
     mplayer_cmd "pause"
-    player refresh
     mplayer_cmd "loadfile $file"
     echo "$idx" >  "$PLAYLIST_IDX"
     touch $PLAYLIST
@@ -292,7 +292,6 @@ function sotrack() {
   echo "playing" > /var/run/player/state
   mpc pause
 
-  player refresh
   mplayer_cmd "get_property path"
   killall osd
 }
