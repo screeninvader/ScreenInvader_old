@@ -31,7 +31,7 @@ FILES_BLACK="/var/cache/apt/pkgcache.bin /var/cache/apt/srcpkgcache.bin /usr/sha
 
 export LC_ALL="C"
 DEBIAN_MIRROR="http://ftp.at.debian.org/debian/"
-EMDEBIAN_MIRROR="http://ftp.at.debian.org/debian/"
+EMDEBIAN_MIRROR="http://www.emdebian.org/grip/"
 DEBIAN_MULTIMEDIA_MIRROR="http://www.deb-multimedia.org/"
 
 dir="`dirname $0`"
@@ -125,10 +125,10 @@ function doDebootstrap() {
   check "Create target dir" \
     "mkdir -p \"$CHROOT_DIR\""
 
-  BOOTSTRAP_MIRROR=$EMDEBIAN_MIRROR
+  BOOTSTRAP_MIRROR=$DEBIAN_MIRROR
 
   [ -n "$APTCACHER_PORT" ] && BOOTSTRAP_MIRROR=$(
-    HOST="`echo $EMDEBIAN_MIRROR | sed 's/^http*:\/\///g' | sed 's/\/.*$//g'`"
+    HOST="`echo $DEBIAN_MIRROR | sed 's/^http*:\/\///g' | sed 's/\/.*$//g'`"
     echo "http://127.0.0.1:$APTCACHER_PORT/$HOST/debian"
   )
 
@@ -160,9 +160,6 @@ function doPackageConf() {
 
   check "Remove black listed packages" \
     "$CHRT $aptni purge $PKG_BLACK"
-
-  check "Autoremove packages" \
-    "$CHRT $aptni autoremove"
 }
 
 function doCopy() {
@@ -193,6 +190,9 @@ function doCopy() {
 }
 
 function doCleanup() {
+  check "Autoremove packages" \
+    "$CHRT apt-get autoremove"
+
   check "Clean apt cache" \
     "$CHRT apt-get clean"
 
