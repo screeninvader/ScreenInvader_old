@@ -18,12 +18,11 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 
+. /lounge/bin/initcgi "text/plain"
+./reset
 
-export DISPLAY=:0
-
-./unblank
-
-if killall -0 midori; then 
-  midori --class="Browser" --name="Browser"  -e ZoomOut &
+if killall -0 midori; then
+  xdotool key ctrl+minus &
   disown
 fi
+
