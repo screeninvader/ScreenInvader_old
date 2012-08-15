@@ -23,5 +23,4 @@
 . /lounge/bin/initcgi "text/plain"
 
 killall feh
-killall gifview
-killall midori
+

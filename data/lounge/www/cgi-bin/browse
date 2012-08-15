@@ -23,7 +23,6 @@
 
 notify "Loading web page: $@" 3
 ./reset
-./removeoverlay
 export MOZ_PLUGIN_PATH="/usr/lib/flashplugin-nonfree/"
 
 [ -z "$QUERY_STRING" ] && QUERY_STRING="$@";

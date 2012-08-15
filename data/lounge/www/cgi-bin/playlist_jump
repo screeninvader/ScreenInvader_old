@@ -22,7 +22,5 @@
 
 . /lounge/bin/initcgi "text/html"
 
-title="`sed -n "${QUERY_STRING}p" /var/run/player/playlist_titles`"
-notify "Jump: $title"
 player jump "$QUERY_STRING"
 

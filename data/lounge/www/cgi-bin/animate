@@ -22,7 +22,9 @@
 . /lounge/bin/initcgi "text/html"
 
 ./reset
-./removeoverlay
+killall -9 gifview
+killall -9 feh
+killall -9 midori
 
 [ -z "$QUERY_STRING" ] && QUERY_STRING="$@";
 notify "Loading gif: `basename "$QUERY_STRING"`"
