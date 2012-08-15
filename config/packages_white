@@ -23,7 +23,6 @@ xserver-xorg-input-mouse
 x11-xserver-utils
 locate
 plymouth
-xfonts-intl-european
 gifsicle
 kbd
 libgl1-mesa-dri

@@ -1,4 +1,8 @@
 mplayer-nogui
+libavutil50
+libva-x11-1
+libva1
+libx264-118
 deb-multimedia-keyring
 debconf-english
 autofs
