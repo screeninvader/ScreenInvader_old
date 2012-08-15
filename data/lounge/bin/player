@@ -35,6 +35,7 @@ EOUSAGE
   exit 1
 }
 
+export PATH="$PATH;/lounge/bin"
 RUN_DIR="/var/run/player"
 CMD_FIFO="$RUN_DIR/cmdfifo"
 CMD_LOCK="$RUN_DIR/cmdlock"
@@ -65,7 +66,7 @@ function mplayer_start {
 
   while [ 0 ]; do 
     sleep 1; 
-    bash -c "/usr/bin/mplayer -idle -input file="$CMD_FIFO" 2>&1 | /lounge/bin/player callback"
+    bash -c "/usr/bin/mplayer -idle -input file="$CMD_FIFO" 2>&1 | player callback"
  done
 }
 
@@ -100,7 +101,6 @@ function jump() {
 
     file="`sed -n "${idx}p" $PLAYLIST`"
     mplayer_cmd "pause"
-    refresh
     mplayer_cmd "loadfile $file"
     echo "$idx" >  "$PLAYLIST_IDX"
     touch $PLAYLIST
@@ -126,8 +126,11 @@ function playlistAdd() {
   playlistEnqueue "$1" "$2"
   mode=post
   action=Playing
-  isQueueMode && ( mode=queue; action=Queuing )
-  /lounge/bin/notify "$action: $2"
+  if isQueueMode; then
+     mode=queue;
+     action=Queuing
+  fi
+  notify "$action: $2"
   if [ "`cat $PLAYER_STATE`" == "stopped" -o "$mode" == "post" ]; then
     lines="`wc -l "$PLAYLIST" | cut -d" " -f1`"
     jump "$lines"
@@ -147,7 +150,7 @@ function playlistEnqueue() {
 }
 
 function loadStdin() {
-    /lounge/bin/notify "Play live upload"
+    notify "Play live upload"
     rm -f "$MPLAYERSTDIN"
     mkfifo "$MPLAYERSTDIN"
     mplayer_cmd "loadfile \"$MPLAYERSTDIN\""
@@ -276,7 +279,7 @@ function eotrack() {
     jump $[ $idx + 1 ]
   else
     echo "stopped" > "$PLAYER_STATE"
-    /lounge/bin/showip
+    showip
     stop
     mpc play
   fi
@@ -287,6 +290,8 @@ function eotrack() {
 function sotrack() {
   echo "playing" > /var/run/player/state
   mpc pause
+
+  player refresh
   mplayer_cmd "get_property path"
   killall osd
 }
