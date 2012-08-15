@@ -38,3 +38,12 @@ check "setting up disk image file on loopback device $LOOPBACK_DEVICE" \
 CHROOT_PARTITION="${LOOPBACK_DEVICE}p1"
 check "mounting screen invader parition $CHROOT_PARTITION on mountpoint $CHROOT_DIR" \
   "mount $CHROOT_PARTITION $CHROOT_DIR"
+
+# create the cleanup script
+> cleanup.sh
+echo "#!/bin/bash" >> cleanup.sh
+echo >> cleanup.sh
+echo "umount $CHROOT_PARTITION" >> cleanup.sh
+echo "losetup -d $LOOPBACK_DEVICE" >> cleanup.sh
+chmod +x cleanup.sh
+
