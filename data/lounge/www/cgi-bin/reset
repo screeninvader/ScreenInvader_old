@@ -21,9 +21,6 @@
 
 
 . /lounge/bin/initcgi "text/plain"
-killall feh
-killall midori
-killall gifview
 xdotool mousemove 1900 1200
 screen/setBlank false
 
