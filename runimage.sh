@@ -19,7 +19,7 @@
 #
 
 function doRunQemu() {
-  check "starting $1" \
+  check "Starting $1" \
     "true"
   $1 -soundhw ac97 -sdl -enable-kvm -hda $IMAGE_FILE -net user,hostfwd=tcp::5555-:80,hostfwd=tcp::5556-:22 -net nic -m 256
   exit $?
@@ -34,11 +34,11 @@ IMAGE_FILE="$1"
 
 [ -z $IMAGE_FILE ] && IMAGE_FILE="tsarbomba.dd"
 
-check "exists image file $IMAGE_FILE" \
+check "Exists image file $IMAGE_FILE" \
   "test -f $IMAGE_FILE"
 
 which qemu > /dev/null && doRunQemu qemu
 which qemu-system-`uname -i` > /dev/null && doRunQemu qemu-system-`uname -i`
 
-check "starting qemu" \ 
+check "Starting qemu" \ 
   "false"

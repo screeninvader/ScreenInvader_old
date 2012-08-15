@@ -27,16 +27,16 @@ IMAGE_FILE="tsarbomba.dd"
 LOOPBACK_DEVICE=`losetup -f`
 CHROOT_DIR="../chrootdir"
 
-check "creating disk image file $IMAGE_FILE" \
+check "Creating disk image file $IMAGE_FILE" \
   "dd if=/dev/zero of=$IMAGE_FILE bs=1024 count=2072000 > /dev/null"
 
-check "setting up disk image file on loopback device $LOOPBACK_DEVICE" \
+check "Setting up disk image file on loopback device $LOOPBACK_DEVICE" \
   "losetup $LOOPBACK_DEVICE $IMAGE_FILE"
 
 ./makestick.sh "$LOOPBACK_DEVICE" "$@"
 
 CHROOT_PARTITION="${LOOPBACK_DEVICE}p1"
-check "mounting screen invader parition $CHROOT_PARTITION on mountpoint $CHROOT_DIR" \
+check "Mounting screen invader parition $CHROOT_PARTITION on mountpoint $CHROOT_DIR" \
   "mount $CHROOT_PARTITION $CHROOT_DIR"
 
 # create the cleanup script
