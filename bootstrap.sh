@@ -18,19 +18,21 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 
-KERNEL="linux-image-686"
+set -x
+function getConf() {
+  cat "$1" | xargs echo
+}
 
-VIDEO_DRIVERS="xserver-xorg-video-all xserver-xorg-video-ati xserver-xorg-video-radeon xserver-xorg-video-nv xserver-xorg-video-intel xserver-xorg-video-geode xserver-xorg-video-glide xserver-xorg-video-glint xserver-xorg-video-i128 xserver-xorg-video-i740 xserver-xorg-video-mach64 xserver-xorg-video-geode xserver-xorg-video-cirrus xserver-xorg-video-mga xserver-xorg-video-openchrome xserver-xorg-video-via xserver-xorg-video-fbdev xserver-xorg-video-dummy xserver-xorg-video-glamo xserver-xorg-video-apm  xserver-xorg-video-ark  xserver-xorg-video-chips xserver-xorg-video-neomagic xserver-xorg-video-nouveau xserver-xorg-video-qxl  xserver-xorg-video-r128 xserver-xorg-video-radeonhd xserver-xorg-video-rendition xserver-xorg-video-s3 xserver-xorg-video-s3virge xserver-xorg-video-savage xserver-xorg-video-siliconmotion xserver-xorg-video-sis  xserver-xorg-video-sisusb xserver-xorg-video-tdfx xserver-xorg-video-tga xserver-xorg-video-trident xserver-xorg-video-tseng xserver-xorg-video-vesa xserver-xorg-video-vmware xserver-xorg-video-voodoo"
-PKG_WHITE="keyboard-configuration debconf-english sudo dialog thttpd feh mpd mpc xdotool alsa-utils awesome psmisc clive midori dos2unix curl dropbear xinit smbfs mingetty xserver-xorg xserver-xorg-input-kbd xserver-xorg-input-mouse x11-xserver-utils locate plymouth xfonts-intl-european gifsicle kbd libgl1-mesa-dri v86d"
+KERNEL="`getConf config/kernel`"
+VIDEO_DRIVERS="`getConf config/video_drivers`"
+PKG_WHITE="`getConf config/packages_white`"
+PKG_ADD="`getConf config/packages_additional`"
+PKG_EXTRA="`getConf config/packages_extra`"
+PKG_BLACK="`getConf config/packages_black`" 
+FILES_BLACK="`getConf config/files_black`"
 
-PKG_ADD="mplayer-nogui deb-multimedia-keyring autofs firmware-linux-nonfree"
 
-PKG_EXTRA="rsyslog vim rsync less"
-
-PKG_BLACK="info manpages rsyslog tasksel tasksel-data aptitude locales man-db whiptail iptables wmctrl vim-tiny vim-common traceroute netcat-traditional iputils-ping dmidecode libboost-iostreams1.42.0 libcwidget3 libept1 libnewt0.52 libnfnetlink0 libsigc++-2.0-0c2a"
-
-FILES_BLACK="/var/cache/apt/pkgcache.bin /var/cache/apt/srcpkgcache.bin /usr/share/man/* /usr/share/locale/* /usr/share/doc/* /usr/share/zoneinfo/* /usr/share/icons/* /root/.bash_history /lib/modules/*/kernel/drivers/infiniband/* /lib/modules/*/kernel/drivers/bluetooth/* /lib/modules/*/kernel/drivers/media/* /lib/modules/*/kernel/drivers/net/wireless/* /var/cache/debconf* /usr/share/doc-base/* /usr/share/fonts/* /usr/share/info/* /usr/share/sounds/alsa/* /usr/share/pixmaps/debian-logo.png"
-
+exit
 export LC_ALL="C"
 
 APTNI="apt-get -q -y --no-install-recommends --force-yes -o Dpkg::Options::=\"--force-confdef\" -o Dpkg::Options::=\"--force-confold\" ";
