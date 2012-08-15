@@ -101,6 +101,7 @@ function jump() {
 
     file="`sed -n "${idx}p" $PLAYLIST`"
     mplayer_cmd "pause"
+    player refresh
     mplayer_cmd "loadfile $file"
     echo "$idx" >  "$PLAYLIST_IDX"
     touch $PLAYLIST
