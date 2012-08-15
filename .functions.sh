@@ -1,5 +1,5 @@
 #
-# LoungeMC - A content centered media center 
+# ScreenInvader - A shared media experience. Instant and seamless.
 #  Copyright (C) 2012 Amir Hassan <amir@viel-zu.org>
 #
 # This program is free software; you can redistribute it and/or modify
