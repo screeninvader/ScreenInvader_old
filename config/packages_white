@@ -1,5 +1,4 @@
 keyboard-configuration
-debconf-english
 sudo
 dialog
 thttpd

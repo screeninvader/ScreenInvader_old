@@ -1,4 +1,5 @@
 mplayer-nogui
 deb-multimedia-keyring
+debconf-english
 autofs
 firmware-linux-nonfree
