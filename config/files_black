@@ -16,3 +16,4 @@
 /usr/share/info/*
 /usr/share/sounds/alsa/*
 /usr/share/pixmaps/debian-logo.png
+/var/lib/apt/lists/*
