@@ -48,7 +48,6 @@ PLAYLIST_LOCK="$RUN_DIR/playlist_lock"
 MPLAYERSTDIN="$RUN_DIR/mplayerstdin"
 
 function refresh() {
-  killall mplayer
   feh --bg-center /lounge/www/_inc/img/blank.png
   feh --bg-center /lounge/www/_inc/img/logo.png
 }
@@ -99,9 +98,9 @@ function jump() {
     PLLEN="`wc -l "$PLAYLIST" | cut -d" " -f1`"
 
     [ $idx -gt $PLLEN ] && idx=$PLLEN
-
     file="`sed -n "${idx}p" $PLAYLIST`"
     mplayer_cmd "pause"
+    refresh
     mplayer_cmd "loadfile $file"
     echo "$idx" >  "$PLAYLIST_IDX"
     touch $PLAYLIST
@@ -149,11 +148,12 @@ function playlistEnqueue() {
     echo "$title" >> "$PLAYLIST_TITLES"
   ) 300>$PLAYLIST_LOCK
 }
-
 function loadStdin() {
     notify "Play live upload"
     rm -f "$MPLAYERSTDIN"
     mkfifo "$MPLAYERSTDIN"
+    mplayer_cmd "pause"
+    refresh
     mplayer_cmd "loadfile \"$MPLAYERSTDIN\""
     cat > "$MPLAYERSTDIN"
     mplayer_cmd "pt_step `cat "$PLAYLIST_IDX"`"
@@ -282,6 +282,7 @@ function eotrack() {
     echo "stopped" > "$PLAYER_STATE"
     showip
     stop
+    killall mplayer
     mpc play
   fi
 
