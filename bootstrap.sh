@@ -161,8 +161,8 @@ function doPackageConf() {
   check "Install kernel" \
     "$CHRT $APTNI install $KERNEL"
 
-#  check "Remove black listed packages" \
-#    "$CHRT $APTNI purge $PKG_BLACK"
+  check "Remove black listed packages" \
+    "$CHRT $APTNI purge $PKG_BLACK"
 }
 
 function doCopy() {
