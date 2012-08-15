@@ -21,6 +21,8 @@
 
 
 . /lounge/bin/initcgi "text/html"
+./reset
+./removeoverlay
 
 set -x
 [ -z "$QUERY_STRING" ] && QUERY_STRING="$@"
