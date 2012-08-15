@@ -245,14 +245,14 @@ function stop() {
 function osd() {
   (
     flock -x 200
-    mplayer_cmd "osd 1" 
+    mplayer_cmd "osd_show_progression"
   ) 200>$CMD_LOCK
 }
 
 function subtitle() {
   (
     flock -x 200
-    mplayer_cmd "sub_visibility 1" 
+    mplayer_cmd "sub_visibility" 
   ) 200>$CMD_LOCK
 }
 

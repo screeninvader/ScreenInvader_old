@@ -21,5 +21,5 @@
 
 export HOME="/lounge"
 export DISPLAY=:0
-/lounge/bin/notify "OSD" 1
-/lounge/bin/player osd
+/lounge/bin/notify "OSD" &
+/lounge/bin/player osd 
