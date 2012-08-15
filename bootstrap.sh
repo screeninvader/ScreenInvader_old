@@ -21,7 +21,9 @@
 KERNEL="linux-image-686"
 
 VIDEO_DRIVERS="xserver-xorg-video-all xserver-xorg-video-ati xserver-xorg-video-radeon xserver-xorg-video-nv xserver-xorg-video-intel xserver-xorg-video-geode xserver-xorg-video-glide xserver-xorg-video-glint xserver-xorg-video-i128 xserver-xorg-video-i740 xserver-xorg-video-mach64 xserver-xorg-video-geode xserver-xorg-video-cirrus xserver-xorg-video-mga xserver-xorg-video-openchrome xserver-xorg-video-via xserver-xorg-video-fbdev xserver-xorg-video-dummy xserver-xorg-video-glamo xserver-xorg-video-apm  xserver-xorg-video-ark  xserver-xorg-video-chips xserver-xorg-video-neomagic xserver-xorg-video-nouveau xserver-xorg-video-qxl  xserver-xorg-video-r128 xserver-xorg-video-radeonhd xserver-xorg-video-rendition xserver-xorg-video-s3 xserver-xorg-video-s3virge xserver-xorg-video-savage xserver-xorg-video-siliconmotion xserver-xorg-video-sis  xserver-xorg-video-sisusb xserver-xorg-video-tdfx xserver-xorg-video-tga xserver-xorg-video-trident xserver-xorg-video-tseng xserver-xorg-video-vesa xserver-xorg-video-vmware xserver-xorg-video-voodoo"
-PKG_WHITE="deb-multimedia-keyring keyboard-configuration debconf-english sudo dialog mplayer-nogui thttpd feh mpd mpc xdotool alsa-utils awesome psmisc clive midori dos2unix curl dropbear xinit autofs smbfs mingetty xserver-xorg xserver-xorg-input-kbd xserver-xorg-input-mouse x11-xserver-utils locate plymouth xfonts-intl-european gifsicle kbd libgl1-mesa-dri v86d firmware-linux-nonfree"
+PKG_WHITE="keyboard-configuration debconf-english sudo dialog thttpd feh mpd mpc xdotool alsa-utils awesome psmisc clive midori dos2unix curl dropbear xinit smbfs mingetty xserver-xorg xserver-xorg-input-kbd xserver-xorg-input-mouse x11-xserver-utils locate plymouth xfonts-intl-european gifsicle kbd libgl1-mesa-dri v86d"
+
+PKG_ADD="mplayer-nogui deb-multimedia-keyring autofs firmware-linux-nonfree"
 
 PKG_EXTRA="rsyslog vim rsync less"
 
@@ -136,7 +138,7 @@ function doDebootstrap() {
   )
 
   check "Bootstrap debian" \
-    "debootstrap --arch $ARCH squeeze "$CHROOT_DIR" $BOOTSTRAP_MIRROR"
+    "debootstrap --include="`echo $PKG_WHITE | sed 's/ /,/g'`" --exclude="`echo $PKG_BLACK | sed 's/ /,/g'`" --arch $ARCH squeeze "$CHROOT_DIR" $BOOTSTRAP_MIRROR"
 }
 
 function doPackageConf() {
@@ -154,14 +156,14 @@ function doPackageConf() {
   check "Update Repositories" \
     "$CHRT $APTNI update"
 
-  check "Install white listed packages" \
-    "$CHRT $APTNI install $PKG_WHITE"
+  check "Install white additional packages" \
+    "$CHRT $APTNI install $PKG_ADD"
 
   check "Install kernel" \
     "$CHRT $APTNI install $KERNEL"
 
-  check "Remove black listed packages" \
-    "$CHRT $APTNI purge $PKG_BLACK"
+#  check "Remove black listed packages" \
+#    "$CHRT $APTNI purge $PKG_BLACK"
 }
 
 function doCopy() {
