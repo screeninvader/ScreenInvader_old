@@ -30,6 +30,9 @@ PKG_BLACK="info manpages rsyslog tasksel tasksel-data aptitude locales man-db wh
 FILES_BLACK="/var/cache/apt/pkgcache.bin /var/cache/apt/srcpkgcache.bin /usr/share/man/* /usr/share/locale/* /usr/share/doc/* /usr/share/zoneinfo/* /usr/share/icons/* /root/.bash_history /lib/modules/*/kernel/drivers/infiniband/* /lib/modules/*/kernel/drivers/bluetooth/* /lib/modules/*/kernel/drivers/media/* /lib/modules/*/kernel/drivers/net/wireless/* /var/cache/debconf* /usr/share/doc-base/* /usr/share/fonts/* /usr/share/info/* /usr/share/sounds/alsa/* /usr/share/pixmaps/debian-logo.png"
 
 export LC_ALL="C"
+
+APTNI="apt-get -q -y --no-install-recommends --force-yes -o Dpkg::Options::=\"--force-confdef\" -o Dpkg::Options::=\"--force-confold\" ";
+
 DEBIAN_MIRROR="http://ftp.at.debian.org/debian/"
 EMDEBIAN_MIRROR="http://www.emdebian.org/grip/"
 DEBIAN_MULTIMEDIA_MIRROR="http://www.deb-multimedia.org/"
@@ -138,7 +141,6 @@ function doDebootstrap() {
 
 function doPackageConf() {
   export DEBIAN_FRONTEND=noninteractive
-  aptni="apt-get -q -y --no-install-recommends --force-yes -o Dpkg::Options::=\"--force-confdef\" -o Dpkg::Options::=\"--force-confold\" ";
 
   check "Prune debconf cache" \
     "$CHRT mkdir -p /var/cache/debconf/"
@@ -147,19 +149,19 @@ function doPackageConf() {
     "$CHRT dpkg --configure -a"
 
   check "Fix dependencies" \
-    "$CHRT $aptni install -f"
+    "$CHRT $APTNI install -f"
 
   check "Update Repositories" \
-    "$CHRT $aptni update"
+    "$CHRT $APTNI update"
 
   check "Install white listed packages" \
-    "$CHRT $aptni install $PKG_WHITE"
+    "$CHRT $APTNI install $PKG_WHITE"
 
   check "Install kernel" \
-    "$CHRT $aptni install $KERNEL"
+    "$CHRT $APTNI install $KERNEL"
 
   check "Remove black listed packages" \
-    "$CHRT $aptni purge $PKG_BLACK"
+    "$CHRT $APTNI purge $PKG_BLACK"
 }
 
 function doCopy() {
@@ -191,10 +193,10 @@ function doCopy() {
 
 function doCleanup() {
   check "Autoremove packages" \
-    "$CHRT apt-get autoremove"
+    "$CHRT $APTNI autoremove"
 
   check "Clean apt cache" \
-    "$CHRT apt-get clean"
+    "$CHRT $APTNI clean"
 
   check "Remove black listed files" \
     "$CHRT bash -c \"rm -fr $FILES_BLACK\""
