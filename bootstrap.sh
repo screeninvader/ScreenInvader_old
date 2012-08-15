@@ -18,7 +18,6 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 
-set -x
 function getConf() {
   cat "$1" | xargs echo
 }
@@ -31,8 +30,6 @@ PKG_EXTRA="`getConf config/packages_extra`"
 PKG_BLACK="`getConf config/packages_black`" 
 FILES_BLACK="`getConf config/files_black`"
 
-
-exit
 export LC_ALL="C"
 
 APTNI="apt-get -q -y --no-install-recommends --force-yes -o Dpkg::Options::=\"--force-confdef\" -o Dpkg::Options::=\"--force-confold\" ";
