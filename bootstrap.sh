@@ -192,15 +192,17 @@ function doCopy() {
 
 }
 
-function doCleanup() {
+function doCleanupPackages() {
   check "Autoremove packages" \
     "$CHRT $APTNI autoremove"
 
   check "Clean apt cache" \
     "$CHRT $APTNI clean"
+}
 
+function doCleanupFiles() {
   check "Remove black listed files" \
-    "$CHRT bash -c \"rm -fr $FILES_BLACK\""
+              "$CHRT bash -c \"rm -fr $FILES_BLACK\""
 }
 
 function doPrepareChroot() {
@@ -303,8 +305,9 @@ else
     skip "package configuration"
   fi
 
-  doCleanup
+  doCleanupPackages
   doCopy
+  doCleanupFiles
 fi
 
 
