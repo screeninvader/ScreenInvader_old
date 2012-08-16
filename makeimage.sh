@@ -28,7 +28,7 @@ IMAGE_SIZE=$1
 LOOPBACK_DEVICE=`losetup -f`
 CHROOT_DIR="../chrootdir"
 
-[ -z $IMAGE_SIZE ] && IMAGE_SIZE="1000"
+[ -z $IMAGE_SIZE ] && IMAGE_SIZE="500"
 
 check "Mountpoint $CHROOT_DIR is unused" \
   "! mountpoint -q $CHROOT_DIR"
