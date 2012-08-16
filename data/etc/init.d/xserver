@@ -34,21 +34,8 @@ case "$1" in
 
 	stop)
 		echo -n "Stopping $DESC: "
-		killall Xorg
+		killall -0 Xorg && killall Xorg
 		echo "$NAME."
-		;;
-
-	force-stop)
-		echo -n "Stopping $DESC: "
-		start-stop-daemon -K -q -p $PIDFILE -x $DAEMON
-		echo "$NAME."
-		;;
-
-	force-reload)
-		if start-stop-daemon -K -q -p $PIDFILE -x $DAEMON --test
-		then
-			$0 restart
-		fi
 		;;
 
 	restart)
