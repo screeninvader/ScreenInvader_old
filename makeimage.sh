@@ -24,11 +24,17 @@ MAKEIMAGE_DIR="`cd $dir; pwd`"
 source "$MAKEIMAGE_DIR/.functions.sh"
 
 IMAGE_FILE="tsarbomba.dd"
+IMAGE_SIZE=$1
 LOOPBACK_DEVICE=`losetup -f`
 CHROOT_DIR="../chrootdir"
 
-check "Creating disk image file $IMAGE_FILE" \
-  "dd if=/dev/zero of=$IMAGE_FILE bs=1024 count=2072000 > /dev/null"
+[ -z $IMAGE_SIZE ] && IMAGE_SIZE="1000"
+
+check "Mountpoint $CHROOT_DIR is unused" \
+  "! mountpoint -q $CHROOT_DIR"
+
+check "Creating disk image file $IMAGE_FILE of size $IMAGE_SIZE MB" \
+  "dd if=/dev/zero of=$IMAGE_FILE bs=1M count=1 seek=$IMAGE_SIZE > /dev/null"
 
 check "Setting up disk image file on loopback device $LOOPBACK_DEVICE" \
   "losetup $LOOPBACK_DEVICE $IMAGE_FILE"
