@@ -54,7 +54,7 @@ function printUsage() {
   cat 1>&2 <<EOUSAGE
 Bootstrap a ScreenInvader file system.
 
-$0 [-a <arch>][-l <logfile>][-p <apt-cacher-port>][-i -d -u ] <bootstrapdir>
+$0 [-a <arch>][-g <num>][-l <logfile>][-p <apt-cacher-port>][-i -d -u -x] <bootstrapdir>
 Options:
   -a <arch> Bootstrap a system of the given architecture
   -g <num>  Build with selected graphics card
