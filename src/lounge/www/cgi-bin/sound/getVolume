@@ -22,7 +22,10 @@
 
 . /lounge/bin/initcgi "text/plain"
 (
-amixer -d sget "PCM" | fgrep "%" | sed '1!d' | awk '{ print $5 }' | cut -d"[" -f2 | cut -d"%" -f1 
+MIXERINFO="`amixer sget "Master"`"
+[ -z "$MIXERINFO" ] && MIXERINFO="`amixer sget "PCM"`"
+
+echo "$MIXERINFO" | fgrep "%" | sed '1!d' | awk '{ print $4 }' | cut -d"[" -f2 | cut -d"%" -f1 
 ) 2>&1
  
 

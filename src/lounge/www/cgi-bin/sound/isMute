@@ -22,7 +22,10 @@
 
 . /lounge/bin/initcgi "text/plain"
 
-mute=`amixer sget PCM | grep "Mono:" | awk '{ print $6 }'`
+MIXERINFO="`amixer -d sget "Master"`"
+[ -z "$MIXERINFO" ] && MIXERINFO="`amixer -d sget "PCM"`"
+
+mute=`echo "$MIXERINFO" | grep "Mono:" | awk '{ print $6 }'`
 
 [ "$mute" == "[on]" ] && echo false || echo true
 

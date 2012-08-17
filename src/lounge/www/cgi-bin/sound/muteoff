@@ -19,5 +19,8 @@
 #
 
 
+MIXER=Master
+MIXERINFO="`amixer -d sget "Master"`"
+[ -z "$MIXERINFO" ] && MIXER="PCM"
 
-amixer sset PCM on  &> /dev/null
+amixer sset "$MIXER" on  &> /dev/null

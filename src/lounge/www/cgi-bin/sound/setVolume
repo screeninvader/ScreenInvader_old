@@ -23,5 +23,8 @@
 . /lounge/bin/initcgi "text/plain"
 
 VOL="$1"
+MIXER=Master
+MIXERINFO="`amixer -d sget "Master"`"
+[ -z "$MIXERINFO" ] && MIXER="PCM"
 
-amixer sset PCM "${VOL}%" &> /dev/null
+amixer sset "$MIXER" "${VOL}%" &> /dev/null
