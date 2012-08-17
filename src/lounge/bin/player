@@ -48,7 +48,6 @@ PLAYLIST_LOCK="$RUN_DIR/playlist_lock"
 MPLAYERSTDIN="$RUN_DIR/mplayerstdin"
 
 function refresh() {
-  feh --bg-center /lounge/www/_inc/img/blank.png
   feh --bg-center /lounge/www/_inc/img/logo.png
 }
 
