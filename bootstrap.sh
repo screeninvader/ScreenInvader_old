@@ -272,12 +272,13 @@ shift $(($OPTIND - 1))
 echo > "$BOOTSTRAP_LOG"
 export BOOTSTRAP_LOG
 source "$BOOTSTRAP_DIR/.functions.sh"
-export CHROOT_DIR="`absPath $1`"
-export CHRT="chroot \"$CHROOT_DIR\" "
 
 if [ $# -ne 1 ]; then
   printUsage
 else
+  export CHROOT_DIR="`absPath $1`"
+  export CHRT="chroot \"$CHROOT_DIR\" "
+
   doCheckPreCond
 
   printVideoDrivers
