@@ -170,9 +170,9 @@ function doCopy() {
     "cd $BOOTSTRAP_DIR/src; rsync -axh etc usr $CHROOT_DIR/"
   
   check "Sync lounge changes" \
-    "cd $BOOTSTRAP_DIR/data; rsync -axh --delete lounge $CHROOT_DIR/"
+    "cd $BOOTSTRAP_DIR/src; rsync -axh --delete lounge $CHROOT_DIR/"
 
-  check "Sync setup data" \
+  check "Sync setup changes" \
     "cd $BOOTSTRAP_DIR/; rsync -axh --delete setup $CHROOT_DIR/"
 
   check "Copy plymouth theme" \
