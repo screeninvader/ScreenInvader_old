@@ -21,10 +21,11 @@
 export DISPLAY=:0
 
 sudo -u lounge bash -c "sleep 1; xdotool mousemove 1900 1200"
-sudo -u lounge setterm -blank 0
-sudo -u lounge setterm -powersave off
-sudo -u lounge setterm -powerdown 0
+setterm -blank 0
+setterm -powersave off
+setterm -powerdown 0
 sudo -u lounge xset s off
+sudo -u lounge xset -dpms
 sudo -u lounge xhost +
 sudo -u lounge /lounge/bin/showip &>/dev/null &
 sudo -u lounge /usr/bin/awsetbg -c /lounge/www/_inc/img/logo.png
