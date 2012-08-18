@@ -54,7 +54,7 @@ function printUsage() {
   cat 1>&2 <<EOUSAGE
 Bootstrap a ScreenInvader file system.
 
-$0 [-a <arch>][-l <logfile>][-c <apt-cacher-port>][-i -d -u ] <bootstrapdir>
+$0 [-a <arch>][-g <num>][-l <logfile>][-p <apt-cacher-port>][-i -d -u -x] <bootstrapdir>
 Options:
   -a <arch> Bootstrap a system of the given architecture
   -g <num>  Build with selected graphics card
@@ -250,6 +250,26 @@ function doCheckPreCond() {
     "which debootstrap"
 }
 
+function doCreateBuildHtml() {
+  cat > $CHROOT_DIR/lounge/www/build.html <<EOHTML
+<html>
+<head>
+<title>ScreenInvader</title>
+</head>
+<body style="background-color: #000000">
+<h3 style="padding: 20px; color: #ff6600;">You are using ScreenInvader version</h3>
+<table>
+<tr>
+<td colspan="2" style="padding: 20px; width:100%; color: #ffffff; font-variant:bold;">
+`date`
+</td>
+</tr>
+</table>
+</body>
+</html>
+EOHTML
+}
+
 ###### main
 
 while getopts 'a:l:p:g:idux' c
@@ -309,6 +329,7 @@ else
   doCleanupPackages
   doCleanupFiles
   doCopy
+  doCreateBuildHtml
 fi
 
 
