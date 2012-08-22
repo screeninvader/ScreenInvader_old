@@ -61,6 +61,7 @@ input {
   font-size: 85%;
   border-radius: 9px;
   white-space:nowrap;
+  cursor: pointer;
 }
 
 .toggle {
