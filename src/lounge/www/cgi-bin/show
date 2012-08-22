@@ -43,10 +43,6 @@ isOrfUrl() {
   return 1;
 }
 
-isVimeoUrl() {
-  [ -n "`echo "$1" | fgrep "vimeo.com"`" ] && return 0;
-  return 1;
-}
 
 isArte7Url() {
   [ -n "`echo "$1" | fgrep "videos.arte.tv"`" ] && return 0;
@@ -119,8 +115,6 @@ elif isOrfUrl "$QUERY_STRING"; then
   orf "$QUERY_STRING"
 elif isArte7Url "$QUERY_STRING"; then
   arte7 "$QUERY_STRING"
-elif isVimeoUrl "$QUERY_STRING"; then
-  vimeo "$QUERY_STRING"
 elif isVideoUrl "$QUERY_STRING"; then
   export QUERY_STRING="`echo "$QUERY_STRING" | sed 's/m.youtube/youtube/g'`"
   youtube "$QUERY_STRING"
