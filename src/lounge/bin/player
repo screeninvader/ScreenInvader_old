@@ -281,7 +281,6 @@ function eotrack() {
     echo "stopped" > "$PLAYER_STATE"
     showip
     stop
-    killall mplayer
     mpc play
   fi
 
