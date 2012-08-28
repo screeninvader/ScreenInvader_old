@@ -32,7 +32,8 @@ if [ -n "`echo "$QUERY_STRING" | grep "^http"`" ]; then
  QUERY_STRING=$tmpfile
 fi
 
-evince "$QUERY_STRING"
+xpdf -fullscreen "$QUERY_STRING" &
+`sleep 1; xdotool key --clearmodifiers w`
 
 
 
