@@ -51,7 +51,7 @@ isArte7Url() {
 isVimeoUrl() {
   [ -n "`echo "$1" | fgrep "vimeo.com"`" ] && return 0;
   return 1;
-}
+} 
 
 isSoundCloudUrl() {
   [ -n "`echo "$1" | fgrep "soundcloud.com"`" ] && return 0;
@@ -120,7 +120,7 @@ elif isOrfUrl "$QUERY_STRING"; then
 elif isArte7Url "$QUERY_STRING"; then
   arte7 "$QUERY_STRING"
 elif isVimeoUrl "$QUERY_STRING"; then
-  vimeo "$QUERY_STRING"
+  vimeo "$QUERY_STRING" 
 elif isVideoUrl "$QUERY_STRING"; then
   export QUERY_STRING="`echo "$QUERY_STRING" | sed 's/m.youtube/youtube/g'`"
   youtube "$QUERY_STRING"
@@ -145,7 +145,7 @@ else
       image "$LOCATION"
     ;;
     "playlist" )
-      playlist "$LOCATION"
+      radio "$LOCATION"
     ;;
     "audio" )
       video "$LOCATION"
