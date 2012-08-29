@@ -1,0 +1,91 @@
+#!/bin/bash
+#
+# ScreenInvader - A shared media experience. Instant and seamless.
+#  Copyright (C) 2012 Amir Hassan <amir@viel-zu.org>
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+#
+
+
+MIXER="Master"
+MIXERINFO="`amixer sget "Master"`"
+
+if [ -z "$MIXERINFO" ]; then
+  MIXER="PCM"
+  MIXERINFO="`amixer sget "PCM"`"
+fi
+
+function getVolume() {
+  echo "$MIXERINFO" | grep -Po 'Playback.*\[\K.*?(?=%)'
+}
+
+function isMute() {
+  mute="`echo "$MIXERINFO" | grep -Po ' \[\K(on|off)?(?=])'`"
+  [ "$mute" == "on" ] && echo false || echo true
+}
+
+function setMute() {
+  m=false;
+  [ "$1" == "true" ] && m=true;
+  amixer sset "$MIXER" "$m"
+}
+
+function setVolume() {
+  amixer sset "$MIXER" "${1}%"
+}
+
+function toggleMute() {
+  if [ "`isMute`" == "true" ]; then
+    setMute "false"
+  else
+    setMute "true"
+  fi
+}
+
+function volumeDecr() {
+  volume=`getVolume`
+  newvol=$[ $volume - 5 ];
+
+  setVolume "$newvol"
+}
+
+function volumeIncr() {
+  volume=`getVolume`
+  newvol=$[ $volume + 5 ];
+
+  setVolume "$newvol"
+}
+
+
+CALL=
+
+while getopts 'c:' c
+do
+  case $c in
+    c) CALL="$OPTARG";;
+  esac
+done
+
+shift $(($OPTIND - 1))
+
+declare -A ARGS="$@"
+
+volume="${ARGS["/sound/volume"]}"
+mute="${ARGS["/sound/mute"]}"
+
+[ -n "$volume" ] && setVolume "$volume"
+[ -n "$mute" ] && setMute "$mute"
+[ -n "$CALL" ] && $CALL
+ 

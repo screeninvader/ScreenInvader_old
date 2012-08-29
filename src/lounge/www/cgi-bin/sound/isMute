@@ -22,11 +22,5 @@
 
 . /lounge/bin/initcgi "text/plain"
 
-MIXERINFO="`amixer -d sget "Master"`"
-[ -z "$MIXERINFO" ] && MIXERINFO="`amixer -d sget "PCM"`"
-
-mute=`echo "$MIXERINFO" | grep "Mono:" | awk '{ print $6 }'`
-
-[ "$mute" == "[on]" ] && echo false || echo true
-
+/lounge/bin/janosh -t isMute
 

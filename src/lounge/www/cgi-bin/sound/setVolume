@@ -18,13 +18,4 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 
-
-
-. /lounge/bin/initcgi "text/plain"
-
-VOL="$1"
-MIXER=Master
-MIXERINFO="`amixer -d sget "Master"`"
-[ -z "$MIXERINFO" ] && MIXER="PCM"
-
-amixer sset "$MIXER" "${VOL}%" &> /dev/null
+/lounge/bin/janosh -t sound /sound/volume "$1"

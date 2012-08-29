@@ -18,9 +18,5 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 
-MIXER=Master
-MIXERINFO="`amixer -d sget "Master"`"
-[ -z "$MIXERINFO" ] && MIXER="PCM"
-
-amixer sset "$MIXER" off  &> /dev/null
+/lounge/bin/janosh -t sound /sound/mute true
 

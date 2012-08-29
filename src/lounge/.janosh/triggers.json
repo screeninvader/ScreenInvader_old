@@ -1,0 +1,26 @@
+{
+  "makeSmbConf": [ "auto_smb", 
+                      [ "/settings/smb/user", 
+                        "/settings/smb/password", 
+                        "/settings/smb/domain", 
+                        "/settings/smb/host",
+                        "/settings/smb/directory" ] ],
+  "makeNetworkMan": [ "interfaces_man",  
+                        [ "/settings/ipconf/address", 
+                          "/settings/ipconf/netmask", 
+                          "/settings/ipconf/gateway" ] 
+                      ],
+  "makeDnsConf": [ "resolv_conf", [ "/settings/ipconf/nameserver" ] ],
+  "makeDefaultInittab": [ "inittab", []  ],
+  "makeNetworkDhcp": [ "interfaces_dhcp",  [] ],
+
+  "setVolume": [ "sound", [ "/sound/volume" ] ],
+  "getVolume": [ "sound -c getVolume", [] ],
+  "setMute": [ "sound", [ "/sound/mute" ] ],
+  "isMute": [ "sound -c isMute", [] ],
+  "toggleMute": [ "sound -c toggleMute", [] ],
+
+  "setBlank": [ "screen -c setBlank", [] ],
+  "isBlank": [ "screen -c isBlank", [] ],
+  "toggleBlank": [ "sound -c toggleBlank", [] ]
+}

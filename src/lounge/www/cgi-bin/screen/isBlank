@@ -21,5 +21,5 @@
 
 . /lounge/bin/initcgi "text/plain"
 
-[ -n "`xset -q | fgrep 'Monitor is On'`" ] && echo false || echo true
+/lounge/bin/janosh -t is_blank
 

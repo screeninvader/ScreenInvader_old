@@ -1,0 +1,14 @@
+#!/bin/bash
+
+declare -A args="$@"
+
+USER="${args[/settings/smb/user]}"
+PASS="${args[/settings/smb/password]}"
+DOMAIN="${args[/settings/smb/domain]}"
+HOST="${args[/settings/smb/host]}"
+DIR="${args[/settings/smb/directory]}"
+
+cat <<EOSMBCONF
+$HOST$DIR      -fstype=cifs,users,user=$USER,password=$PASS,domain=$DOMAIN,ro ://$HOST/$DIR
+EOSMBCONF
+

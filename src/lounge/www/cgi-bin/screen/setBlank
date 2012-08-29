@@ -18,14 +18,6 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 
+/lounge/bin/janosh -t set_blank /screen/blank "$1"
 
-
-. /lounge/bin/initcgi "text/html"
-
-if [ "$1" == "true" ]; then
-  xset dpms force standby
-else
-  xset s reset
-  xset dpms force on
-fi
 

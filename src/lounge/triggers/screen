@@ -18,5 +18,42 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 
-/lounge/bin/janosh -t sound /sound/mute false 
+
+function isBlank() {
+  [ -n "`xset -q | fgrep 'Monitor is On'`" ] && echo false || echo true
+}
+
+function setBlank() {
+  if [ "$1" == "true" ]; then
+    xset dpms force standby
+  else
+    xset s reset
+    xset dpms force on
+  fi
+}
+
+function toggleBlank() {
+if [ $(isBlank) == "true" ]; then
+  screen/setBlank false
+else
+  screen/setBlank true
+  fi
+}
+
+CALL=
+
+while getopts 'c:' c
+do
+  case $c in
+    c) CALL="$OPTARG";;
+  esac
+done
+
+shift $(($OPTIND - 1))
+
+declare -A ARGS="$@"
+
+blank=${ARGS["/screen/blank"]}
+[ -n "$blank" ] && setBlank "$blank"
+[ -n "$CALL" ] && $CALL
 

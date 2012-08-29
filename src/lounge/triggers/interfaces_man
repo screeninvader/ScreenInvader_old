@@ -1,0 +1,18 @@
+#!/bin/bash
+
+declare -A args="$@"
+
+ADDR="${args[/settings/ipconf/address]}"
+NETMASK="${args[/settings/ipconf/netmask]}"
+GATEWAY="${args[/settings/ipconf/gateway]}"
+
+cat <<EONETCONF
+auto lo
+iface lo inet loopback
+allow-hotplug eth0
+iface eth0 inet static
+address $ADDR
+netmask $NETMASK
+gateway $GATEWAY
+EONETCONF
+

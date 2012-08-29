@@ -107,16 +107,8 @@ function jump() {
 }
 
 function isQueueMode() {
-  [ -f /var/run/player/queuemode ] && return 0;
+  [ -n "$(janosh /playlist/queue)" ] && return 0;
   return 1;
-}
-
-function toggleQueueMode() {
-  if isQueueMode; then
-    rm /var/run/player/queuemode
-  else
-   touch /var/run/player/queuemode
-  fi
 }
 
 function playlistAdd() {
