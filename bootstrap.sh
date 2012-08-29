@@ -181,11 +181,20 @@ function doCopy() {
   check "Copy xosd lib" \
     "cp -a $BOOTSTRAP_DIR/build/xosd-2.2.14/src/libxosd/.libs/libxosd.so.2.2.14 $CHROOT_DIR/usr/lib/"
 
+  check "Copy kyotocabinet" \
+    "cp -a $BOOTSTRAP_DIR/build/libkyotocabinet* $CHROOT_DIR/usr/lib/"
+
+  check "Copy json-spirit" \
+    "cp -a $BOOTSTRAP_DIR/build/libjson_spirit.a $CHROOT_DIR/usr/lib/"
+
   check "ldconfig" \
     "$CHRT ldconfig"
 
   check "Copy osd binary"  \
     "cp -a $BOOTSTRAP_DIR/build/xosd-2.2.14/src/screeninvader_plugin/osd $CHROOT_DIR/lounge/bin/"
+
+  check "Copy janosh binary"  \
+    "cp -a $BOOTSTRAP_DIR/build/janosh $CHROOT_DIR/lounge/bin/"
 
   check "Update plymouth theme" \
     "$CHRT plymouth-set-default-theme -R screeninvader"
