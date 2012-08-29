@@ -1,0 +1,3 @@
+initialZoom width
+bind home      any         gotoPage(1)
+bind end       any         gotoLastPage
