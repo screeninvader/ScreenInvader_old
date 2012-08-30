@@ -29,3 +29,7 @@ libgl1-mesa-dri
 v86d
 wireless-tools
 xpdf
+wpasupplicant
+libboost-system1.42.0
+libboost-filesystem1.42.0
+
