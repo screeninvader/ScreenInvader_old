@@ -18,6 +18,17 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 
+CALL=
+
+while getopts 'c:' c
+do
+  case $c in
+    c) CALL="$OPTARG";;
+  esac
+done
+shift $(($OPTIND - 1))
+
+declare -A ARGS="$@"
 
 MIXER="Master"
 MIXERINFO="`amixer sget "Master"`"
@@ -37,13 +48,16 @@ function isMute() {
 }
 
 function setMute() {
-  m=false;
-  [ "$1" == "true" ] && m=true;
+  mute="${ARGS[/sound/mute]}"
+  m="off";
+ 
+  [ "$mute" == "true" ] && m="on";
   amixer sset "$MIXER" "$m"
 }
 
 function setVolume() {
-  amixer sset "$MIXER" "${1}%"
+  volume="${ARGS[/sound/volume]}"
+  amixer sset "$MIXER" "${volume}%"
 }
 
 function toggleMute() {
@@ -54,38 +68,19 @@ function toggleMute() {
   fi
 }
 
-function volumeDecr() {
+function decVolume() {
   volume=`getVolume`
   newvol=$[ $volume - 5 ];
 
   setVolume "$newvol"
 }
 
-function volumeIncr() {
+function incVolume() {
   volume=`getVolume`
   newvol=$[ $volume + 5 ];
 
   setVolume "$newvol"
 }
 
-
-CALL=
-
-while getopts 'c:' c
-do
-  case $c in
-    c) CALL="$OPTARG";;
-  esac
-done
-
-shift $(($OPTIND - 1))
-
-declare -A ARGS="$@"
-
-volume="${ARGS["/sound/volume"]}"
-mute="${ARGS["/sound/mute"]}"
-
-[ -n "$volume" ] && setVolume "$volume"
-[ -n "$mute" ] && setMute "$mute"
 [ -n "$CALL" ] && $CALL
  

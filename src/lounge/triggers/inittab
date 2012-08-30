@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cat <<EOINITTAB
+cat > /etc/inittab <<EOINITTAB
 id:2:initdefault:
 si::sysinit:/etc/init.d/rcS
 ~~:S:wait:/sbin/sulogin

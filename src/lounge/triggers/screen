@@ -18,13 +18,24 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 
+CALL=
+
+while getopts 'c:' c
+do
+  case $c in
+    c) CALL="$OPTARG";;
+  esac
+done
+
+shift $(($OPTIND - 1))
+declare -A ARGS="$@"
 
 function isBlank() {
   [ -n "`xset -q | fgrep 'Monitor is On'`" ] && echo false || echo true
 }
 
 function setBlank() {
-  if [ "$1" == "true" ]; then
+  if [ "${ARGS["/screen/blank"]}" == "true" ]; then
     xset dpms force standby
   else
     xset s reset
@@ -40,20 +51,5 @@ else
   fi
 }
 
-CALL=
-
-while getopts 'c:' c
-do
-  case $c in
-    c) CALL="$OPTARG";;
-  esac
-done
-
-shift $(($OPTIND - 1))
-
-declare -A ARGS="$@"
-
-blank=${ARGS["/screen/blank"]}
-[ -n "$blank" ] && setBlank "$blank"
 [ -n "$CALL" ] && $CALL
 
