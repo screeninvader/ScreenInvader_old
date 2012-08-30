@@ -19,7 +19,7 @@
 #
 
 function getConf() {
-  cat "$1" | xargs echo
+  cat "$1" | tr "\n" " "
 }
 
 KERNEL="`getConf config/kernel`"
@@ -135,8 +135,7 @@ function doDebootstrap() {
     HOST="`echo $DEBIAN_MIRROR | sed 's/^http*:\/\///g' | sed 's/\/.*$//g'`"
     echo "http://127.0.0.1:$APTCACHER_PORT/$HOST/debian"
   )
-
-  check "Bootstrap debian" \
+ check "Bootstrap debian" \
     "debootstrap --include="`echo $PKG_WHITE | sed 's/ /,/g'`" --exclude="`echo $PKG_BLACK | sed 's/ /,/g'`" --arch $ARCH squeeze "$CHROOT_DIR" $BOOTSTRAP_MIRROR"
 }
 
@@ -327,6 +326,7 @@ else
   fi
 
   doPrepareChroot
+  # make sure we're cleaning up eventually
   trap doFreeChroot SIGINT SIGTERM EXIT
 
   if [ -z "$NOINSTALL" ]; then 
