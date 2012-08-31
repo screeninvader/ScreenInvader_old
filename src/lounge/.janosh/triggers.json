@@ -1,38 +1,58 @@
 {
-  "makeSmb": [ "storage -c makeSmb", 
-    [ "/storage/smb/user", 
-      "/storage/smb/password", 
-      "/storage/smb/domain", 
+  "makeSmb": [ "storage makeSmb", [
+      "/storage/smb/user",
+      "/storage/smb/password",
+      "/storage/smb/domain",
       "/storage/smb/host",
-      "/storage/smb/directory" ] ],
-  "makeNetworkMan": [ "network -c makeNetworkMan",  
-    [ "/network/interface",
+      "/storage/smb/directory" 
+    ] ],
+
+  "makeNetworkMan": [ "network makeNetworkMan", [ 
       "/network/address", 
       "/network/netmask", 
-      "/network/gateway" ] ],
-  "makeWifi": [ "network -c makeWifi", 
-    [ "/network/wifi/ssid", 
+      "/network/gateway", 
+      "/network/interface"
+    ] ],
+
+
+  "makeWifi": [ "network makeWifi", [
+      "/network/wifi/ssid",
       "/network/wifi/encryption/value",
-      "/network/wifi/passphrase" ] ],
-  "makeNetworkDhcp": [ "network -c makeNetworkDhcp", [ "/network/interface" ] ],
-  "makeDns": [ "network -c makeDns", [ "/network/nameserver" ] ],
-  "makeHostname": [ "network -c makeHostname", [ "/network/hostname" ] ],
-  "reloadNetwork": [ "network -c reloadNetwork", [ "/network/interface" ] ],
-  "getWirelessInterfaces": [ "network -c getWirelessInterfaces", [ ] ],
-  "getWiredInterfaces": [ "network -c getWiredInterfaces", [ ] ],
-  "reloadNetwork": [ "network -c reload", [] ]
+      "/network/wifi/passphrase"
+    ] ],
 
-  "makeDefaultInittab": [ "inittab", []  ],
 
-  "setVolume": [ "sound -c setVolume", [ "/sound/volume" ] ],
-  "getVolume": [ "sound -c getVolume", [] ],
-  "incVolume": [ "screen -c incVolume", [] ],
-  "decVolume": [ "sound -c decVolume", [] ],
-  "setMute": [ "sound -c setMute", [ "/sound/mute" ] ],
-  "isMute": [ "sound -c isMute", [] ],
-  "toggleMute": [ "sound -c toggleMute", [] ],
+  "makeNetworkDhcp": [ "network makeNetworkDhcp", [
+      "/network/interface"
+    ] ],
 
-  "setBlank": [ "screen -c setBlank", [] ],
-  "isBlank": [ "screen -c isBlank", [] ],
-  "toggleBlank": [ "sound -c toggleBlank", [] ],
+  "makeDns": [ "network makeDns", [
+      "/network/nameserver"
+    ] ],
+
+  "makeHostname": [ "network makeHostname", [
+      "/network/hostname"
+    ] ],
+
+  "setVolume": [ "sound setVolume",  [
+      "/sound/volume"
+    ] ],
+
+  "setMute": [ "sound setMute", [
+      "/sound/mute"
+    ] ],
+
+  "setBlank": [ "display setBlank", [
+      "/display/blank"
+    ] ],
+
+  "reloadNetwork": [ "network reload", [] ],
+  "reloadSound": [ "sound reload", [] ],
+  "reloadDisplay": [ "display reload", [] ],
+  "reloadStorage": [ "storage reload", [] ],
+  "makeDefaultInittab": [ "system makeInittab", [] ],
+  "incVolume": [ "sound incVolume", [] ],
+  "decVolume": [ "sound decVolume", [] ],
+  "toggleMute": [ "sound toggleMute", [] ],
+  "toggleBlank": [ "display toggleBlank", [] ]
 }
