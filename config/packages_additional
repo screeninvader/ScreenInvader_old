@@ -6,4 +6,5 @@ libx264-118
 deb-multimedia-keyring
 debconf-english
 autofs
+multiarch-support
 firmware-linux-nonfree
