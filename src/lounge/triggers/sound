@@ -18,69 +18,68 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 
-CALL=
-
-while getopts 'c:' c
-do
-  case $c in
-    c) CALL="$OPTARG";;
-  esac
-done
-shift $(($OPTIND - 1))
-
-declare -A ARGS="$@"
-
-MIXER="Master"
-MIXERINFO="`amixer sget "Master"`"
-
-if [ -z "$MIXERINFO" ]; then
-  MIXER="PCM"
-  MIXERINFO="`amixer sget "PCM"`"
-fi
-
-function getVolume() {
-  echo "$MIXERINFO" | grep -Po 'Playback.*\[\K.*?(?=%)'
-}
-
-function isMute() {
-  mute="`echo "$MIXERINFO" | grep -Po ' \[\K(on|off)?(?=])'`"
-  [ "$mute" == "on" ] && echo false || echo true
-}
+FUNCTION="$1"
+declare -A DATA="$(janosh /sound/.)"
 
 function setMute() {
-  mute="${ARGS[/sound/mute]}"
   m="off";
- 
-  [ "$mute" == "true" ] && m="on";
-  amixer sset "$MIXER" "$m"
+  [ "${DATA[/sound/mute]}" == "true" ] && m="on";
+  amixer sset "${DATA[/sound/mixer]}" "$m"
 }
 
 function setVolume() {
-  volume="${ARGS[/sound/volume]}"
-  amixer sset "$MIXER" "${volume}%"
+  amixer sset "${DATA[/sound/mixer]}" "${DATA[/sound/volume]}%"
 }
 
 function toggleMute() {
-  if [ "`isMute`" == "true" ]; then
-    setMute "false"
+  if [ "${DATA[/sound/mute]}" == "true" ]; then
+    janosh -t -s /sound/mute "false"
   else
-    setMute "true"
+    janosh -t -s /sound/mute "true"
   fi
 }
 
 function decVolume() {
-  volume=`getVolume`
-  newvol=$[ $volume - 5 ];
-
-  setVolume "$newvol"
+  janosh -t -s /sound/volume "$[ $(getVolume) - 5 ]"
 }
 
 function incVolume() {
-  volume=`getVolume`
-  newvol=$[ $volume + 5 ];
-
-  setVolume "$newvol"
+  janosh -t -s /sound/volume "$[ $(getVolume) + 5 ]"
 }
 
-[ -n "$CALL" ] && $CALL
- 
+function readVolume() {
+  mixer="${DATA[/sound/mixer]}"
+  mixerinfo="`amixer sget "$mixer"`"
+  echo "$mixerinfo" | grep -Po 'Playback.*\[\K.*?(?=%)'
+}
+
+function readMute() {
+  mixer="${DATA[/sound/mixer]}"
+  mixerinfo="`amixer sget "$mixer"`"
+  mute="`echo "$mixerinfo" | grep -Po ' \[\K(on|off)?(?=])'`"
+  [ "$mute" == "on" ] && echo false || echo true
+}
+
+function readMixer() {
+  mixer="Master"
+  mixerinfo="`amixer sget "Master"`"
+
+  if [ -z "$mixerinfo" ]; then
+    mixer="PCM"
+  fi
+
+  echo "$mixer"
+}
+
+function reload() {
+  janosh -s /sound/volume "$(readVolume)" /sound/mute "$(readMute)" /sound/mixer/ "$(readMixer)"
+}
+
+if [ "$(type -t "$FUNCTION")" == "function" ]; then
+  $FUNCTION
+else
+  echo "Unknown command: $FUNCTION" 1>&2
+  exit 1
+fi
+
+

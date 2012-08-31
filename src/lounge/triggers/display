@@ -18,24 +18,12 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 
-CALL=
+FUNCTION="$1"
 
-while getopts 'c:' c
-do
-  case $c in
-    c) CALL="$OPTARG";;
-  esac
-done
-
-shift $(($OPTIND - 1))
-declare -A ARGS="$@"
-
-function isBlank() {
-  [ -n "`xset -q | fgrep 'Monitor is On'`" ] && echo false || echo true
-}
+declare -A DATA="$(janosh /display/.)"
 
 function setBlank() {
-  if [ "${ARGS["/screen/blank"]}" == "true" ]; then
+  if [ "${DATA["/display/blank"]}" == "true" ]; then
     xset dpms force standby
   else
     xset s reset
@@ -44,12 +32,26 @@ function setBlank() {
 }
 
 function toggleBlank() {
-if [ $(isBlank) == "true" ]; then
-  screen/setBlank false
+if [ "${DATA["/display/blank"]}" == "true" ]; then
+  setBlank false
 else
-  screen/setBlank true
+  setBlank true
   fi
 }
 
-[ -n "$CALL" ] && $CALL
+function readBlank() {
+  [ -n "`xset -q | fgrep 'Monitor is On'`" ] && echo false || echo true
+}
+
+function reload() {
+  janosh -s /display/blank $(readBlank)
+}
+
+if [ "$(type -t "$FUNCTION")" == "function" ]; then
+  $FUNCTION
+else
+  echo "Unknown command: $FUNCTION" 1>&2
+  exit 1
+fi
+
 
