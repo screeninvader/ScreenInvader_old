@@ -144,6 +144,7 @@ function networkConf() {
         doConf "network"
       fi
     fi
+    doConf "reboot"
   else
     doConf "connection"
   fi
