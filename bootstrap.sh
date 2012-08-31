@@ -28,6 +28,7 @@ PKG_WHITE="`getConf config/packages_white`"
 PKG_ADD="`getConf config/packages_additional`"
 PKG_EXTRA="`getConf config/packages_extra`"
 PKG_BLACK="`getConf config/packages_black`" 
+PKG_SID="`getConf config/packages_sid`"
 FILES_BLACK="`getConf config/files_black`"
 
 export LC_ALL="C"
@@ -154,7 +155,10 @@ function doPackageConf() {
   check "Update Repositories" \
     "$CHRT $APTNI update"
 
-  check "Install white additional packages" \
+  check "Install sid packages" \
+    "$CHRT $APTNI -t sid install $PKG_SID"
+
+  check "Install additional packages" \
     "$CHRT $APTNI install $PKG_ADD"
 
   check "Install kernel" \
@@ -224,6 +228,13 @@ function doPrepareChroot() {
   mkdir -p "$CHROOT_DIR/etc/apt/"
 
   $BOOTSTRAP_DIR/templates/sources_list "$EMDEBIAN_MIRROR" "$DEBIAN_MIRROR" "$DEBIAN_MULTIMEDIA_MIRROR" > $CHROOT_DIR/etc/apt/sources.list
+
+#don't install updates from sid
+  cat > $CHROOT_DIR/etc/apt/preferences.d/sid <<EOPREF
+Package: *
+Pin: release n=sid
+Pin-Priority: 50
+EOPREF
 
   if [ -n "$APTCACHER_PORT" ]; then
     # use apt-cacher-ng to cache packages during install
