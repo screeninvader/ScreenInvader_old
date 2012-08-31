@@ -3,9 +3,8 @@
 cat <<EOSOURCES
 # emdebian
 deb $1 squeeze main
-# debian
 deb $2 squeeze main non-free
-# debian multimedia
+deb $2 sid main non-free
 deb $3 squeeze main non-free 
 EOSOURCES
 
