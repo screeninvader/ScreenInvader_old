@@ -39,18 +39,18 @@ function toggleMute() {
   fi
 }
 
-function decVolume() {
-  janosh -t -s /sound/volume "$[ $(getVolume) - 5 ]"
-}
-
-function incVolume() {
-  janosh -t -s /sound/volume "$[ $(getVolume) + 5 ]"
-}
-
 function readVolume() {
   mixer="${DATA[/sound/mixer]}"
   mixerinfo="`amixer sget "$mixer"`"
-  echo "$mixerinfo" | grep -Po 'Playback.*\[\K.*?(?=%)'
+  echo "$mixerinfo" | grep -Po 'Playback.*\[\K.*?(?=%)' | head -n1
+}
+
+function decVolume() {
+  janosh -t -s /sound/volume $[ `readVolume` - 5 ]
+}
+
+function incVolume() {
+  janosh -t -s /sound/volume "$[ $(readVolume) + 5 ]"
 }
 
 function readMute() {

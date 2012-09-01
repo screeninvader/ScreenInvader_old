@@ -22,5 +22,5 @@
 
 . /lounge/bin/initcgi "text/plain"
 
-/lounge/bin/janosh -t getVolume 
+/lounge/bin/janosh /sound/volume
 
