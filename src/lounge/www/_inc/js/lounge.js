@@ -13,7 +13,7 @@ function Lounge(local) {
 
 var lounge = new Lounge(true);
 var video;
-var ScreenInvader;
+var ScreenInvader = {};
 
 function bookmarklet() {
     $.get('cgi-bin/bookmarklet', function(data) {
@@ -23,8 +23,11 @@ function bookmarklet() {
 
 
 function updateScreenInvader() {
-  $.each(widgets, function(i,w) {
-    w.update();
+  $.getJSON("cgi-bin/get?/.", function(data) {
+    $.each(widgets, function(i,w) {
+      w.update(data);
+    });
+
   });
 }
 
@@ -64,7 +67,7 @@ $().ready(function () {
   })
 
   bookmarklet();
-
+  updateScreenInvader();
   setInterval("updateScreenInvader",1000);
 });
 

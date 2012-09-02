@@ -7,7 +7,7 @@ function SwitchControl () {
     })
   };
   
-  this.update = function() {
+  this.update = function(ScreenInvader) {
     $.get('cgi-bin/switch/getInput', function(data) {
       $('#switch-control * option').eq(parseInt(data) - 1).attr('selected', 'selected');
     }, 'text');

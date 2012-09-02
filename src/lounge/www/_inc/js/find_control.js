@@ -11,7 +11,7 @@ function FindControl () {
     })
   };
   
-  this.update = function() {
+  this.update = function(ScreenInvader) {
 
   };
   
