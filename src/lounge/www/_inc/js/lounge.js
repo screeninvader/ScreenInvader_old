@@ -1,7 +1,7 @@
- jQuery.fn.wait = function (MiliSeconds) {
-        $(this).animate({ opacity: '+=0' }, MiliSeconds);
-        return this;
-    }
+jQuery.fn.wait = function (MiliSeconds) {
+  $(this).animate({ opacity: '+=0' }, MiliSeconds);
+  return this;
+}
 
 function Lounge(local) {
  this.local = local;
@@ -41,6 +41,7 @@ $().ready(function () {
   playerWidget.loadInto('#player_panel');
   navigateWidget.loadInto('#navigate_panel');  
   uploadWidget.loadInto('#upload_panel');
+  playlistWidget.loadInto('#playlist_panel');
 
   widgets = [
    soundWidget,
@@ -50,7 +51,8 @@ $().ready(function () {
    cleanupWidget,
    playerWidget,
    navigateWidget,
-   uploadWidget
+   uploadWidget,
+   playlistWidget
   ]
 
   $('.button').ready(function() {

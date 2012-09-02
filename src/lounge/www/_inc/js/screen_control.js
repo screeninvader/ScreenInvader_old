@@ -5,18 +5,18 @@ function ScreenControl () {
   this.setScreen = function(on) {
     blank=on;
     if(on) {
-      $('#sound-control #screen-toggle').text("Off");
-      $('#sound-control #screen-toggle').addClass("up");
-      $('#sound-control #screen-toggle').removeClass("down");
+      $('#screen-control #screen-toggle').text("Off");
+      $('#screen-control #screen-toggle').addClass("up");
+      $('#screen-control #screen-toggle').removeClass("down");
     } else {
-      $('#sound-control #screen-toggle').text("On"); 
-      $('#sound-control #screen-toggle').addClass("down");
-      $('#sound-control #screen-toggle').removeClass("up");
+      $('#screen-control #screen-toggle').text("On"); 
+      $('#screen-control #screen-toggle').addClass("down");
+      $('#screen-control #screen-toggle').removeClass("up");
     }
   };
 
   this.init = function() {
-    $('#sound-control #screen-toggle').live ('click', function(){
+    $('#screen-control #screen-toggle').live ('click', function(){
       var b=!blank;
       $.get('cgi-bin/set?/display/blank=' + b);
       screenWidget.setScreen(b);
@@ -24,7 +24,7 @@ function ScreenControl () {
   };
   
   this.update = function(ScreenInvader) {
-    screenWidget.setScreen(ScreenInvader.display.blank);
+    screenWidget.setScreen(ScreenInvader.display.blank == "true" ? true : false);
   };
 
   this.loadInto = function(into) {
