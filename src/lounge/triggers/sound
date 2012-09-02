@@ -18,12 +18,15 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 
+set -x 
 FUNCTION="$1"
-declare -A DATA="$(janosh /sound/.)"
+declare -A DATA="`janosh /sound/.`"
+
+echo amixer sset "${DATA[/sound/mixer]}" "${DATA[/sound/volume]}%"
 
 function setMute() {
-  m="off";
-  [ "${DATA[/sound/mute]}" == "true" ] && m="on";
+  m="on";
+  [ "${DATA[/sound/mute]}" == "true" ] && m="off";
   amixer sset "${DATA[/sound/mixer]}" "$m"
 }
 
