@@ -1,5 +1,6 @@
 #!/bin/bash
 
+. /lounge/triggers/env
 
 FUNCTION="$1"
 declare -A DATA="$(janosh /network/.)"
@@ -72,7 +73,7 @@ function readWiredNic() {
   cat /proc/net/dev | grep -Po '^\s*\K(e[A-Za-z0-9]*)(?=:)'
 }
 
-function reload() {
+function restart() {
   interface="${DATA[/network/interface]}"
 
   killall wpa_supplicant
@@ -82,6 +83,10 @@ function reload() {
   /etc/init.d/networking stop
   /etc/init.d/networking start
   wpa_cli reconfigure
+}
+
+function reload() {
+  return 0
 }
 
 if [ "$(type -t "$FUNCTION")" == "function" ]; then

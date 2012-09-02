@@ -18,7 +18,8 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 
-set -x 
+. /lounge/triggers/env 
+
 FUNCTION="$1"
 declare -A DATA="`janosh /sound/.`"
 
@@ -77,6 +78,11 @@ function readMixer() {
 function reload() {
   janosh -s /sound/volume "$(readVolume)" /sound/mute "$(readMute)" /sound/mixer/ "$(readMixer)"
 }
+
+function restart() {
+  return 0
+}
+
 
 if [ "$(type -t "$FUNCTION")" == "function" ]; then
   $FUNCTION

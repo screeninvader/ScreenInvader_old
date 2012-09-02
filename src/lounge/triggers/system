@@ -18,6 +18,8 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 
+. /lounge/triggers/env
+
 function makeInittab() {
   cat > /etc/inittab <<EOINITTAB
 id:2:initdefault:
@@ -44,7 +46,14 @@ po::powerokwait:/etc/init.d/powerfail stop
 EOINITTAB
 }
 
-function reload() {}
+function reload() {
+  return 0
+}
+
+function restart() {
+  return 0
+}
+
 
 if [ "$(type -t "$FUNCTION")" == "function" ]; then
   $FUNCTION

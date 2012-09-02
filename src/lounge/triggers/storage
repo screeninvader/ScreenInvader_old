@@ -1,5 +1,7 @@
 #!/bin/bash
 
+. /lounge/triggers/env
+
 FUNCTION="$1"
 declare -A DATA="$(janosh /storage/.)"
 
@@ -15,9 +17,14 @@ $host$dir      -fstype=cifs,users,user=$user,password=$pass,domain=$domain,ro :/
 EOSMBCONF
 }
 
-function reload() {
+function restart() {
   /etc/init.d/autofs restart
 }
+
+function reload() {
+  return 0 
+}
+
 
 if [ "$(type -t "$FUNCTION")" == "function" ]; then
   $FUNCTION

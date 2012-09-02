@@ -20,6 +20,8 @@
 
 FUNCTION="$1"
 
+. /lounge/triggers/env
+
 declare -A DATA="$(janosh /display/.)"
 
 function setBlank() {
@@ -40,11 +42,15 @@ else
 }
 
 function readBlank() {
-  [ -n "`xset -q | fgrep 'Monitor is On'`" ] && echo false || echo true
+  xset -q | fgrep 'Monitor is On' && echo false || echo true
 }
 
 function reload() {
   janosh -s /display/blank $(readBlank)
+}
+
+function restart() {
+  return 0
 }
 
 if [ "$(type -t "$FUNCTION")" == "function" ]; then
