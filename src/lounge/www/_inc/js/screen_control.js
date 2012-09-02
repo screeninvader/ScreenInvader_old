@@ -1,28 +1,25 @@
 function ScreenControl () {
   this.screen = true;
+  this.sv = ScreenInvader;
 
   this.setScreen = function(on) {
-    if(on.trim() == 'true') {
-      this.screen = true;
+    sv.display.blank=on;
+    if(on) {
       $('#sound-control #screen-toggle').text("Off");
       $('#sound-control #screen-toggle').addClass("up");
       $('#sound-control #screen-toggle').removeClass("down");
-      $.get('cgi-bin/screen/setBlank?true');
     } else if(on.trim() == 'false') {
-      this.screen = false;
       $('#sound-control #screen-toggle').text("On"); 
       $('#sound-control #screen-toggle').addClass("down");
       $('#sound-control #screen-toggle').removeClass("up");
-      $.get('cgi-bin/screen/setBlank?false');
     }
   };
 
   this.init = function() {
     $('#sound-control #screen-toggle').live ('click', function(){
-      if(screenWidget.screen)
-        screenWidget.setScreen('false');
-      else
-        screenWidget.setScreen('true');
+      var b=!sv.display.blank;
+      $.get('cgi-bin/set?/display/blank=' + b);
+      screenWidget.setScreen(b);
     })
   };
   

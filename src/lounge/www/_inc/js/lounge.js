@@ -13,11 +13,19 @@ function Lounge(local) {
 
 var lounge = new Lounge(true);
 var video;
+var ScreenInvader;
 
 function bookmarklet() {
     $.get('cgi-bin/bookmarklet', function(data) {
       $("#bookmarklet").attr("href",data);
     }, 'text');
+}
+
+
+function updateScreenInvader() {
+  $.each(widgets, function(i,w) {
+    w.update();
+  });
 }
 
 $().ready(function () {
@@ -30,6 +38,17 @@ $().ready(function () {
   playerWidget.loadInto('#player_panel');
   navigateWidget.loadInto('#navigate_panel');  
   uploadWidget.loadInto('#upload_panel');
+
+  widgets = [
+   soundWidget,
+   screenWidget,
+   showWidget,
+   findWidget,
+   cleanupWidget,
+   playerWidget,
+   navigateWidget,
+   uploadWidget
+  ]
 
   $('.button').ready(function() {
     $(this).addClass('up');
@@ -45,6 +64,8 @@ $().ready(function () {
   })
 
   bookmarklet();
+
+  setInterval("updateScreenInvader",1000);
 });
 
 

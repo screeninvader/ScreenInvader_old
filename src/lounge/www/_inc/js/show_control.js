@@ -18,5 +18,4 @@ function ShowControl () {
 
 showWidget = new ShowControl();
 showWidget.init();
-showWidget.update();
 

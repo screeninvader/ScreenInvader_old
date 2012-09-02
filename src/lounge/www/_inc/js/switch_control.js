@@ -22,5 +22,3 @@ function SwitchControl () {
 
 switchWidget = new SwitchControl();
 switchWidget.init();
-switchWidget.update();
-setInterval("switchWidget.update()", 1000);
