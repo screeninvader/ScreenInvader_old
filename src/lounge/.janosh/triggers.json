@@ -50,6 +50,7 @@
   "reloadSound": [ "sound reload", [] ],
   "reloadDisplay": [ "display reload", [] ],
   "reloadStorage": [ "storage reload", [] ],
+  "reloadSystem": [ "system reload", [] ],
   "makeDefaultInittab": [ "system makeInittab", [] ],
   "incVolume": [ "sound incVolume", [] ],
   "decVolume": [ "sound decVolume", [] ],
