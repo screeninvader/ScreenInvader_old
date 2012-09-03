@@ -12,15 +12,6 @@
         $('#playlist').html(data);
      }, "text");
    }
-   function updateQueueToggle() {
-     $.get('cgi-bin/isQueueMode', function(data) {
-        if(data.charAt(0) == 'f') {
-          $('#queuetoggle').html('Post Mode');
-        } else if (data.charAt(0) == 't') {
-          $('#queuetoggle').html('Queue Mode');
-        }
-     }, "text");
-   }
 
   $('.button').live('mousedown', function(){
    $(this).addClass('down');
@@ -32,8 +23,6 @@
 
    loadPlaylist
    setInterval("loadPlaylist()", 1000);  
-   setInterval("updateQueueToggle()", 1000);
-
 </script>
 	</head>
 	<body id="playlist" style="background-color: #666; padding-right: 4px;" >
