@@ -18,6 +18,9 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 
+(
+set -x 
+
 [ -z "$LC_ALL" ] && export LC_ALL=C
 cd `dirname $0`
 chvt 2
@@ -69,23 +72,23 @@ function askDoReboot() {
 }
 
 function makeHostname() {
-  $janosh -t makeHostname -s /network/hostname "$1"
+  $janosh -t -s /network/hostname "$1"
 }
 
 function makeDNS() {
-  $janosh -t makeDns -s /network/nameserver "$1"
+  $janosh -t -s /network/nameserver "$1"
 }
 
 function makeDHCPNet() {
-  $janosh -t makeNetworkDhcp
+  $janosh -e makeNetworkDhcp -s /network/interface
 }
 
 function makeManualNet() {
-  $janosh -t makeNetworkMan /network/address "$1" /network/netmask "$2" /network/gateway "$3"
+  $janosh -e makeNetworkMan -s /network/address "$1" /network/netmask "$2" /network/gateway "$3"
 }
 
 function makeWifi() {
-  $janosh -t makeWifi /network/wifi/ssid "$1" /network/wifi/encryption/value "$2" /network/wifi/passphrase "$3"
+  $janosh -t -s /network/wifi/ssid "$1" /network/wifi/encryption/value "$2" /network/wifi/passphrase "$3"
   }
 
 function doConf() {
@@ -180,4 +183,4 @@ function finish() {
 }
 
 doConf "hostname"
-
+) &> /setup.log
