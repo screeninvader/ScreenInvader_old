@@ -107,8 +107,7 @@ function jump() {
 }
 
 function isQueueMode() {
-  [ -n "$(janosh /playlist/queue)" ] && return 0;
-  return 1;
+  [ "$(janosh /playlist/queue)" == "true" ] && return 0 || return 1;
 }
 
 function playlistAdd() {
