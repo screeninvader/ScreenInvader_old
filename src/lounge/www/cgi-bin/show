@@ -128,12 +128,24 @@ else
   HEAD=`getHead "$QUERY_STRING"`
   LOCATION="$QUERY_STRING";
   CONTENT_TYPE="`echo "$HEAD" | fgrep -i "Content-Type: " | cut -d" " -f2 | cut -d ";" -f1`"
-
   [ -z "$CONTENT_TYPE" ] && CONTENT_TYPE="audio/mpeg";
-  [ "$CONTENT_TYPE" == "audio/x-scpls" -o "$CONTENT_TYPE" == "application/pls" ] && CONTENT_TYPE="playlist/pls"
-  [ "$CONTENT_TYPE" == "image/gif" ] && CONTENT_TYPE="animation/gif";
 
-   CATEGORY="`echo "$CONTENT_TYPE" | cut -d"/" -f1;`"
+  CATEGORY="`echo "$CONTENT_TYPE" | cut -d"/" -f1;`"
+
+  case "$CONTENT_TYPE" in
+    "application/x-matroska" )
+      CATEGORY=video
+    ;;
+    "application/pls" )
+      CATEGORY=playlist
+    ;;
+    "audio/x-scpls" )
+      CATEGORY=playlist
+    ;;
+    "image/gif" )
+      CATEGORY=animation
+    ;;
+  esac
 
   echo $CATEGORY
   QUERY_STRING="$LOCATION"

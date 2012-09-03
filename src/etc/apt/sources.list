@@ -1,4 +1,0 @@
-deb http://ftp.us.debian.org/debian squeeze main
-deb http://ftp.us.debian.org/debian sid main
-deb http://www.deb-multimedia.org squeeze main non-free
-

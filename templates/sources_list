@@ -1,8 +1,8 @@
 #!/bin/bash
 
 cat <<EOSOURCES
-# emdebian
 deb $1 squeeze main
+deb $1 sid-grip main
 deb $2 squeeze main non-free
 deb $2 sid main non-free
 deb $3 squeeze main non-free 
