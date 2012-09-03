@@ -6,7 +6,7 @@ function UploadControl () {
     })
   };
   
-  this.update = function() {
+  this.update = function(ScreenInvader) {
   };
   
   this.loadInto = function(into) {
@@ -18,5 +18,3 @@ function UploadControl () {
 
 uploadWidget = new UploadControl();
 uploadWidget.init();
-uploadWidget.update();
-

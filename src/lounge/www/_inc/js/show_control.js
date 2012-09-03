@@ -6,7 +6,7 @@ function ShowControl () {
     })
   };
   
-  this.update = function() {
+  this.update = function(ScreenInvader) {
   };
   
   this.loadInto = function(into) {
@@ -18,5 +18,4 @@ function ShowControl () {
 
 showWidget = new ShowControl();
 showWidget.init();
-showWidget.update();
 

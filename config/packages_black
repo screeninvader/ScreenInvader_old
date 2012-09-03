@@ -24,5 +24,7 @@ libsigc++-2.0-0c2a
 xserver-xorg-input-all
 xserver-xorg-input-synaptics
 xserver-xorg-input-wacom
+libboost-filesystem1.42.0
+libboost-system1.42.0
 libnewt0.52
 

@@ -1,31 +1,32 @@
+
 function ScreenControl () {
-  this.screen = true;
+  this.blank = false;
 
   this.setScreen = function(on) {
-    if(on.trim() == 'true') {
-      this.screen = true;
-      $('#sound-control #screen-toggle').text("Off");
-      $('#sound-control #screen-toggle').addClass("up");
-      $('#sound-control #screen-toggle').removeClass("down");
-      $.get('cgi-bin/screen/setBlank?true');
-    } else if(on.trim() == 'false') {
-      this.screen = false;
-      $('#sound-control #screen-toggle').text("On"); 
-      $('#sound-control #screen-toggle').addClass("down");
-      $('#sound-control #screen-toggle').removeClass("up");
-      $.get('cgi-bin/screen/setBlank?false');
+    blank=on;
+    if(on) {
+      $('#screen-control #screen-toggle').text("Off");
+      $('#screen-control #screen-toggle').addClass("up");
+      $('#screen-control #screen-toggle').removeClass("down");
+    } else {
+      $('#screen-control #screen-toggle').text("On"); 
+      $('#screen-control #screen-toggle').addClass("down");
+      $('#screen-control #screen-toggle').removeClass("up");
     }
   };
 
   this.init = function() {
-    $('#sound-control #screen-toggle').live ('click', function(){
-      if(screenWidget.screen)
-        screenWidget.setScreen('false');
-      else
-        screenWidget.setScreen('true');
+    $('#screen-control #screen-toggle').live ('click', function(){
+      var b=!blank;
+      $.get('cgi-bin/set?/display/blank=' + b);
+      screenWidget.setScreen(b);
     })
   };
   
+  this.update = function(ScreenInvader) {
+    screenWidget.setScreen(ScreenInvader.display.blank == "true" ? true : false);
+  };
+
   this.loadInto = function(into) {
     return $.get(lounge.prefix + 'screen_control.html', function(data) {
       $(into).prepend(data);

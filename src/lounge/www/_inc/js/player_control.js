@@ -37,7 +37,7 @@ function PlayerControl () {
     })
   };
   
-  this.update = function() {
+  this.update = function(ScreenInvader) {
   };
   
   this.loadInto = function(into) {

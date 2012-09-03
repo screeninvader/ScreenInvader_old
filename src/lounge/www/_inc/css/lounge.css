@@ -14,6 +14,37 @@ iframe {
   border-radius: 9px;
 }
 
+    #switch-control {
+      width: 120px;
+    }
+
+    #sound-control {
+      width: 120px;
+    }
+
+    #screen-control {
+      width: 130px;
+    }
+
+    #cleanup-control table {
+      background-color: #000;
+      border: 0;
+    }
+
+    .panel-column {
+      display: table-cell;
+      vertical-align: top;
+    }
+
+   .panel-row {
+      display: inline-block;
+      vertical-align: top;
+    }
+
+   .panel-row div {
+      display: inline-block;
+      vertical-align: top;
+    }
 
 * table {
   width: 100%;

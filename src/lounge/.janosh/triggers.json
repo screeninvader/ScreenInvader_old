@@ -1,0 +1,59 @@
+{
+  "makeSmb": [ "storage makeSmb", [
+      "/storage/smb/user",
+      "/storage/smb/password",
+      "/storage/smb/domain",
+      "/storage/smb/host",
+      "/storage/smb/directory" 
+    ] ],
+
+  "makeNetworkMan": [ "network makeNetworkMan", [ 
+      "/network/address", 
+      "/network/netmask", 
+      "/network/gateway", 
+      "/network/interface"
+    ] ],
+
+
+  "makeWifi": [ "network makeWifi", [
+      "/network/wifi/ssid",
+      "/network/wifi/encryption/value",
+      "/network/wifi/passphrase"
+    ] ],
+
+
+  "makeNetworkDhcp": [ "network makeNetworkDhcp", [
+      "/network/interface"
+    ] ],
+
+  "makeDns": [ "network makeDns", [
+      "/network/nameserver"
+    ] ],
+
+  "makeHostname": [ "network makeHostname", [
+      "/network/hostname"
+    ] ],
+
+  "setVolume": [ "sound setVolume",  [
+      "/sound/volume"
+    ] ],
+
+  "setMute": [ "sound setMute", [
+      "/sound/mute"
+    ] ],
+
+  "setBlank": [ "display setBlank", [
+      "/display/blank"
+    ] ],
+
+  "reloadNetwork": [ "network reload", [] ],
+  "reloadSound": [ "sound reload", [] ],
+  "reloadDisplay": [ "display reload", [] ],
+  "reloadStorage": [ "storage reload", [] ],
+  "reloadSystem": [ "system reload", [] ],
+  "makeDefaultInittab": [ "system makeInittab", [] ],
+  "incVolume": [ "sound incVolume", [] ],
+  "decVolume": [ "sound decVolume", [] ],
+  "toggleMute": [ "sound toggleMute", [] ],
+  "toggleBlank": [ "display toggleBlank", [] ]
+}

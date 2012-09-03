@@ -1,7 +1,7 @@
- jQuery.fn.wait = function (MiliSeconds) {
-        $(this).animate({ opacity: '+=0' }, MiliSeconds);
-        return this;
-    }
+jQuery.fn.wait = function (MiliSeconds) {
+  $(this).animate({ opacity: '+=0' }, MiliSeconds);
+  return this;
+}
 
 function Lounge(local) {
  this.local = local;
@@ -13,11 +13,22 @@ function Lounge(local) {
 
 var lounge = new Lounge(true);
 var video;
+var ScreenInvader = {};
 
 function bookmarklet() {
     $.get('cgi-bin/bookmarklet', function(data) {
       $("#bookmarklet").attr("href",data);
     }, 'text');
+}
+
+
+function updateScreenInvader() {
+  $.getJSON("cgi-bin/get?/.", function(data) {
+    $.each(widgets, function(i,w) {
+      w.update(data);
+    });
+
+  });
 }
 
 $().ready(function () {
@@ -30,6 +41,19 @@ $().ready(function () {
   playerWidget.loadInto('#player_panel');
   navigateWidget.loadInto('#navigate_panel');  
   uploadWidget.loadInto('#upload_panel');
+  playlistWidget.loadInto('#playlist_panel');
+
+  widgets = [
+   soundWidget,
+   screenWidget,
+   showWidget,
+   findWidget,
+   cleanupWidget,
+   playerWidget,
+   navigateWidget,
+   uploadWidget,
+   playlistWidget
+  ]
 
   $('.button').ready(function() {
     $(this).addClass('up');
@@ -45,6 +69,8 @@ $().ready(function () {
   })
 
   bookmarklet();
+  updateScreenInvader();
+  setInterval("updateScreenInvader",1000);
 });
 
 

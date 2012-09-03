@@ -7,7 +7,7 @@ function SwitchControl () {
     })
   };
   
-  this.update = function() {
+  this.update = function(ScreenInvader) {
     $.get('cgi-bin/switch/getInput', function(data) {
       $('#switch-control * option').eq(parseInt(data) - 1).attr('selected', 'selected');
     }, 'text');
@@ -22,5 +22,3 @@ function SwitchControl () {
 
 switchWidget = new SwitchControl();
 switchWidget.init();
-switchWidget.update();
-setInterval("switchWidget.update()", 1000);
