@@ -196,6 +196,9 @@ function doCopy() {
   check "Sync lounge changes" \
     "cd $BOOTSTRAP_DIR/src; rsync -axh --delete lounge $CHROOT_DIR/"
 
+  check "Sync root changes" \
+    "cd $BOOTSTRAP_DIR/src; rsync -axh --delete root $CHROOT_DIR/"
+
   check "Sync setup changes" \
     "cd $BOOTSTRAP_DIR/; rsync -axh --delete setup $CHROOT_DIR/"
 
