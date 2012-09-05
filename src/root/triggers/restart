@@ -1,0 +1,3 @@
+#!/bin/bash
+/root/triggers/network restart
+/root/triggers/storage restart

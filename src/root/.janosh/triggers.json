@@ -1,0 +1,28 @@
+{
+  "makeSmb": [ "storage makeSmb", [
+      "/storage/smb/user",
+      "/storage/smb/password",
+      "/storage/smb/domain",
+      "/storage/smb/host",
+      "/storage/smb/directory" 
+    ] ],
+
+  "makeNetworkMan": [ "network makeNetworkMan", [ 
+    ] ],
+
+  "makeNetworkDhcp": [ "network makeNetworkDhcp", [
+    ] ],
+
+  "makeDns": [ "network makeDns", [
+      "/network/nameserver"
+    ] ],
+
+  "makeHostname": [ "network makeHostname", [
+      "/network/hostname"
+    ] ],
+
+  "makeDefaultInittab": [ "system makeInittab", [] ],
+
+  "reload": [ "reload", [] ],
+  "restart": [ "restart", [] ]
+}

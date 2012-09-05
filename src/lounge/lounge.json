@@ -1,0 +1,15 @@
+{
+  "display": {
+    "blank": "false"
+  },
+
+  "sound": {
+    "mixer": "Master",
+    "volume": "100",
+    "mute": "false"    
+  },
+
+  "playlist": {
+    "queue": "true"
+  }
+}

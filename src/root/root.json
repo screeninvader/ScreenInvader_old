@@ -43,19 +43,5 @@
       "choices" : [ "800x600", "1024x768" ],
       "value": "1024x768"
     }
-  },
-
-  "sound": {
-    "mixer": "Master",
-    "volume": "100",
-    "mute": "false"    
-  },
-
-  "playlist": {
-    "queue": "true"
-  },
-
-  "screen": {
-    "blank": "false"
   }
 }
