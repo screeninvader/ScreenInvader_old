@@ -5,53 +5,6 @@
 FUNCTION="$1"
 declare -A DATA="$(janosh /network/.)"
 
-function makeHostname() {
-  echo "${DATA[/network/hostname]}" > "/etc/hostname"
-}
-
-function makeNetworkDhcp() {
-  cat > /etc/network/interfaces <<EODHCPCONF
-auto lo ${DATA[/network/interface]}
-iface lo inet loopback
-allow-hotplug ${DATA[/network/interface]}
-iface ${DATA[/network/interface]} inet dhcp
-EODHCPCONF
-
-[ "${DATA[/network/connection/value]}" == "Wifi" ] && addWifi
-
-}
-
-function makeNetworkMan() {
-  cat > /etc/network/interfaces <<EONETCONF
-auto lo ${DATA[/network/interface]}
-iface lo inet loopback
-allow-hotplug ${DATA[/network/interface]}
-iface ${DATA[/network/interface]} inet static
-address ${DATA[/network/address]}
-netmask ${DATA[/network/netmask]}
-gateway ${DATA[/network/gateway]}
-EONETCONF
-
-[ "${DATA[/network/connection/value]}" == "Wifi" ] && addWifi
-}
-
-function makeDns() {
-  cat > /etc/resolv.conf <<EORESOLVCONF
-domain local
-search local
-nameserver ${DATA[/network/nameserver]}
-EORESOLVCONF
-}
-
-function addWifi() {
-cat >> /etc/network/interface <<EOWIFICONF
-wpa-ssid "${DATA[/network/wifi/ssid]}"
-wpa-ap-scan 1
-wpa-key-mgmt ${DATA[/network/wifi/encryption/value]}
-wpa-psk "${DATA[/network/wifi/passphrase]}"
-EOWIFICONF
-}
-
 function readWirelessNic() {
   cat /proc/net/wireless | grep -Po '^ \K([A-Za-z0-9]*)(?=:)'
 }

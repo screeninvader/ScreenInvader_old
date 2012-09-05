@@ -5,20 +5,8 @@
 FUNCTION="$1"
 declare -A DATA="$(janosh /storage/.)"
 
-function makeSmb() {
-  user="${DATA[/storage/smb/user]}"
-  pass="${DATA[/storage/smb/password]}"
-  domain="${DATA[/storage/smb/domain]}"
-  host="${DATA[/storage/smb/host]}"
-  dir="${DATA[/storage/smb/directory]}"
-
-  cat > /etc/auto.smb <<EOSMBCONF
-$host$dir      -fstype=cifs,users,user=$user,password=$pass,domain=$domain,ro ://$host/$dir
-EOSMBCONF
-}
-
 function restart() {
-  /etc/init.d/autofs restart
+ return 0
 }
 
 function reload() {
