@@ -23,8 +23,6 @@
 FUNCTION="$1"
 declare -A DATA="`janosh /sound/.`"
 
-echo amixer sset "${DATA[/sound/mixer]}" "${DATA[/sound/volume]}%"
-
 function setMute() {
   m="on";
   [ "${DATA[/sound/mute]}" == "true" ] && m="off";
@@ -33,42 +31,21 @@ function setMute() {
 
 function setVolume() {
   amixer sset "${DATA[/sound/mixer]}" "${DATA[/sound/volume]}%"
-}
-
-function toggleMute() {
-  if [ "${DATA[/sound/mute]}" == "true" ]; then
-    janosh -t -s /sound/mute "false"
-  else
-    janosh -t -s /sound/mute "true"
-  fi
+  janosh -s /sound/volume "$(readVolume)"
 }
 
 function readVolume() {
-  mixer="${DATA[/sound/mixer]}"
-  mixerinfo="`amixer sget "$mixer"`"
-  echo "$mixerinfo" | grep -Po 'Playback.*\[\K.*?(?=%)' | head -n1
-}
-
-function decVolume() {
-  janosh -t -s /sound/volume $[ `readVolume` - 5 ]
-}
-
-function incVolume() {
-  janosh -t -s /sound/volume "$[ $(readVolume) + 5 ]"
+  amixer sget "${DATA[/sound/mixer]}" | grep -Po 'Playback.*\[\K.*?(?=%)' | head -n1
 }
 
 function readMute() {
-  mixer="${DATA[/sound/mixer]}"
-  mixerinfo="`amixer sget "$mixer"`"
-  mute="`echo "$mixerinfo" | grep -Po ' \[\K(on|off)?(?=])'`"
-  [ "$mute" == "on" ] && echo false || echo true
+  [ "`amixer sget "${DATA[/sound/mixer]}" | grep -Po ' \[\K(on|off)?(?=])'`" == "on" ] && echo false || echo true
 }
 
 function readMixer() {
   mixer="Master"
-  mixerinfo="`amixer sget "Master"`"
 
-  if [ -z "$mixerinfo" ]; then
+  if [ -z "`amixer sget "Master"`" ]; then
     mixer="PCM"
   fi
 
