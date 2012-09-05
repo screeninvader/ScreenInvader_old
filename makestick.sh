@@ -18,7 +18,6 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 
-
 dir="`dirname $0`"
 MAKEPARTITION_DIR="`cd $dir; pwd`"
 
@@ -26,12 +25,11 @@ function printUsage() {
   cat 1>&2 <<EOUSAGE
 makestick.sh - Prepare a file system for installation of the ScreenInvader system.
 
-Usage: $0 [-z] <device-file> [<sizeInM>]
+Usage: $0 [-z][-s <sizeInM>] <device-file>
 
   <device-file>    a block special device.
-  <sizeInM>        the size of the resulting file system in megabytes.
-
 Options:
+  -s <sizeInM>     overwrite the default (= 500MB) file system size.
   -z               write zeroes to the device before creating the partition
 
 EOUSAGE
@@ -54,12 +52,14 @@ function doCheckPreCond() {
 export BOOTSTRAP_LOG="makestick.log"
 source "$MAKEPARTITION_DIR/.functions.sh"
 
-WRITE_ZEROES=""
+WRITE_ZEROES=
+SIZES=500
 
-while getopts 'z' c
+while getopts 'zs:' c
 do
   case $c in
     z) WRITE_ZEROES="YES";;
+    s) SIZE="$OPTARG";;
     \?) printUsage;;
   esac
 done
@@ -67,18 +67,16 @@ done
 shift $(($OPTIND - 1))
 
 DEVICE="$1"
-SIZE="$2"
 
-[ $# -eq 0 -o $# -gt 2 ] && printUsage;
+[ $# -ne 1 ] && printUsage;
 [ ! -b "$DEVICE" ] &&  error "Not a block device: $DEVICE";
-[ -z "$SIZE" ] && SIZE=500
 [ printf "%d" $SIZE &> /dev/null -o $SIZE -lt 100 ] && error "Invalid size: $SIZE"
 
 doCheckPreCond
 
 if [ -n "$WRITE_ZEROES" ]; then
   check "Write zeros to device" \
-    "dd if=/dev/zero of=$DEVICE bs=1M count=$[$SIZE + 1]" 
+    "dd if=/dev/zero of=$DEVICE bs=1M count=$SIZE" 
 fi
 
 check "Make disk label" \
@@ -125,3 +123,4 @@ check "Install syslinux mbr" \
 check "Check file system" \
   "fsck.ext4 -fa $DEVICE*1"
 
+exit 0

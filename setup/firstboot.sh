@@ -1,3 +1,4 @@
+#!/bin/bash
 #
 # ScreenInvader - A shared media experience. Instant and seamless.
 #  Copyright (C) 2012 Amir Hassan <amir@viel-zu.org>
@@ -17,23 +18,48 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 
-#!/bin/bash
+(
+set -x 
+
 [ -z "$LC_ALL" ] && export LC_ALL=C
 cd `dirname $0`
 chvt 2
+janosh="/lounge/bin/janosh"
 ask="dialog --stdout --ok-label Next --cancel-label Back"
 
-function askHowNetConf() {
+function askHowNet() {
   $ask --radiolist "Network Configuration" 11 42 4 \
 	dhcp "Automatic configuration" on \
 	manual "Manual configuration" off
 }
 
-function askHostnameConf() {
+function askNetConnection() {
+  $ask --radiolist "Network Connection" 9 32 2 \
+    Wifi "Wireless" on \
+    Ethernet "Wired" off
+}
+
+function askWifiSSID() {
+  $ask --nocancel --inputbox "Wireless Network (SSID)" 7 30
+}
+
+function askWifiEncryption() {
+  $ask  --radiolist "Wireless Encryption" 10 38 3 \
+    WPA-PSK "WPA Passphrase" on \
+    WEP "WEP Passphrase" off \
+    NONE "No encryptiion"  off
+}
+
+function askWifiPassphrase() {
+  $ask --insecure --passwordbox "Wireless Passphrase" 7 30
+}
+
+
+function askHostname() {
   $ask --nocancel --inputbox "Please specify a hostname:" 7 30
 }
 
-function askManualNetworkConf() {
+function askManualNetwork() {
   $ask  --form "Manual Network Configuration" 12 38 0 \
 	"Address:"	1 1 "" 1 12 20 0 \
 	"Netmask:"	2 1 "" 2 12 20 0 \
@@ -41,127 +67,120 @@ function askManualNetworkConf() {
 	"DNS:"		4 1 "" 4 12 20 0
 }
 
-function askDoSMBConf() {
-  $ask --yesno 'Would you like to configure a network share?' 6 48
-}
-
-function askSMBConf() {
-  $ask --form "Samba (Windows Network) Configuration" 12 38 0 \
-	"Workgroup:" 1 1 "WORKGROUP" 1 12 20 0 \
-	"Host:" 2 1 "" 2 12 20 0 \
-	"Path:" 3 1 "/" 3 12 20 0 \
-	"User:" 4 1 "" 4 12 20 0 \
-	"Password:" 5 1 "" 5 12 20 0
-}
-
 function askDoReboot() {
   $ask --yesno 'Finish configuration and reboot?' 6 43
 }
 
-function makeHostnameConf() {
-  hostname $1
-  echo "$1" > "/etc/hostname"
+function makeHostname() {
+  $janosh -t -s /network/hostname "$1"
 }
 
-function makeDNSConf() {
-  templates/resolv_conf "$1" > /etc/resolv.conf
+function makeDNS() {
+  $janosh -t -s /network/nameserver "$1"
 }
 
-function makeDHCPNetConf() {
-  templates/interfaces_dhcp > /etc/network/interfaces
+function makeDHCPNet() {
+  $janosh -e makeNetworkDhcp -s /network/interface
 }
 
-function makeManualNetConf() {
-  templates/interfaces_man "$1" "$2" "$3" > /etc/network/interfaces
+function makeManualNet() {
+  $janosh -e makeNetworkMan -s /network/address "$1" /network/netmask "$2" /network/gateway "$3"
 }
 
-function makeSMBConf() {
-  templates/auto_smb "$1" "$2" "$3" "$4" "$5" > /etc/auto.smb
-}
-
-function makeInittabConf() {
-  templates/inittab > /etc/inittab
-}
-
-SCREENS="hostname network smb reboot"
+function makeWifi() {
+  $janosh -t -s /network/wifi/ssid "$1" /network/wifi/encryption/value "$2" /network/wifi/passphrase "$3"
+  }
 
 function doConf() {
 	${1}Conf
 }
 
 function hostnameConf(){
-  HOSTNAME=
-  while [ -z "$HOSTNAME" ]; do  
-    HOSTNAME=$(askHostnameConf)
+  hostname=
+  while [ -z "$hostname" ]; do  
+    hostname=$(askHostname)
   done
 
-  makeHostnameConf "$HOSTNAME"
-	doConf "network"
+  makeHostname "$hostname"
+  doConf "connection"
 }
 
-function networkConf() {
-  HOWCONF=$(askHowNetConf)
+function connectionConf() {
+  howconf=$(askNetConnection)
   if [ $? == 0 ]; then
-    if [ "$HOWCONF" == "dhcp" ]; then
-      makeDHCPNetConf
-    elif  [ "$HOWCONF" == "manual" ]; then
-      NETCONF=$(askManualNetworkConf)
-      if [ $? == 0 ]; then
-        set $NETCONF
-        makeManualNetConf "$1" "$2" "$3"
-        makeDNSConf "$4"
-      else
-				doConf "network"
-      fi
+    if [ "$howconf" == "Wifi" ]; then
+      doConf "wireless"
+    elif  [ "$howconf" == "Ethernet" ]; then
+      doConf "network"
     fi
   else
     doConf "hostname"
   fi
-
-	doConf "smb"
 }
 
-function smbConf() {
-  if askDoSMBConf; then
-    SMBCONF="$(askSMBConf)"
-    if [ $? -eq 0 ]; then
-      set $SMBCONF
-       makeSMBConf "$4" "$5" "$1" "$2" "$3"
-    else
-      doConf "network"
+function wirelessConf() {
+  ssid=$(askWifiSSID)
+  if [ $? == 0 ]; then
+    encrypt=$(askWifiEncryption)
+    if [ "$encrypt" == "WPA-PSK" -o "$encrypt" == "WEP" ]; then
+      passphrase=$(askWifiPassphrase)
     fi
+    makeWifi "$ssid" "$encrypt" "$passphrase"
+    doConf "network"
+  else
+    doConf "connection"
   fi
+}
 
-  doConf "reboot"
+function networkConf() {
+  howconf=$(askHowNet)
+  if [ $? == 0 ]; then
+    if [ "$howconf" == "dhcp" ]; then
+      makeDHCPNet
+    elif  [ "$howconf" == "manual" ]; then
+      netconf=$(askManualNetwork)
+      if [ $? == 0 ]; then
+        set $netconf
+        makeManualNet "$1" "$2" "$3"
+        makeDNS "$4"
+      else
+        doConf "network"
+      fi
+    fi
+    doConf "reboot"
+  else
+    doConf "connection"
+  fi
 }
 
 function rebootConf(){
   if askDoReboot; then
-    return 0
+   finish
   else
    doConf "hostname"
   fi
 }
 
+function finish() {
+  update-rc.d autofs defaults
+  update-rc.d thttpd defaults
+  update-rc.d mpd defaults
+  update-rc.d xserver defaults
+
+  mkdir -p /share
+  mkdir -p /var/cache/debconf/
+  mkdir -p /var/run/mpd/
+  mkdir -p /var/lib/mpd
+  chown -R mpd:audio  /var/lib/mpd
+  chown -R mpd:audio /var/run/mpd/
+  chmod a+rwx /var/run/mpd/
+  chown -R lounge:lounge /lounge/
+
+  usermod -s /bin/bash root
+  makeInittab
+
+  shutdown -r now
+}
+
 doConf "hostname"
-
-update-rc.d autofs defaults
-update-rc.d thttpd defaults
-update-rc.d mpd defaults
-update-rc.d xserver defaults
-
-mkdir -p /share
-mkdir -p /var/cache/debconf/
-mkdir -p /var/run/mpd/
-mkdir -p /var/lib/mpd
-chown -R mpd:audio  /var/lib/mpd
-chown -R mpd:audio /var/run/mpd/
-chmod a+rwx /var/run/mpd/
-chown -R lounge:lounge /lounge/
-
-usermod -s /bin/bash root
-makeInittabConf
-
-shutdown -r now
-
-
+) &> /setup.log

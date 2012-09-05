@@ -1,0 +1,12 @@
+#!/bin/bash
+. /var/www/cgi-bin/initrequest "text/html"
+. /lounge/bin/locatefunctions.sh
+
+[ -z "$QUERY_STRING" ] && QUERY_STRING="$1";
+TERMS="`prepareTerms "$QUERY_STRING"`"
+LOCATEARGS="`makeLocateArgs "$TERMS"`"
+bash -c "locate  $LOCATEARGS" | while read line; do 
+  title=`basename "$line"`; 
+  echo "<br/><a href=\"http://`getip`/cgi-bin/show?$line\">$title</a>"; 
+done
+

@@ -1,3 +1,0 @@
-updatedb.loungemc  --prunepaths='' --prunefs='/' --netpaths='' --findoptions='-type f \( -iname "*mpeg" -o -iname "*mpg" -o -iname "*avi" -o -iname "*mov" -o -iname "*wmv" -o -iname "*mp4" -o -iname "*3gp" -o -iname "*ogm" -o -iname "*mkv" \)' --output="/lounge/movie.db" --localpaths="/share/"
-
-

@@ -1,0 +1,31 @@
+
+[settings]
+default-encoding=ISO-8859-1
+monospace-font-family=Topaz a500a1000a2000
+default-font-size=16
+default-monospace-font-size=14
+minimum-font-size=12
+enable-site-specific-quirks=true
+last-window-width=1360
+last-window-height=768
+last-window-state=MIDORI_WINDOW_MAXIMIZED
+last-panel-position=399
+last-panel-page=5
+show-menubar=false
+show-navigationbar=false
+show-statusbar=false
+toolbar-style=MIDORI_TOOLBAR_ICONS
+search-engines-in-completion=false
+toolbar-items=Location,CompactMenu,
+load-on-startup=MIDORI_STARTUP_BLANK_PAGE
+homepage=
+show-crash-dialog=false
+speed-dial-in-new-tabs=false
+location-entry-search=http://www.google.com/search?q=%s
+enable-plugins=false
+enable-html5-database=true
+user-agent=Midori/0.2 (X11; Linux; U; c) WebKit/531.2+
+
+[extensions]
+libtoolbar-editor.so=true
+libadblock.so=true

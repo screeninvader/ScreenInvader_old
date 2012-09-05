@@ -1,0 +1,4 @@
+{
+  "triggerDirectories": [ "/lounge/triggers/" ],
+  "database": "/lounge/janosh.db"
+}

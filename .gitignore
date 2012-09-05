@@ -1,0 +1,5 @@
+extra/
+tmp/
+
+*.log
+*.dd

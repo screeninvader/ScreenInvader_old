@@ -1,6 +1,0 @@
-#!/bin/bash
-
-. /lounge/bin/initcgi "text/plain"
-
-cat "requests/standby" | switch/post &> /dev/null
-

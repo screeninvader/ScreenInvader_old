@@ -9,7 +9,6 @@
 /lib/modules/*/kernel/drivers/infiniband/*
 /lib/modules/*/kernel/drivers/bluetooth/*
 /lib/modules/*/kernel/drivers/media/*
-/lib/modules/*/kernel/drivers/net/wireless/*
 /var/cache/debconf*
 /usr/share/doc-base/*
 /usr/share/fonts/*

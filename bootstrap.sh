@@ -19,15 +19,16 @@
 #
 
 function getConf() {
-  cat "$1" | xargs echo
+  cat "$1" | tr "\n" " "
 }
 
 KERNEL="`getConf config/kernel`"
 VIDEO_DRIVERS="`getConf config/video_drivers`"
+KEYRINGS="`getConf config/keyrings`"
 PKG_WHITE="`getConf config/packages_white`"
-PKG_ADD="`getConf config/packages_additional`"
 PKG_EXTRA="`getConf config/packages_extra`"
 PKG_BLACK="`getConf config/packages_black`" 
+PKG_SID="`getConf config/packages_sid`"
 FILES_BLACK="`getConf config/files_black`"
 
 export LC_ALL="C"
@@ -51,10 +52,10 @@ DEBUG=
 GIDX=
 
 function printUsage() {
-  cat 1>&2 <<EOUSAGE
+  cat 0>&2 <<EOUSAGE
 Bootstrap a ScreenInvader file system.
 
-$0 [-a <arch>][-l <logfile>][-c <apt-cacher-port>][-i -d -u ] <bootstrapdir>
+$0 [-a <arch>][-g <num>][-l <logfile>][-p <apt-cacher-port>][-i -d -u -x] <bootstrapdir>
 Options:
   -a <arch> Bootstrap a system of the given architecture
   -g <num>  Build with selected graphics card
@@ -132,12 +133,11 @@ function doDebootstrap() {
   BOOTSTRAP_MIRROR=$DEBIAN_MIRROR
 
   [ -n "$APTCACHER_PORT" ] && BOOTSTRAP_MIRROR=$(
-    HOST="`echo $DEBIAN_MIRROR | sed 's/^http*:\/\///g' | sed 's/\/.*$//g'`"
+    HOST="`echo $BOOTSTRAP_MIRROR | sed 's/^http*:\/\///g' | sed 's/\/.*$//g'`"
     echo "http://127.0.0.1:$APTCACHER_PORT/$HOST/debian"
   )
-
-  check "Bootstrap debian" \
-    "debootstrap --include="`echo $PKG_WHITE | sed 's/ /,/g'`" --exclude="`echo $PKG_BLACK | sed 's/ /,/g'`" --arch $ARCH squeeze "$CHROOT_DIR" $BOOTSTRAP_MIRROR"
+ check "Bootstrap debian" \
+    "debootstrap --exclude="`echo $PKG_BLACK | sed 's/ /,/g'`" --arch $ARCH squeeze "$CHROOT_DIR" $BOOTSTRAP_MIRROR"
 }
 
 function doPackageConf() {
@@ -155,24 +155,48 @@ function doPackageConf() {
   check "Update Repositories" \
     "$CHRT $APTNI update"
 
-  check "Install white additional packages" \
-    "$CHRT $APTNI install $PKG_ADD"
+  check "Install keyrings" \
+    "$CHRT $APTNI install $KEYRINGS"
+
+  check "Clear apt lists" \
+    "$CHRT rm -rf /var/lib/apt/lists/*"
+
+  check "Clear apt cache" \
+   "$CHRT rm -rf /var/cache/apt/*"
+  
+  check "Update apt policy" \
+    "$CHRT apt-cache policy"
+
+  check "Update Repositories" \
+   "$CHRT $APTNI update"
+
+  check "Update apt policy" \
+    "$CHRT apt-cache policy"
+
+  check "Install white packages" \
+    "$CHRT $APTNI install $PKG_WHITE"
+
+  check "Install sid packages" \
+     "$CHRT $APTNI -t sid-grip install $PKG_SID"
 
   check "Install kernel" \
-    "$CHRT $APTNI install $KERNEL"
+    "$CHRT $APTNI -t squeeze install $KERNEL"
+
+  check "Upgrade packages" \
+    "$CHRT $APTNI upgrade"
 
   check "Remove black listed packages" \
     "$CHRT $APTNI purge $PKG_BLACK"
 }
 
 function doCopy() {
-  check "Copy system data" \
-    "cd $BOOTSTRAP_DIR/data; rsync -axh etc usr $CHROOT_DIR/"
+  check "Copy system changes" \
+    "cd $BOOTSTRAP_DIR/src; rsync -axh etc usr $CHROOT_DIR/"
   
-  check "Sync lounge data" \
-    "cd $BOOTSTRAP_DIR/data; rsync -axh --delete lounge $CHROOT_DIR/"
+  check "Sync lounge changes" \
+    "cd $BOOTSTRAP_DIR/src; rsync -axh --delete lounge $CHROOT_DIR/"
 
-  check "Sync setup data" \
+  check "Sync setup changes" \
     "cd $BOOTSTRAP_DIR/; rsync -axh --delete setup $CHROOT_DIR/"
 
   check "Copy plymouth theme" \
@@ -181,11 +205,20 @@ function doCopy() {
   check "Copy xosd lib" \
     "cp -a $BOOTSTRAP_DIR/build/xosd-2.2.14/src/libxosd/.libs/libxosd.so.2.2.14 $CHROOT_DIR/usr/lib/"
 
+  check "Copy kyotocabinet" \
+    "cp -a $BOOTSTRAP_DIR/build/libkyotocabinet* $CHROOT_DIR/usr/lib/"
+
+  check "Copy json-spirit" \
+    "cp -a $BOOTSTRAP_DIR/build/libjson_spirit.a $CHROOT_DIR/usr/lib/"
+
   check "ldconfig" \
     "$CHRT ldconfig"
 
   check "Copy osd binary"  \
     "cp -a $BOOTSTRAP_DIR/build/xosd-2.2.14/src/screeninvader_plugin/osd $CHROOT_DIR/lounge/bin/"
+
+  check "Copy janosh binary"  \
+    "cp -a $BOOTSTRAP_DIR/build/janosh $CHROOT_DIR/lounge/bin/"
 
   check "Update plymouth theme" \
     "$CHRT plymouth-set-default-theme -R screeninvader"
@@ -207,26 +240,41 @@ function doCleanupFiles() {
 
 function doPrepareChroot() {
   cd "$CHROOT_DIR"
-  mount --bind /dev/ dev
-  mount -t proc none proc
-  mount -t sysfs none sys
-  mount -t tmpfs none tmp
-  mount -t devpts none dev/pts
+  check "Bind chroot dev fs" \
+    "mount --bind /dev/ dev"
+  check "Create chroot procs fs" \
+     "mount -t proc none proc"
+  check "Create chroot sys fs" \
+      "mount -t sysfs none sys"
+  check "Create chroot tmpfs fs" \
+      "mount -t tmpfs none tmp"
+  check "Create chroot devpts fs" \
+      "mount -t devpts none dev/pts"
 
-  mkdir -p "$CHROOT_DIR/etc/apt/"
+  check "Prune apt directories" \
+      "mkdir -p \"$CHROOT_DIR/etc/apt/\" \"$CHROOT_DIR/etc/apt/preferences.d/\" \"$CHROOT_DIR/etc/apt/apt.conf.d/\""
 
-  $BOOTSTRAP_DIR/templates/sources_list "$EMDEBIAN_MIRROR" "$DEBIAN_MIRROR" "$DEBIAN_MULTIMEDIA_MIRROR" > $CHROOT_DIR/etc/apt/sources.list
+  check "Make apt preferences" \
+    "\"$BOOTSTRAP_DIR/templates/apt_preferences\" > \"$CHROOT_DIR/etc/apt/preferences.d/prefere_em_squeeze\""
+
+  check "Make apt sources list" \
+    "\"$BOOTSTRAP_DIR/templates/sources_list\" \"$EMDEBIAN_MIRROR\" \"$DEBIAN_MIRROR\" \"$DEBIAN_MULTIMEDIA_MIRROR\" > \"$CHROOT_DIR/etc/apt/sources.list\""
 
   if [ -n "$APTCACHER_PORT" ]; then
     # use apt-cacher-ng to cache packages during install
-    mkdir -p "$CHROOT_DIR/etc/apt/apt.conf.d/"
-    $BOOTSTRAP_DIR/templates/00aptcacher "$APTCACHER_PORT" > $CHROOT_DIR/etc/apt/apt.conf.d/00aptcacher
+    check "Make apt cacher conf" \
+      "\"$BOOTSTRAP_DIR/templates/00aptcacher\" \"$APTCACHER_PORT\" > \"$CHROOT_DIR/etc/apt/apt.conf.d/00aptcacher\""
   fi
 
   # disable starting daemons after install
-  mkdir -p "$CHROOT_DIR/usr/sbin"
-  $BOOTSTRAP_DIR/templates/policy-rc_d > "$CHROOT_DIR/usr/sbin/policy-rc.d"
-  chmod 755 "$CHROOT_DIR/usr/sbin/policy-rc.d"
+  check "Prune /usr/sbin" \
+      "mkdir -p \"$CHROOT_DIR/usr/sbin\""
+
+  check "Make policy-rd.d" \
+    "$BOOTSTRAP_DIR/templates/policy-rc_d > $CHROOT_DIR/usr/sbin/policy-rc.d"
+
+  check "Fix policy-rd.d permissions" \
+      "chmod 755 \"$CHROOT_DIR/usr/sbin/policy-rc.d\""
 }
 
 function doFreeChroot() {
@@ -248,6 +296,26 @@ function doFreeChroot() {
 function doCheckPreCond() {
   check "'debootstrap' installed" \
     "which debootstrap"
+}
+
+function doCreateBuildHtml() {
+  cat > $CHROOT_DIR/lounge/www/build.html <<EOHTML
+<html>
+<head>
+<title>ScreenInvader</title>
+</head>
+<body style="background-color: #000000">
+<h3 style="padding: 20px; color: #ff6600;">You are using ScreenInvader version</h3>
+<table>
+<tr>
+<td colspan="2" style="padding: 20px; width:100%; color: #ffffff; font-variant:bold;">
+`date`
+</td>
+</tr>
+</table>
+</body>
+</html>
+EOHTML
 }
 
 ###### main
@@ -272,12 +340,13 @@ shift $(($OPTIND - 1))
 echo > "$BOOTSTRAP_LOG"
 export BOOTSTRAP_LOG
 source "$BOOTSTRAP_DIR/.functions.sh"
-export CHROOT_DIR="`absPath $1`"
-export CHRT="chroot \"$CHROOT_DIR\" "
 
 if [ $# -ne 1 ]; then
   printUsage
 else
+  export CHROOT_DIR="`absPath $1`"
+  export CHRT="chroot \"$CHROOT_DIR\" "
+
   doCheckPreCond
 
   printVideoDrivers
@@ -297,6 +366,7 @@ else
   fi
 
   doPrepareChroot
+  # make sure we're cleaning up eventually
   trap doFreeChroot SIGINT SIGTERM EXIT
 
   if [ -z "$NOINSTALL" ]; then 
@@ -308,6 +378,9 @@ else
   doCleanupPackages
   doCleanupFiles
   doCopy
+  doCreateBuildHtml
 fi
 
+
+exit 0
 

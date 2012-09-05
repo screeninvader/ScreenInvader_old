@@ -18,6 +18,12 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 
+dir="`dirname $0`"
+RUNIMAGE_DIR="`cd $dir; pwd`"
+
+export BOOTSTRAP_LOG="runimage.log"
+source "$RUNIMAGE_DIR/.functions.sh"
+
 function doRunQemu() {
   check "Starting $1" \
     "true"
@@ -25,14 +31,19 @@ function doRunQemu() {
   exit $?
 }
 
-dir="`dirname $0`"
-RUNIMAGE_DIR="`cd $dir; pwd`"
+function printUsage() {
+  cat 1>&2 <<EOUSAGE
+runimage.sh - Run a disk image of the ScreenInvader system in qemu
 
-source "$RUNIMAGE_DIR/.functions.sh"
+Usage: $0 <image>
+<image>           the disk image file
+EOUSAGE
+  exit 1
+}
+
+[ $# -ne 1 ] && printUsage
 
 IMAGE_FILE="$1"
-
-[ -z $IMAGE_FILE ] && IMAGE_FILE="tsarbomba.dd"
 
 check "Exists image file $IMAGE_FILE" \
   "test -f $IMAGE_FILE"

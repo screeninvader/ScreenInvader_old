@@ -1,5 +1,0 @@
-#!/bin/bash
-arguments="`echo $@ | sed 's/[(] -fstype.*[)]//g' | sed 's/[-]prune [-]o//g'`"
-
-bash -c "/usr/bin/find $arguments"
-

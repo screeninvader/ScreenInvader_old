@@ -1,3 +1,0 @@
-updatedb.loungemc --prunepaths='' --prunefs='/' --netpaths='' --findoptions='-type f \( -iname "*aac" -o -iname "*ac3*" -o -iname "*flac" -o -iname "*m4a" -o -iname "*mp3" -o -iname "*oga" -o -iname "*wav" -o -iname "*wave" -o -iname "*wma" \)' --output="/lounge/music.db" --localpaths="/share/"
-
-

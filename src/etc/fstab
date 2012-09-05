@@ -1,0 +1,4 @@
+rootfs / rootfs defaults,data=writeback,noatime,nodiratime 0 1
+none /var/log/ tmpfs rw,noatime       0 0
+none /var/run/ tmpfs rw,noatime       0 0
+

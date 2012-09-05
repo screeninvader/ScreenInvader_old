@@ -1,0 +1,94 @@
+#!/bin/bash
+#
+# ScreenInvader - A shared media experience. Instant and seamless.
+#  Copyright (C) 2012 Amir Hassan <amir@viel-zu.org>
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+#
+
+. /lounge/triggers/env 
+
+FUNCTION="$1"
+declare -A DATA="`janosh /sound/.`"
+
+echo amixer sset "${DATA[/sound/mixer]}" "${DATA[/sound/volume]}%"
+
+function setMute() {
+  m="on";
+  [ "${DATA[/sound/mute]}" == "true" ] && m="off";
+  amixer sset "${DATA[/sound/mixer]}" "$m"
+}
+
+function setVolume() {
+  amixer sset "${DATA[/sound/mixer]}" "${DATA[/sound/volume]}%"
+}
+
+function toggleMute() {
+  if [ "${DATA[/sound/mute]}" == "true" ]; then
+    janosh -t -s /sound/mute "false"
+  else
+    janosh -t -s /sound/mute "true"
+  fi
+}
+
+function readVolume() {
+  mixer="${DATA[/sound/mixer]}"
+  mixerinfo="`amixer sget "$mixer"`"
+  echo "$mixerinfo" | grep -Po 'Playback.*\[\K.*?(?=%)' | head -n1
+}
+
+function decVolume() {
+  janosh -t -s /sound/volume $[ `readVolume` - 5 ]
+}
+
+function incVolume() {
+  janosh -t -s /sound/volume "$[ $(readVolume) + 5 ]"
+}
+
+function readMute() {
+  mixer="${DATA[/sound/mixer]}"
+  mixerinfo="`amixer sget "$mixer"`"
+  mute="`echo "$mixerinfo" | grep -Po ' \[\K(on|off)?(?=])'`"
+  [ "$mute" == "on" ] && echo false || echo true
+}
+
+function readMixer() {
+  mixer="Master"
+  mixerinfo="`amixer sget "Master"`"
+
+  if [ -z "$mixerinfo" ]; then
+    mixer="PCM"
+  fi
+
+  echo "$mixer"
+}
+
+function reload() {
+  janosh -s /sound/volume "$(readVolume)" /sound/mute "$(readMute)" /sound/mixer/ "$(readMixer)"
+}
+
+function restart() {
+  return 0
+}
+
+
+if [ "$(type -t "$FUNCTION")" == "function" ]; then
+  $FUNCTION
+else
+  echo "Unknown command: $FUNCTION" 1>&2
+  exit 1
+fi
+
+
