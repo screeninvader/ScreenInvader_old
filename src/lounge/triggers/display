@@ -33,14 +33,6 @@ function setBlank() {
   fi
 }
 
-function toggleBlank() {
-if [ "${DATA["/display/blank"]}" == "true" ]; then
-  setBlank false
-else
-  setBlank true
-  fi
-}
-
 function readBlank() {
   xset -q | fgrep 'Monitor is On' && echo false || echo true
 }
