@@ -70,7 +70,7 @@ $().ready(function () {
 
   bookmarklet();
   updateScreenInvader();
-  setInterval("updateScreenInvader",1000);
+  setInterval("updateScreenInvader()",1000);
 });
 
 
