@@ -10,58 +10,46 @@ function makeHostname() {
 }
 
 function makeNetworkDhcp() {
-  interface="${DATA[/network/interface]}"
-
   cat > /etc/network/interfaces <<EODHCPCONF
 auto lo
 iface lo inet loopback
-allow-hotplug $interface
-iface $interface inet dhcp
+allow-hotplug ${DATA[/network/interface]}
+iface ${DATA[/network/interface]} inet dhcp
 EODHCPCONF
 }
 
 function makeNetworkMan() {
-  addr="${DATA[/network/address]}"
-  netmask="${DATA[/network/netmask]}"
-  gateway="${DATA[/network/gateway]}"
-  interface="${DATA[/network/interface]}"
-
   cat > /etc/network/interfaces <<EONETCONF
 auto lo
 iface lo inet loopback
 allow-hotplug $interface
 iface $interface inet static
-address $addr
-netmask $netmask
-gateway $gateway
+address ${DATA[/network/address]}
+netmask ${DATA[/network/netmask]}
+gateway ${DATA[/network/gateway]}
 EONETCONF
 }
 
+function makeDns() {
+  cat > /etc/resolv.conf <<EORESOLVCONF
+domain local
+search local
+nameserver ${DATA[/network/nameserver]}
+EORESOLVCONF
+}
+
 function makeWifi() {
-  ssid="${DATA[/network/wifi/ssid]}"
-  encryption="${DATA[/network/wifi/encryption/value]}"
-  passphrase="${DATA[/network/wifi/passphrase]}"
-  
+  killall -0 wpa_supplicant || wpa_supplicant -B -Dwext -iwlan0 -c /etc/wpa_supplicant/wpa_supplicant.conf
   networks="`wpa_cli list_networks | grep -o "^[0-9]*"`"
   for id in $networks; do
     wpa_cli remove_network "$id"
   done
   wpa_cli add_network
-  wpa_cli set_network 0 ssid "\"$ssid\""
+  wpa_cli set_network 0 ssid "\"${DATA[/network/wifi/ssid]}\""
   wpa_cli set_network 0 scan_ssid 1
-  wpa_cli set_network 0 key_mgmt "$encryption"
-  wpa_cli set_network 0 psk "\"$passphrase\""
+  wpa_cli set_network 0 key_mgmt "${DATA[/network/wifi/encryption/value]}"
+  wpa_cli set_network 0 psk "\"${DATA[/network/wifi/passphrase]}\""
   wpa_cli enable_network 0
-}
-
-function makeDns() {
-  dns="${DATA[/network/nameserver]}"
-
-  cat > /etc/resolv.conf <<EORESOLVCONF
-domain local
-search local
-nameserver $dns
-EORESOLVCONF
 }
 
 function readWirelessNic() {
@@ -69,20 +57,21 @@ function readWirelessNic() {
 }
 
 function readWiredNic() {
-  #match for interface that start with 'e'
   cat /proc/net/dev | grep -Po '^\s*\K(e[A-Za-z0-9]*)(?=:)'
 }
 
 function restart() {
-  interface="${DATA[/network/interface]}"
-
   killall wpa_supplicant
-  ifconfig "$interface" down
-
+  killall dhclient
+  ifconfig "${DATA[/network/interface]}" down
+  ifdown -a
   #http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=550240
   /etc/init.d/networking stop
   /etc/init.d/networking start
-  wpa_cli reconfigure
+  ifup -a 
+  ifconfig "${DATA[/network/interface]}" up
+  makeWifi
+  dhclient "${DATA[/network/interface]}"
 }
 
 function reload() {
