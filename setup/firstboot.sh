@@ -24,8 +24,13 @@ set -x
 [ -z "$LC_ALL" ] && export LC_ALL=C
 cd `dirname $0`
 chvt 2
+export HOME=/root
+
 janosh="/lounge/bin/janosh"
 ask="dialog --stdout --ok-label Next --cancel-label Back"
+
+sudo -u lounge bash -c "cat /lounge/lounge.json | /lounge/bin/janosh -l"
+cat /root/root.json | $janosh -l
 
 function askHowNet() {
   $ask --radiolist "Network Configuration" 11 42 4 \
@@ -80,16 +85,16 @@ function makeDNS() {
 }
 
 function makeDHCPNet() {
-  $janosh -e makeNetworkDhcp -s /network/interface
+  $janosh -e makeNetworkDhcp -s /network/interface "$1"
 }
 
 function makeManualNet() {
-  $janosh -e makeNetworkMan -s /network/address "$1" /network/netmask "$2" /network/gateway "$3"
+  $janosh -e makeNetworkMan -s /network/interface "$1" /network/address "$2" /network/netmask "$3" /network/gateway "$4"
 }
 
 function makeWifi() {
-  $janosh -t -s /network/wifi/ssid "$1" /network/wifi/encryption/value "$2" /network/wifi/passphrase "$3"
-  }
+  $janosh -t -s /network/wifi/inteface "$1" /network/wifi/ssid "$2" /network/wifi/encryption/value "$3" /network/wifi/passphrase "$4"
+}
 
 function doConf() {
 	${1}Conf
@@ -105,12 +110,16 @@ function hostnameConf(){
   doConf "connection"
 }
 
+INTERFACE=
+
 function connectionConf() {
   howconf=$(askNetConnection)
   if [ $? == 0 ]; then
+    $janosh -s /network/connection/value "$howconf"
     if [ "$howconf" == "Wifi" ]; then
       doConf "wireless"
     elif  [ "$howconf" == "Ethernet" ]; then
+      export INTERFACE="`/lounge/triggers/network readWiredNic`"
       doConf "network"
     fi
   else
@@ -125,7 +134,8 @@ function wirelessConf() {
     if [ "$encrypt" == "WPA-PSK" -o "$encrypt" == "WEP" ]; then
       passphrase=$(askWifiPassphrase)
     fi
-    makeWifi "$ssid" "$encrypt" "$passphrase"
+    export INTERFACE="`/lounge/triggers/network readWirelessNic`"
+    makeWifi "$INTERFACE" "$ssid" "$encrypt" "$passphrase"
     doConf "network"
   else
     doConf "connection"
@@ -136,12 +146,12 @@ function networkConf() {
   howconf=$(askHowNet)
   if [ $? == 0 ]; then
     if [ "$howconf" == "dhcp" ]; then
-      makeDHCPNet
+      makeDHCPNet "$INTERFACE"
     elif  [ "$howconf" == "manual" ]; then
       netconf=$(askManualNetwork)
       if [ $? == 0 ]; then
         set $netconf
-        makeManualNet "$1" "$2" "$3"
+        makeManualNet "$INTERFACE" "$1" "$2" "$3"
         makeDNS "$4"
       else
         doConf "network"
@@ -162,24 +172,23 @@ function rebootConf(){
 }
 
 function finish() {
-  update-rc.d autofs defaults
-  update-rc.d thttpd defaults
-  update-rc.d mpd defaults
-  update-rc.d xserver defaults
+ update-rc.d autofs defaults
+ update-rc.d thttpd defaults
+ update-rc.d mpd defaults
+ update-rc.d xserver defaults
 
-  mkdir -p /share
-  mkdir -p /var/cache/debconf/
-  mkdir -p /var/run/mpd/
-  mkdir -p /var/lib/mpd
-  chown -R mpd:audio  /var/lib/mpd
-  chown -R mpd:audio /var/run/mpd/
-  chmod a+rwx /var/run/mpd/
-  chown -R lounge:lounge /lounge/
+ mkdir -p /share
+ mkdir -p /var/cache/debconf/
+ mkdir -p /var/run/mpd/
+ mkdir -p /var/lib/mpd
+ chown -R mpd:audio  /var/lib/mpd
+ chown -R mpd:audio /var/run/mpd/
+ chmod a+rwx /var/run/mpd/
+ chown -R lounge:lounge /lounge/
 
-  usermod -s /bin/bash root
-  makeInittab
-
-  shutdown -r now
+ usermod -s /bin/bash root
+ $janosh -e makeDefaultInittab
+ /sbin/shutdown -r now
 }
 
 doConf "hostname"
