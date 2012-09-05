@@ -1,9 +1,0 @@
-#!/bin/bash
-
-cat <<EODHCPCONF
-auto lo
-iface lo inet loopback
-allow-hotplug eth0
-iface eth0 inet dhcp
-EODHCPCONF
-
