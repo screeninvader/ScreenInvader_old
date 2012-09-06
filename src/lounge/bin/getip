@@ -18,4 +18,5 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 
-/sbin/ifconfig | grep "inet addr" | awk '{ print $2 }' | cut -d":" -f2 | tail -n0
+
+/sbin/ifconfig | grep "inet addr" | awk '{ print $2 }' | cut -d":" -f2 | head -n1
