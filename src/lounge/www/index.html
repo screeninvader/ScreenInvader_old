@@ -7,35 +7,36 @@
   <script type="text/javascript" src="_inc/js/sound_control.js"></script>
   <script type="text/javascript" src="_inc/js/show_control.js"></script>
   <script type="text/javascript" src="_inc/js/upload_control.js"></script>
-  <script type="text/javascript" src="_inc/js/screen_control.js"></script>
   <script type="text/javascript" src="_inc/js/find_control.js"></script>
   <script type="text/javascript" src="_inc/js/cleanup_control.js"></script>
   <script type="text/javascript" src="_inc/js/player_control.js"></script>
   <script type="text/javascript" src="_inc/js/navigate_control.js"></script>
   <script type="text/javascript" src="_inc/js/playlist_control.js"></script>
+  <script type="text/javascript" src="_inc/js/close_control.js"></script>
   <script type="text/javascript" src="_inc/js/lounge.js"></script>  
   <link rel="stylesheet" type="text/css" href="_inc/css/lounge.css"></link>
 </head>
 <body>
-<table style="background-color:#000;">
+<table style="background-color:#000; height: 100%;">
 <tr>
-  <td style="width:0%;background-color:#000;">
-    <div style="display: table; width:100px;">
+  <td style="width:0%;background-color:#000; height: 100%;">
+    <div style="display: table; width:100px; height: 100%;">
       <div class="panel-columm">
         <div id="show_panel"></div>
         <div id="find_panel" style="padding-top: 5px;"></div>
         <div id="upload_panel"  style="padding-top: 5px;"></div>
-        <div id="player_panel"  style="padding-top: 5px;"></div>
-        <div id="navigate_panel" style="padding-top: 5px;"></div>
-        <div class="panel-row">
-          <div id="sound_panel" style="padding-right: 5px;"></div><div id="screen_panel"></div>
+        <div id="sound_panel" style="padding-top: 5px;"></div>
+        <div id="active" style="padding-top: 10px;">
+          <table style="background-color: #222; padding: 5px;"><tr><td>
+            <div id="close_panel"></div>
+            <div id="player_panel"></div>
+            <div id="navigate_panel"></div>
+            <div id="sound_panel"></div>
+          </td></tr></table>
         </div>
-        <div id="cleanup_panel" style="margin: 10px"></div>
-        <span id="update-library" onclick="$.get('cgi-bin/updatelibrary');" class="button up">Update Library</span>
-        <span id="remove-image" onclick="$.get('cgi-bin/removeoverlay'); " class="button up">Remove Overlay</span>
-        </br>Bookmarklet: <a id="bookmarklet" title="Post current web content to the LoungeControl" href="" style="color:orange;">Lounge it!</a>
       </div>
     </div>
+ <p style="text-align:left;">Bookmarklet: <a id="bookmarklet" title="Post current web content to the LoungeControl" href="" style="color:orange;">Lounge it!</a></span>
   </td>
   <td style="width:100%;height:100%;">
     <div id="playlist_panel">
