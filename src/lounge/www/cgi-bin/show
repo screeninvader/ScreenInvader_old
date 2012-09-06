@@ -18,16 +18,13 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 
+. ./initcgi "text/html"
 
-
-set -x
-
-. /lounge/bin/initcgi "text/html"
-
-killall -9 youtube &> /dev/null
-reset &> /dev/null
+killall youtube &> /dev/null
 
 (
+./reset
+
 VIDEO_HOSTS="m.youtube.com youtu.be youtube.com vimeo.com myvideo.de"
 
 isVideoUrl() {

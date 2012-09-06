@@ -18,11 +18,8 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 
-
-
-. /lounge/bin/initcgi "text/html"
-
-#./reset
+. ./initcgi "text/html"
+./reset
 
 notify "Load arte+7..."
 

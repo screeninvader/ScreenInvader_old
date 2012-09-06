@@ -20,7 +20,7 @@
 
 
 
-. /lounge/bin/initcgi "text/plain"
+. ./initcgi "text/html"
 
 LIST="/var/run/player/playlist"
 TITLES="/var/run/player/playlist_titles"

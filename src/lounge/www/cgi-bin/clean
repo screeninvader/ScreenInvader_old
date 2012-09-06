@@ -20,7 +20,7 @@
 
 
 
-. /lounge/bin/initcgi "text/plain"
+. ./initcgi "text/plain"
 
 killall -9 feh &> /dev/null
 killall -9 evince &> /dev/null
@@ -32,3 +32,4 @@ pid=`ps -ef | grep "midori.*class=Browser" | fgrep -v grep | tr -s " " | cut -d"
 [ -n "$pid" ] && kill -9 $pid
 screen/setBlank false
 xdotool mousemove 1900 1200
+player refresh

@@ -20,7 +20,7 @@
 
 
 
-. /lounge/bin/initcgi "text/plain"
+. ./initcgi "text/plain"
 
 IP=`getip`
 echo "javascript:(function(){ window.open('http://$IP/cgi-bin/show?' + location.href); })();"

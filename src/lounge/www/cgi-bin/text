@@ -20,7 +20,7 @@
 
 
 
-. /lounge/bin/initcgi "text/html"
+. ./initcgi "text/html"
 
 ./reset
 export QUERY_STRING="http://10.20.30.51/cgi-bin/printtext?$QUERY_STRING"

@@ -20,7 +20,7 @@
 
 
 
-. /lounge/bin/initcgi "text/plain"
+. ./initcgi "text/plain"
 
 killall feh
 killall midori

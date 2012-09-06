@@ -1,5 +1,5 @@
 #!/bin/bash
-. /lounge/bin/initcgi "text/html"
+. ../initcgi "text/html"
 . /lounge/bin/locatefunctions.sh
 
 MOVIE_EXT="mpeg mpg mpa mp2 m2a avi mov qt asf asx wma wmv wmx rm ra ram rmvb mp4 3gp ogm mkv"

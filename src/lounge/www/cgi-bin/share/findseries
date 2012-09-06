@@ -1,6 +1,6 @@
 #!/bin/bash
-. /var/www/cgi-bin/initrequest "text/html"
-. /lounge/bin/locatefunctions.sh
+. ../initcgi "text/html"
+. /lounge/bin/locate/locatefunctions.sh
 
 MOVIE_EXT="mpeg mpg mpe mpeg mls mpa mp2 m2a mp2v m2v m2s avi apple mov qt asf asx wma wmv wmx rm ra ram rmvb mp4 3gp ogm mkv"
 

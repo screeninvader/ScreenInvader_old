@@ -20,5 +20,5 @@
 
 
 
-. /lounge/bin/initcgi "text/plain"
-/lounge/bin/getip
+. ./initcgi "text/plain"
+getip

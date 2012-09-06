@@ -19,10 +19,10 @@
 #
 
 
-. /lounge/bin/initcgi "text/html"
+. ./initcgi "text/html"
 
 ./reset
-set -x
+
 [ -z "$QUERY_STRING" ] && QUERY_STRING="$@";
 
 wget -q -O - "$QUERY_STRING" | while read line; do 

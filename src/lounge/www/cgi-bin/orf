@@ -19,10 +19,9 @@
 #
 
 
-set -x
-. /lounge/bin/initcgi "text/html"
+. ./initcgi "text/html"
 
-#./reset
+./reset
 
 notify "Loading orf..."
 

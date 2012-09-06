@@ -18,9 +18,7 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 
-
-
-. /lounge/bin/initcgi "text/plain"
+#make sure your cgi called initcgi before calling reset
 xdotool mousemove 1900 1200
-screen/setBlank false
+janosh -t -s /display/blank false
 

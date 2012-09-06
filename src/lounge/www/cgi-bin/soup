@@ -18,15 +18,11 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 
-
-set -x
-. /lounge/bin/initcgi "text/html"
-
+. ./initcgi "text/html"
 ./reset
 
 /var/www/bin/notify "Loading soup..." 1
 
-echo "$QUERY_STRING"
 [ -z "$QUERY_STRING" ] && QUERY_STRING="$@"
 
 function getImage() {

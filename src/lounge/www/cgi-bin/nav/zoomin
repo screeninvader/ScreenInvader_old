@@ -20,7 +20,7 @@
 
 
 
-. /lounge/bin/initcgi "text/plain"
+export DISPLAY=:0
 ./reset
 
 if killall -0 midori; then 

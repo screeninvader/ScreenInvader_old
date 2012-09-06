@@ -1,7 +1,6 @@
 #!/bin/bash
-set -x
-. /lounge/bin/initcgi "text/html"
-. /lounge/bin/locatefunctions.sh
+. ../initcgi "text/html"
+. /lounge/bin/locate/locatefunctions.sh
 
 MEDIA_EXT="svg avi mpeg mpg mov wmv mp4 3gp ogm mkv jpg jpeg gif png"
 
