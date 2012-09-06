@@ -18,23 +18,4 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 
-
-. ./initcgi "text/html"
-./reset
-
-notify "Loading web page: $@" 3
-export MOZ_PLUGIN_PATH="/usr/lib/flashplugin-nonfree/"
-
-[ -z "$QUERY_STRING" ] && QUERY_STRING="$@";
-pid=`ps -ef | grep "midori.*class=Browser" | fgrep -v grep | tr -s " " | cut -d" " -f2`
-if [ -n "$pid" ]; then 
-	midori --class="Browser" --name="Browser" -e TabCloseOther 
-fi
-pid=`ps -ef | grep "midori.*class=Browser" | fgrep -v grep | tr -s " " | cut -d" " -f2`
-[ -n "$pid" ] && kill -9 $pid
-
-(
-janosh -s /browser/active true
-midori --class="Browser" --name="Browser" "$QUERY_STRING" &> /dev/null
-janosh -s /browser/active false
-) &
+killall midori &> /dev/null

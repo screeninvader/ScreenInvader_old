@@ -19,15 +19,20 @@
 #
 
 
-. /lounge/bin/initcgi "text/html"
+. ./initcgi "text/html"
 
 ./reset
-killall -9 gifview
-killall -9 feh
-killall -9 midori
+
+killall gifview
 
 [ -z "$QUERY_STRING" ] && QUERY_STRING="$@";
 notify "Loading gif: `basename "$QUERY_STRING"`"
-wget -q -O - "$QUERY_STRING" | gifview -a &>/dev/null
+
+(
+janosh -s /animation/active true;
+wget -q -O - "$QUERY_STRING" | gifview -a &>/dev/null;
+janosh -s /image/active false;
+) &
+
 disown
 

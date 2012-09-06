@@ -20,14 +20,22 @@
 
 
 
-. /lounge/bin/initcgi "text/html"
+. ./initcgi "text/html"
+./reset
 
-set -x
+killall feh &> /dev/null
+
 [ -z "$QUERY_STRING" ] && QUERY_STRING="$@"
 notify "Loading image: `basename "$QUERY_STRING"`"
 tmpimg=`mktemp`
 wget --no-check-certificate -O "$tmpimg" "$QUERY_STRING"
-feh -F --image-bg black --auto-zoom "$tmpimg" &
-bash -c "sleep 60; rm $tmpimg"
+
+(
+janosh -s /image/active true;
+feh -F --image-bg black --auto-zoom "$tmpimg";
+janosh -s /image/active false;
+rm "$tmpimg"
+) &
+
 disown
 exit 0

@@ -19,9 +19,10 @@
 #
 
 
-. /lounge/bin/initcgi "text/html"
-
+. ./initcgi "text/html"
 ./reset
+
+killall xpdf &> /dev/null
 
 [ -z "$QUERY_STRING" ] && QUERY_STRING=$1;
 notify "Loading pdf.."
@@ -32,7 +33,13 @@ if [ -n "`echo "$QUERY_STRING" | grep "^http"`" ]; then
  QUERY_STRING=$tmpfile
 fi
 
-xpdf -fullscreen "$QUERY_STRING" &
+(
+janosh -s /pdf/active true;
+xpdf -fullscreen "$QUERY_STRING"
+janosh -s /pdf/active false;
+[ -f "$tmpfile" ] && rm "$tmpfile"
+) &
+
 `sleep 1; xdotool key --clearmodifiers w`
 
 

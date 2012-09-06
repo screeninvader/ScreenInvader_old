@@ -19,7 +19,7 @@
 #
 
 
-. /lounge/bin/initcgi "text/html"
+. ./initcgi "text/html"
 
 ./reset
 [ -z "$QUERY_STRING" ] && QUERY_STRING="$@";

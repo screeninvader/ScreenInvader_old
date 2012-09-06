@@ -10,6 +10,26 @@
   },
 
   "playlist": {
-    "queue": "true"
+    "queue": "false"
+  },
+
+  "video": {
+    "active": "false"
+  },
+
+  "animation": {
+    "active": "false"
+  },
+
+  "image": {
+    "active": "false"
+  },
+
+  "browser": {
+    "active": "false"
+  },
+
+  "pdf": {
+    "active": "false"
   }
 }
