@@ -34,6 +34,10 @@ function NavigateControl () {
   };
   
   this.update = function(ScreenInvader) {
+    if(ScreenInvader.pdf.active == "true" || ScreenInvader.browser.active == "true")
+      $('#navigate-control').css('display', '');
+    else
+      $('#navigate-control').css('display', 'none');
   };
   
   this.loadInto = function(into) {

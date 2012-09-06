@@ -38,6 +38,11 @@ function PlayerControl () {
   };
   
   this.update = function(ScreenInvader) {
+    if(ScreenInvader.video.active == "true") {
+      $('#player-control').css('display', '');
+    }else {
+      $('#player-control').css('display', 'none');
+    }
   };
   
   this.loadInto = function(into) {

@@ -34,25 +34,23 @@ function updateScreenInvader() {
 $().ready(function () {
   lounge.init();
   soundWidget.loadInto('#sound_panel');
-  screenWidget.loadInto('#screen_panel');
   showWidget.loadInto('#show_panel');
   findWidget.loadInto('#find_panel');
-  cleanupWidget.loadInto('#cleanup_panel');
   playerWidget.loadInto('#player_panel');
   navigateWidget.loadInto('#navigate_panel');  
   uploadWidget.loadInto('#upload_panel');
   playlistWidget.loadInto('#playlist_panel');
+  closeWidget.loadInto('#close_panel');
 
   widgets = [
    soundWidget,
-   screenWidget,
    showWidget,
    findWidget,
-   cleanupWidget,
    playerWidget,
    navigateWidget,
    uploadWidget,
-   playlistWidget
+   playlistWidget,
+   closeWidget
   ]
 
   $('.button').ready(function() {

@@ -44,6 +44,7 @@ iframe {
    .panel-row div {
       display: inline-block;
       vertical-align: top;
+      padding: 0px;
     }
 
 * table {
@@ -85,7 +86,9 @@ input {
 .button {
   -moz-user-select: none;
   -webkit-user-select: none;
-  width: 20px;
+
+  color: #fff;
+  margin: 0px;
   padding: 2px;
   padding-left: 5px;
   padding-right: 5px;
@@ -98,7 +101,6 @@ input {
 .toggle {
   -moz-user-select: none;
   -webkit-user-select: none;
-  width: 20px;
   padding: 2px;
   padding-left: 5px;
   padding-right: 5px;
