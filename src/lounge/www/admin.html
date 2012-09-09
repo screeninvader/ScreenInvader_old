@@ -9,7 +9,7 @@
     <div id="wrapper">
       <header class="main">
         <h1>screeninvader admin interface</h1>
-        <a href="http://10.20.30.51">back to screeninvader</a>
+        <a class="back-link" href="http://10.20.30.51">back to screeninvader</a>
       </header>
       <div id="content">
         <form id="admin-form">
@@ -18,15 +18,15 @@
               <header>
                 <h1>hostname:</h1>
               </header>
-              <div class="input-container">
-                <input type="text" name="hostname" id="hostname" />
+              <div class="input-container" data-path="/network/hostname">
+                <input type="text" name="hostname" id="hostname" class="value-change" />
               </div>
             </div>
-            <div id="fieldset-connection" class="panel-row  aligntop">
+            <div id="fieldset-connection" class="panel-row aligntop">
               <header>
                 <h1>internet connection:</h1>
               </header>
-              <div id="connection-container" class="input-container">
+              <div id="connection-container" class="input-container value-change" data-type="radio" data-path="/network/connection/value">
                 <input type="radio" name="connection" value="Wifi" id="connection-wifi" class="connection-radio" /><label for="connection">Wifi</label>
                 <input type="radio" name="connection" value="Ethernet" id="connection-ethernet" class="connection-radio" /><label for="connection">Ethernet</label>
               </div>
@@ -36,18 +36,18 @@
                 <h1>wifi settings:</h1>
               </header>
               <div class="input-container">
-                <div>
+                <div data-path="/network/wifi/ssid">
                   <label for="wifi-essid">essid:</label>
                   <input type="text" name="wifi-essid" id="wifi-essid" />
                 </div>
-                <div>
+                <div data-path="/network/wifi/passphrase">
                   <label for="wifi-pass">pass:</label>
                   <input type="text" name="wifi-pass" id="wifi-pass" />
                 </div>
                 
                 <div class="floatright">
                   <label for="encryption-select">encryption:</label>
-                  <select name="encryption-select" id="encryption-select">
+                  <select name="encryption-select" id="encryption-select" class="value-change" data-type="select" data-path="/network/wifi/encryption/value">
                     <option class="encryption-option" value="None">None</option>
                     <option class="encryption-option" value="WEP">WEP</option>
                     <option class="encryption-option" value="WPA-PSK">WPA-PSK</option>
@@ -60,22 +60,22 @@
                 <h1>ip configuration:</h1>
               </header>
               <div class="input-container">
-                <div class="input-div">
+                <div class="input-div" data-path="/network/address">
                   <label for="ip-address">address:</label>
-                  <input type="text" name="ip-address" id="ip-address" />
+                  <input type="text" name="ip-address" class="value-change" id="ip-address" />
                 </div>
-                <div class="input-div">
+                <div class="input-div" data-path="/network/netmask">
                   <label for="ip-netmask">netmask:</label>
-                  <input type="text" name="ip-netmask" id="ip-netmask" />
+                  <input type="text" name="ip-netmask" class="value-change" id="ip-netmask" />
                 </div>
-                <div class="input-div">
+                <div class="input-div" data-path="/network/gateway">
                   <label for="ip-gateway">gateway:</label>
-                  <input type="text" name="ip-gateway" id="ip-gateway" />
+                  <input type="text" name="ip-gateway"  class="value-change" id="ip-gateway" />
                 </div>
                 
                 <div class="floatright" class="input-div">
                   <label for="ip-mode-select">mode:</label>
-                  <select name="ip-mode-select" id="ip-mode-select">
+                  <select name="ip-mode-select" id="ip-mode-select" data-path="/network/mode/value" class="value-change" data-type="select">
                     <option class="ip-mode-option">DHCP</option>
                     <option class="ip-mode-option">Manual</option>
                   </select>
@@ -90,14 +90,14 @@
                 
                 <div class="input-div">
                   <label for="display-adapter">adapter:</label>
-                  <select name="display-adapter" id="display-adapter">
+                  <select name="display-adapter" id="display-adapter" data-path="/display/adapter/value" class="value-change" data-type="select">
                     <option class="loading">loading...</option>
                   </select>
                 </div>
                 
                 <div class="input-div">
                   <label for="display-resolution">resolution:</label>
-                  <select name="display-resolution" id="display-resolution">
+                  <select name="display-resolution" id="display-resolution" data-path="/display/resolution/value" class="value-change" data-type="select">
                     <option class="loading">loading...</option>
                   </select>
                 </div>
@@ -125,6 +125,3 @@
     </div><!-- end of wrapper-->
   </body>
 </html>
-
-
-
