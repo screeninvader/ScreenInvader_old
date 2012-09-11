@@ -7,7 +7,7 @@ function FindControl () {
 
     $('#find-control #random-button').live ('click', function(){
       var terms = $('#find-control #terms-input').val();
-      $.get('cgi-bin/link/randomshare?' + terms);
+      $.get('cgi-bin/share/randomshare?' + terms);
     })
   };
   
