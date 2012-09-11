@@ -18,12 +18,22 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 
-
-
 . ./initcgi "text/html"
+l_unblank
+l_notify "Loading pdf $( basename "$QUERY_STRING" )"
 
-./reset
-export QUERY_STRING="http://10.20.30.51/cgi-bin/printtext?$QUERY_STRING"
-browse
+(
+  if [ -n "`echo "$QUERY_STRING" | grep "^http"`" ]; then
+   tmpfile=`mktemp`
+   wget "$QUERY_STRING" -O $tmpfile
+   QUERY_STRING=$tmpfile
+  fi
 
-exit 0
+  killall xpdf
+  janosh -s /pdf/active true;
+  xpdf -fullscreen "$QUERY_STRING"
+  janosh -s /pdf/active false;
+  [ -f "$tmpfile" ] && rm "$tmpfile"
+  `sleep 1; xdotool key --clearmodifiers w`
+) | l_lock "pdf" || exit 111
+

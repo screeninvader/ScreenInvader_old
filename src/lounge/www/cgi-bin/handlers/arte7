@@ -19,29 +19,18 @@
 #
 
 . ./initcgi "text/html"
-./reset
 
-notify "Load arte+7..."
+l_unblank
+l_notify "Load arte+7..."
 
-[ -z "$QUERY_STRING" ] && QUERY_STRING="$@"
+wgeto="wget -O - -q"
 
-(
-function playUrl() {
-  player loadVideo "$1" "arte+7"
-  disown
-}
-
-function wgeto {
-  wget -O - -q "$1"
-}
-
-XML_URL=`wgeto "$QUERY_STRING" | fgrep "vars_player.videorefFileUrl" | cut -d"\"" -f2`
-XML_DE_URL=`wgeto "$XML_URL" | fgrep "<video lang=\"de\"" | cut -d"\"" -f4`
-RTMP_URL=`wgeto "$XML_DE_URL" | sed -n -e 's/.*<url quality="hd">\(.*\)<\/url>.*/\1/p'`
+XML_URL=`$wgeto "$QUERY_STRING" | fgrep "vars_player.videorefFileUrl" | cut -d"\"" -f2`
+XML_DE_URL=`$wgeto "$XML_URL" | fgrep "<video lang=\"de\"" | cut -d"\"" -f4`
+RTMP_URL=`$wgeto "$XML_DE_URL" | sed -n -e 's/.*<url quality="hd">\(.*\)<\/url>.*/\1/p'`
 
 if [ -n "$RTMP_URL" ]; then 
-  playUrl "$RTMP_URL"
+  player loadVideo "$RTMP_URL" "arte+7"
 else
   notify "failed"
 fi
-) &> /dev/null

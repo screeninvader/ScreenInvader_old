@@ -18,15 +18,10 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 
+. ../initcgi "text/plain"
+l_unblank
+l_notify "Loading plain text..."
 
-. ./initcgi "text/html"
-
-./reset
-
-[ -z "$QUERY_STRING" ] && QUERY_STRING="$@";
-
-wget -q -O - "$QUERY_STRING" | while read line; do 
-  player playlistEnqueue "`echo $line | sed 's/ /%20/g'`" "`echo $line | sed 's/.*\///g'`"
-done
-
+export QUERY_STRING="http://10.20.30.51/cgi-bin/printtext?$QUERY_STRING"
+./browse
 

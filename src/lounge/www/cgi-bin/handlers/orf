@@ -18,34 +18,16 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 
+
 . ./initcgi "text/html"
-./reset
 
-/var/www/bin/notify "Loading soup..." 1
+l_unblank
+l_notify "Loading orf..."
 
-[ -z "$QUERY_STRING" ] && QUERY_STRING="$@"
+MMS_URL="`wget -O - -q "$QUERY_STRING" |  grep "src=.*mms" | cut -d'"' -f2`"
 
-function getImage() {
-  echo "$1" | fgrep "click to zoom" | sed 's/^.*href="//g' | sed 's/".*$//g'
-}
-
-function getVimeo() {
-  ID="`echo "$1" | grep "<embed.*vimeo.com" | sed 's/^.*clip_id=//g'  | sed 's/&.*$//g'`"
-  [ -n "$ID" ] && echo "http://vimeo.com/$ID"
-}
-
-function getYoutube() {
-  URL="`echo "$1" | grep "<embed.*youtube.com" | sed 's/^.*embed src="//g'  | sed 's/".*$//g'`"
-  [ -n "$URL" ] && echo "$URL"
-}
-
-PAGE="`wget -q -O - "$QUERY_STRING"`"
-IMAGE="`getImage "$PAGE"`"
-VIMEO="`getVimeo "$PAGE"`"
-YOUTUBE="`getYoutube "$PAGE"`"
-
-
-[ -n "$IMAGE" ] && QUERY_STRING="$IMAGE" ./image "$IMAGE"
-[ -n "$VIMEO" ] && QUERY_STRING="$VIMEO" ./youtube "$VIMEO"
-[ -n "$YOUTUBE" ] && QUERY_STRING="$YOUTUBE" ./youtube "$YOUTUBE"
-
+if [ -n "$MMS_URL" ]; then 
+ player loadVideo "$MMS_URL" "orf stream"
+else
+  notify "failed"
+fi
