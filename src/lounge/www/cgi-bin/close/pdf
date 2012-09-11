@@ -19,5 +19,5 @@
 #
 
 killall xpdf
-janosh -s /pdf/active false
+/lounge/bin/janosh -s /pdf/active false
 

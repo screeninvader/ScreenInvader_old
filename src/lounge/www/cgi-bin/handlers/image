@@ -27,8 +27,8 @@ l_notify "Loading image: `basename "$QUERY_STRING"`"
 QUERY_STRING="http://localhost/cgi-bin/makeImageView?$QUERY_STRING"
 
 (
-janosh -s "/browser/active" true
+janosh -s "/image/active" true "/browser/active" false
 midori  --class="Browser" --name="Browser" "$QUERY_STRING" && midori -e TabCloseOther --class="Browser" --name="Browser"
 
-killall -0 midori || janosh -s "/browser/active" false
+killall -0 midori || janosh -s "/image/active" false
 ) | l_lock "image" || exit 111
