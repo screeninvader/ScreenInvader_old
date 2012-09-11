@@ -22,14 +22,9 @@
 
 . ./initcgi "text/plain"
 
-killall -9 feh &> /dev/null
-killall -9 evince &> /dev/null
-killall -9 gifview &> /dev/null
-killall -9 xpdf &> /dev/null
+killall midori 
+killall xpdf
 player stop
-
-pid=`ps -ef | grep "midori.*class=Browser" | fgrep -v grep | tr -s " " | cut -d" " -f2`
-[ -n "$pid" ] && kill -9 $pid
-screen/setBlank false
-xdotool mousemove 1900 1200
+janosh -s /browser/active false
+janosh -s /video/active false
 player refresh
