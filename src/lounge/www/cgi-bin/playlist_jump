@@ -23,6 +23,6 @@
 . ./initcgi "text/html"
 
 title="`sed -n "${QUERY_STRING}p" /var/run/player/playlist_titles`"
-notify "Jump: $title"
+l_notify "Jump: $title"
 player jump "$QUERY_STRING"
 

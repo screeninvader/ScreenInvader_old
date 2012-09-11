@@ -20,6 +20,6 @@
 
 
 . ./initcgi "text/html"
-./reset
+l_unblank
 
 cat | sed "1,4d" | player loadStdin

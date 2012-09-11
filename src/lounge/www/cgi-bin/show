@@ -18,158 +18,76 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 
-. ./initcgi "text/html"
-
-killall youtube &> /dev/null
+echo "Content-type: text/html"
+echo ""
 
 (
-./reset
+set -x
+declare -A VIDEO_HOSTS="( \
+[youtube.com/]='youtube' \
+[tvthek.orf.at/]='orf' \
+[videos.arte.tv/]='arte7' \
+[vimeo.com/]='vimeo' \
+[soundcloud.com/]='soundcloud' \
+[soup.io/post]='soup' \
+)"
 
-VIDEO_HOSTS="m.youtube.com youtu.be youtube.com vimeo.com myvideo.de"
+declare -A CATEGORY_MAP="( \
+[video]='./video' \
+[audio]='./video' \
+[image]='./image' \
+[radio]='./radio' \
+[text]='./browse' \
+[pdf]='./pdf' \
+[youtube]='./youtube' \
+[orf]='./orf' \
+[arte7]='./arte7' \
+[vimeo]='./vimeo' \
+[soundcloud]='./soundcloud' \
+[soup]='./soup' \
+)"
 
-isVideoUrl() {
-  for host in $VIDEO_HOSTS; do
-    [ -n "`echo "$1" | fgrep "$host"`" ] && return 0;
+declare -A CATEGORY_FIX="( \
+[application/x-matroska]='video' \
+[application/pls]='radio' \
+[audio/x-scpls]='radio' \
+)"
+
+function getCategory() {
+  url="$1"
+  for host in "${!VIDEO_HOSTS[@]}"
+  do
+    if [[ $url =~ http[s]*://.*$host ]]; then
+      echo "${VIDEO_HOSTS[$host]}"
+      return
+    fi
   done
 
-  return 1;
-}
+  mime_type="unknown/"
 
-isOrfUrl() {
-  [ -n "`echo "$1" | fgrep "http://tvthek.orf.at"`" ] && return 0;
-  return 1;
-}
-
-isArte7Url() {
-  [ -n "`echo "$1" | fgrep "videos.arte.tv"`" ] && return 0;
-  return 1;
-}
-
-isVimeoUrl() {
-  [ -n "`echo "$1" | fgrep "vimeo.com"`" ] && return 0;
-  return 1;
-} 
-
-isSoundCloudUrl() {
-  [ -n "`echo "$1" | fgrep "soundcloud.com"`" ] && return 0;
-  return 1;
-}
-
-isSoupUrl() {
-  [ -n "`echo "$1" | fgrep "soup.io/post"`" ] && return 0;
-  return 1;
-}
-
-function getHead() {
-  HEAD=
-  LOCATION="$1"
-  while [ -n "$LOCATION" ]; do
-    HEAD="`curl --head \"$LOCATION\"`"
-    LOCATION="`echo "$HEAD" | fgrep "Location: " | cut -d" " -f2 | dos2unix`"
-  done
-  echo "$HEAD" | dos2unix
-}
-
-function isFileType() {
-  echo -n "isFileType $2"
-  if [ -n "`echo "$1" | fgrep -i "$2"`" ]; then
-    echo true
-    return 0
-  else
-    echo false
-    return 1
+  if [[ $url =~ http[s]*:// ]]; then
+    head=
+    location="$url"
+    while [ -n "$location" ]; do
+      head="$( curl --head "$location" | dos2unix )"
+      location="$( echo "$head" | grep -Po 'Location: \K(.*)?(?= )' )"
+    done
+    mime_type="$( echo "$head" | grep -Po 'Content-Type: \K(.*)?(?=)' )"
+  elif  [[ $( readlink -e "$url" ) == /share/* ]]; then
+    file=$( l_urldecode "$url" )
+    mime_type=$( file -i "$file" | sed 's/.*: \([a-zA-Z]*\/[a-zA-Z]*\).*/\1/p' )
   fi
+
+  category="${CATEGORY_FIX[$mime_type]}"
+  if [ -n "$category" ]; then
+    echo "$category"
+  else
+    category="$( echo "$mime_type" | cut -d"/" -f1 )"
+  fi
+  echo "$category"
 }
 
-
-
-[ -z "$QUERY_STRING" ] && QUERY_STRING="$@";
-
-QUERY_STRING="`echo $QUERY_STRING | sed 's/https/http/'`"
-
-if [ -z "`echo "$QUERY_STRING" | grep "^http"`" ]; then
-  FILE="`echo -e "$QUERY_STRING" | echo -e $(sed 's/%/\\\x/g')`"
-  echo "FILE $FILE"
-  FILEINFO="`file "$FILE"`"
-  echo "INFO $FILEINFO"
-
-  QUERY_STRING="$FILE"
- 
-  if isFileType "$FILEINFO" "audio"; then
-    video "$QUERY_STRING"
-  elif isFileType "$FILEINFO" "video"; then
-   video "$QUERY_STRING"
-  elif isFileType "$FILEINFO" "image"; then
-    image "$QUERY_STRING"
-  elif isFileType "$FILEINFO" "pdf"; then
-    pdf "$QUERY_STRING"
-  elif isFileType "$FILEINFO" "text"; then
-    browse "$QUERY_STRING"
-  elif isFileType "$FILEINFO" "bitmap"; then
-    image "$QUERY_STRING"
-  else
-    video "$QUERY_STRING"
-  fi
-elif isSoundCloudUrl "$QUERY_STRING"; then
-  soundcloud "$QUERY_STRING"
-elif isOrfUrl "$QUERY_STRING"; then
-  orf "$QUERY_STRING"
-elif isArte7Url "$QUERY_STRING"; then
-  arte7 "$QUERY_STRING"
-elif isVimeoUrl "$QUERY_STRING"; then
-  vimeo "$QUERY_STRING" 
-elif isVideoUrl "$QUERY_STRING"; then
-  export QUERY_STRING="`echo "$QUERY_STRING" | sed 's/m.youtube/youtube/g'`"
-  youtube "$QUERY_STRING"
-else
-  HEAD=`getHead "$QUERY_STRING"`
-  LOCATION="$QUERY_STRING";
-  CONTENT_TYPE="`echo "$HEAD" | fgrep -i "Content-Type: " | cut -d" " -f2 | cut -d ";" -f1`"
-  [ -z "$CONTENT_TYPE" ] && CONTENT_TYPE="audio/mpeg";
-
-  CATEGORY="`echo "$CONTENT_TYPE" | cut -d"/" -f1;`"
-
-  case "$CONTENT_TYPE" in
-    "application/x-matroska" )
-      CATEGORY=video
-    ;;
-    "application/pls" )
-      CATEGORY=playlist
-    ;;
-    "audio/x-scpls" )
-      CATEGORY=playlist
-    ;;
-    "image/gif" )
-      CATEGORY=animation
-    ;;
-  esac
-
-  echo $CATEGORY
-  QUERY_STRING="$LOCATION"
-  case "$CATEGORY" in
-    "animation" )
-      animate "$LOCATION"
-    ;;
-    "image" )
-      image "$LOCATION"
-    ;;
-    "playlist" )
-      radio "$LOCATION"
-    ;;
-    "audio" )
-      video "$LOCATION"
-    ;;
-    "video" )
-      video "$LOCATION"
-    ;;
-    "text" )
-      browse "$LOCATION"
-    ;;
-    "application" )
-      pdf "$LOCATION"
-    ;;
-  esac
-fi
+/lounge/www/cgi-bin/handlers/${CATEGORY_MAP[$(getCategory "$QUERY_STRING")]}
 ) &>/dev/null &
 
 cat /lounge/www/close.html
