@@ -36,6 +36,7 @@ declare -A CATEGORY_MAP="( \
 [video]='./video' \
 [audio]='./video' \
 [image]='./image' \
+[animation]='./animation' \
 [radio]='./radio' \
 [text]='./browse' \
 [pdf]='./pdf' \
@@ -50,7 +51,9 @@ declare -A CATEGORY_MAP="( \
 declare -A CATEGORY_FIX="( \
 [application/x-matroska]='video' \
 [application/pls]='radio' \
+[application/pdf]='pdf' \
 [audio/x-scpls]='radio' \
+[image/gif]='animation'
 )"
 
 function getCategory() {
@@ -70,7 +73,7 @@ function getCategory() {
     location="$url"
     while [ -n "$location" ]; do
       head="$( curl --head "$location" | dos2unix )"
-      location="$( echo "$head" | grep -Po 'Location: \K(.*)?(?= )' )"
+      location="$( echo "$head" | grep -Po 'Location: \K(.*)?(?=)' )"
     done
     mime_type="$( echo "$head" | grep -Po 'Content-Type: \K(.*)?(?=)' )"
   elif  [[ $( readlink -e "$url" ) == /share/* ]]; then
@@ -79,15 +82,13 @@ function getCategory() {
   fi
 
   category="${CATEGORY_FIX[$mime_type]}"
-  if [ -n "$category" ]; then
-    echo "$category"
-  else
+  if [ -z "$category" ]; then
     category="$( echo "$mime_type" | cut -d"/" -f1 )"
   fi
   echo "$category"
 }
 
-/lounge/www/cgi-bin/handlers/${CATEGORY_MAP[$(getCategory "$QUERY_STRING")]}
+/lounge/www/cgi-bin/handlers/${CATEGORY_MAP["$(getCategory "$QUERY_STRING")"]}
 ) &>/dev/null &
 
 cat /lounge/www/close.html

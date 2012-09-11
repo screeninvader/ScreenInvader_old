@@ -18,18 +18,17 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 
-export DISPLAY=:0
 
-sudo -u lounge bash -c "sleep 1; xdotool mousemove 1900 1200"
-setterm -blank 0
-setterm -powersave off
-setterm -powerdown 0
-sudo -u lounge xset s off
-sudo -u lounge xset -dpms
-sudo -u lounge xhost +
-sudo -u lounge /lounge/bin/showip &>/dev/null &
-sudo -u lounge /lounge/bin/player mplayer_start &>/dev/null &
-sudo -u lounge /lounge/bin/player refresh
-exec evilwm -fn "-misc-topaz a500a1000a2000-medium-r-normal--0-240-0-0-c-0-iso8859-1"
-#exec evilwm -fn "-misc-topaz a500a1000a2000-medium-r-normal--0-240-0-0-c-0-iso8859-1"
+. ./initcgi "text/html"
 
+l_unblank
+l_notify "Loading image: `basename "$QUERY_STRING"`"
+
+QUERY_STRING="http://localhost/cgi-bin/makeImageView?$QUERY_STRING"
+
+(
+janosh -s "/animation/active" true "/browser/active" false
+midori  --class="Browser" --name="Browser" "$QUERY_STRING" && midori -e TabCloseOther --class="Browser" --name="Browser"
+
+killall -0 midori || janosh -s "/animation/active" false
+) | l_lock "image" || exit 111

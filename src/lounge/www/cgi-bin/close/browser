@@ -19,4 +19,4 @@
 #
 
 killall midori
-janosh -s /browser/active false
+/lounge/bin/janosh -s /browser/active false
