@@ -158,3 +158,6 @@ text-overflow:clip;
 font-size: 70%;
 }
 
+.button, .toggle {
+	cursor: pointer;
+}
