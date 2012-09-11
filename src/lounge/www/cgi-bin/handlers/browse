@@ -25,8 +25,8 @@ l_unblank
 l_notify "Loading web page: $QUERY_STRING"
 
 (
-janosh -s "/browser/active" true
-midori  --class="Browser" --name="Browser" "$QUERY_STRING" && midori -e TabCloseOther --class="Browser" --name="Browser"
+janosh -s "/browser/active" true "/image/active" false
+midori --class="Browser" --name="Browser" "$QUERY_STRING" && midori -e TabCloseOther --class="Browser" --name="Browser" && midori  -e Fullscreen --class="Browser" --name="Browser" "$QUERY_STRING"
 
 killall -0 midori || janosh -s "/browser/active" false
 ) | l_lock "browser" || exit 111

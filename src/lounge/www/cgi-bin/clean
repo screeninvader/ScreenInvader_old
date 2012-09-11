@@ -27,4 +27,7 @@ killall xpdf
 player stop
 janosh -s /browser/active false
 janosh -s /video/active false
+janosh -s /image/active false
+janosh -s /pdf/active false
+janosh -s /animation/active false
 player refresh

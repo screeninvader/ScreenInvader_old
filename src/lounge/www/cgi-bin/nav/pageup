@@ -19,8 +19,7 @@
 #
 
 . ../initcgi "text/plain"
-unblank
-
+l_unblank
 
 if killall -0 midori; then 
   xdotool key Page_Up
