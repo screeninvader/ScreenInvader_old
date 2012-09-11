@@ -27,4 +27,4 @@ timeout=$2
 ARG="$1"
 TITLE=${ARG:0:48}
 killall osd
-/lounge/bin/osd -t $timeout "$TITLE"
+/lounge/bin/osd -t $timeout "$TITLE" &
