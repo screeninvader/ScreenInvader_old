@@ -20,8 +20,24 @@
 
 
 
-echo Content-type: text/xml
-echo ""
+. ./initcgi "text/html"
 
-curl -s --data-binary @- http://10.20.30.50/YamahaRemoteControl/ctrl
+URL="$QUERY_STRING"
 
+cat <<EOHTML
+<html>
+<head>
+<style>
+html { 
+  background: url($URL) no-repeat center center fixed; 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+</style>
+</head>
+<body>
+</body>
+</html>
+EOHTML

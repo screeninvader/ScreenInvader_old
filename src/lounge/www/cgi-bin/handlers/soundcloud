@@ -1,7 +1,8 @@
 #!/bin/bash
 #
-# ScreenInvader - A shared media experience. Instant and seamless.
-#  Copyright (C) 2012 Amir Hassan <amir@viel-zu.org>
+# ScreenInvader - A content centered media center 
+# Copyright (C) 2012 Amir Hassan <amir@viel-zu.org>
+#                    Bernd Forstner <red667@gmail.com>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -18,4 +19,21 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 
-killall gifview &> /dev/null
+. ./initcgi "text/html"
+l_unblank
+
+url=$1
+
+artist=`echo $url | cut -d'/' -f4`
+song=`echo $url | cut -d'/' -f5`
+title=$artist" - "$song
+l_notify "Loading soundcloud: $title" 1
+
+client_id="2dcf4e12afd6ed5119741f888260fc85"
+resolve="http://api.soundcloud.com/resolve.json?url=$url&client_id=$client_id"
+stream=`curl -v -L -o - "$resolve" | grep -Po '"stream_url":.*?[^\\\]",' | cut -d"\"" -f4`
+json=`curl -v -L -o - "$resolve"`
+
+for s in $stream; do
+  player loadVideo "${s}?client_id=${client_id}" "$title"    
+done

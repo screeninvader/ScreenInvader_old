@@ -21,12 +21,12 @@
 
 . ./initcgi "text/html"
 
-./reset
+l_unblank
+l_notify "Loading web page: $QUERY_STRING"
 
-[ -z "$QUERY_STRING" ] && QUERY_STRING="$@";
+(
+janosh -s "/browser/active" true
+midori  --class="Browser" --name="Browser" "$QUERY_STRING" && midori -e TabCloseOther --class="Browser" --name="Browser"
 
-wget -q -O - "$QUERY_STRING" | while read line; do 
-  player playlistEnqueue "`echo $line | sed 's/ /%20/g'`" "`echo $line | sed 's/.*\///g'`"
-done
-
-
+killall -0 midori || janosh -s "/browser/active" false
+) | l_lock "browser" || exit 111

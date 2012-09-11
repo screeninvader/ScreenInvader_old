@@ -206,7 +206,7 @@ else
 fi
 
 # The names of the utilities to run to build the database.
-find="/lounge/bin/find.loungemc"
+find="/lounge/bin/locate/find.screeninvader"
 : ${frcode:=${LIBEXECDIR}/frcode}
 : ${bigram:=${LIBEXECDIR}/bigram}
 : ${code:=${LIBEXECDIR}/code}

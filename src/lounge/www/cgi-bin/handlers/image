@@ -21,24 +21,14 @@
 
 . ./initcgi "text/html"
 
-./reset
+l_unblank
+l_notify "Loading image: `basename "$QUERY_STRING"`"
 
-notify "Loading orf..."
-
-[ -z "$QUERY_STRING" ] && QUERY_STRING="$@"
+QUERY_STRING="http://localhost/cgi-bin/makeImageView?$QUERY_STRING"
 
 (
-function playUrl() {
-  player loadVideo "$1" "orf stream"
-  disown
-}
+janosh -s "/browser/active" true
+midori  --class="Browser" --name="Browser" "$QUERY_STRING" && midori -e TabCloseOther --class="Browser" --name="Browser"
 
-MMS_URL="`orfget.sh "$QUERY_STRING"`"
-
-if [ -n "$MMS_URL" ]; then 
-  playUrl "$MMS_URL"
-else
-  notify "failed"
-fi
-)
-# &> /dev/null
+killall -0 midori || janosh -s "/browser/active" false
+) | l_lock "image" || exit 111
