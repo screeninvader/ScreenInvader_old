@@ -158,20 +158,11 @@ function doPackageConf() {
   check "Install keyrings" \
     "$CHRT $APTNI install $KEYRINGS"
 
-  check "Clear apt lists" \
-    "$CHRT rm -rf /var/lib/apt/lists/*"
-
-  check "Clear apt cache" \
-   "$CHRT rm -rf /var/cache/apt/*"
-  
-  check "Update apt policy" \
-    "$CHRT apt-cache policy"
-
   check "Update Repositories" \
-   "$CHRT $APTNI update"
+    "$CHRT $APTNI update"
 
   check "Update apt policy" \
-    "$CHRT apt-cache policy"
+    "$CHRT bash -c 'touch /var/lib/apt/lists/*; apt-cache policy'"
 
   check "Install white packages" \
     "$CHRT $APTNI install $PKG_WHITE"
