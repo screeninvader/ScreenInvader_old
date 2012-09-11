@@ -1,6 +1,6 @@
 #!/bin/bash
 . ../initcgi "text/html"
-. /lounge/bin/locate/locatefunctions.sh
+. /lounge/bin/locate/functions.sh
 
 MEDIA_EXT="svg avi mpeg mpg mov wmv mp4 3gp ogm mkv jpg jpeg gif png"
 
@@ -15,4 +15,5 @@ echo $locate
 FILE="`bash -c "$locate"`"
 QUERY_STRING="$FILE"
 
-[ -z "$FILE" ] && notify "nothing found" || /lounge/www/cgi-bin/show "$FILE"
+[ -z "$FILE" ] && notify "nothing found" || player loadVideo "$FILE" "`basename $FILE`"
+

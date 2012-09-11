@@ -5,8 +5,7 @@
 [ -z "$QUERY_STRING" ] && QUERY_STRING="$@";
 TERMS="`prepareTerms "$QUERY_STRING"`"
 LOCATEARGS=`makeLocateArgs "$TERMS"`
-bash -c "locate.findutils -d /lounge/music.db $LOCATEARGS" | while read line; do
-  title=`basename "$line"`; 
-  echo "<br/><a href=\"http://`getip`/cgi-bin/show?$line\">$title</a>"; 
+bash -c "locate.findutils -d /lounge/movie.db $LOCATEARGS" | while read line; do
+  title=`basename "$line"`;
+  echo "<br/><a href=\"http://`getip`/cgi-bin/show?$line\">$title</a>";
 done
-
