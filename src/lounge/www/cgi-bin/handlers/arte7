@@ -18,8 +18,19 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 
+. ./initcgi "text/html"
 
-export DISPLAY=:0
-timeout=3
+l_unblank
+l_notify "Load arte+7..."
 
-notify "$@" 3
+wgeto="wget -O - -q"
+
+XML_URL=`$wgeto "$QUERY_STRING" | fgrep "vars_player.videorefFileUrl" | cut -d"\"" -f2`
+XML_DE_URL=`$wgeto "$XML_URL" | fgrep "<video lang=\"de\"" | cut -d"\"" -f4`
+RTMP_URL=`$wgeto "$XML_DE_URL" | sed -n -e 's/.*<url quality="hd">\(.*\)<\/url>.*/\1/p'`
+
+if [ -n "$RTMP_URL" ]; then 
+  player loadVideo "$RTMP_URL" "arte+7"
+else
+  notify "failed"
+fi

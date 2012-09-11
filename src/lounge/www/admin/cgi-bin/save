@@ -18,24 +18,6 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 
+. ./initcgi "text/plain"
 
-
-. ./initcgi "text/html"
-./reset
-
-killall feh &> /dev/null
-
-[ -z "$QUERY_STRING" ] && QUERY_STRING="$@"
-notify "Loading image: `basename "$QUERY_STRING"`"
-tmpimg=`mktemp`
-wget --no-check-certificate -O "$tmpimg" "$QUERY_STRING"
-
-(
-janosh -s /image/active true;
-feh -F --image-bg black --auto-zoom "$tmpimg";
-janosh -s /image/active false;
-rm "$tmpimg"
-) &
-
-disown
-exit 0
+cat | sudo /lounge/bin/gainroot "/lounge/bin/janosh -l"

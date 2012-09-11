@@ -2,13 +2,9 @@
 
 . ./initcgi "text/html"
 
-./reset
+l_unblank
+l_notify "Loading vimeo..." 1
 
-notify "Loading vimeo..." 1
-
-[ -z "$QUERY_STRING" ] && QUERY_STRING="$@"
-
-(
 VIMEO_ID=`echo $QUERY_STRING | awk -F / '{print $NF}'`
 #USER_AGENT="Mozilla/5.0"
 USER_AGENT="Mplayer"
@@ -24,6 +20,3 @@ echo "URL: ${VIMEO_URL}"
 # wget -U \"${USER_AGENT}\" $VIMEO_URL
 
 player loadVideo "$VIMEO_URL" "$TITLE"
-disown
-
-) &> /dev/null

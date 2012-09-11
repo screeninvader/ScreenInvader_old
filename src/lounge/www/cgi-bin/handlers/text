@@ -18,12 +18,10 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 
+. ../initcgi "text/plain"
+l_unblank
+l_notify "Loading plain text..."
 
-
-. ./initcgi "text/plain"
-
-
-[ "`ps -eo cmd | fgrep mplayer | wc -l`" -gt 1 ] && echo true || echo false
-
-exit 0
+export QUERY_STRING="http://10.20.30.51/cgi-bin/printtext?$QUERY_STRING"
+./browse
 

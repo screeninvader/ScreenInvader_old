@@ -19,10 +19,13 @@
 #
 
 
+. ./initcgi "text/html"
 
-. ./initcgi "text/plain"
+l_unblank
+l_notify "Loading playlist..." 1
 
-[ "`ps -ef | fgrep updatedb.loungemc | wc -l`" -gt 1 ] && echo true || echo false
-
+wget -q -O - "$QUERY_STRING" | while read line; do 
+  player playlistEnqueue "`echo $line | sed 's/ /%20/g'`" "`echo $line | sed 's/.*\///g'`"
+done
 
 

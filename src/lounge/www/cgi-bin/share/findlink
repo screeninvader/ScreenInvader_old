@@ -1,6 +1,6 @@
 #!/bin/bash
 . ../initcgi "text/html"
-. /lounge/bin/locate/locatefunctions.sh
+. /lounge/bin/locate/functions.sh
 
 [ -z "$QUERY_STRING" ] && QUERY_STRING="$1";
 TERMS="`prepareTerms "$QUERY_STRING"`"

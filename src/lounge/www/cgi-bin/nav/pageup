@@ -18,10 +18,9 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 
+. ../initcgi "text/plain"
+unblank
 
-export DISPLAY=:0
-
-./reset
 
 if killall -0 midori; then 
   xdotool key Page_Up

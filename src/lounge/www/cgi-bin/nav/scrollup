@@ -19,9 +19,8 @@
 #
 
 
-export DISPLAY=:0
-
-./reset
+. ../initcgi "text/plain"
+unblank
 
 if killall -0 midori; then 
   midori --class="Browser" --name="Browser" -e ScrollUp &

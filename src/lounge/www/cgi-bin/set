@@ -20,7 +20,6 @@
 
 . ./initcgi "text/plain"
 
-set -x
 SET="`echo $QUERY_STRING | sed 's/=/ /g;s/&/ /g'`"
 
 /lounge/bin/janosh -t -s $SET &>/dev/null

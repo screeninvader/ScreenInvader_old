@@ -1,13 +1,13 @@
 #!/bin/bash
 
 . ./initcgi "text/plain"
+export PATH=$PATH:/lounge/bin/locate/
 
-[ "`./isUpdating | sed '1,2d'`" == "true" ] && exit 0;
+[ "`janosh /media/updating`" == "true" ] && exit 0;
 
-(
-  updatemovie
-  updateimage
-) > /dev/null &
-disown
+janosh -s /media/updating true
+updatemovie
+updateimage
+janosh -s /media/updating false
 
 

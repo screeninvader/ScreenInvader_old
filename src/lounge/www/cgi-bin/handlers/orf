@@ -20,21 +20,14 @@
 
 
 . ./initcgi "text/html"
-./reset
 
-notify "Loading web page: $@" 3
-export MOZ_PLUGIN_PATH="/usr/lib/flashplugin-nonfree/"
+l_unblank
+l_notify "Loading orf..."
 
-[ -z "$QUERY_STRING" ] && QUERY_STRING="$@";
-pid=`ps -ef | grep "midori.*class=Browser" | fgrep -v grep | tr -s " " | cut -d" " -f2`
-if [ -n "$pid" ]; then 
-	midori --class="Browser" --name="Browser" -e TabCloseOther 
+MMS_URL="`wget -O - -q "$QUERY_STRING" |  grep "src=.*mms" | cut -d'"' -f2`"
+
+if [ -n "$MMS_URL" ]; then 
+ player loadVideo "$MMS_URL" "orf stream"
+else
+  notify "failed"
 fi
-pid=`ps -ef | grep "midori.*class=Browser" | fgrep -v grep | tr -s " " | cut -d" " -f2`
-[ -n "$pid" ] && kill -9 $pid
-
-(
-janosh -s /browser/active true
-midori --class="Browser" --name="Browser" "$QUERY_STRING" &> /dev/null
-janosh -s /browser/active false
-) &

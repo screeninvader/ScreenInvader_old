@@ -18,10 +18,8 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 
-
-export DISPLAY=:0
-
-./reset
+. ../initcgi "text/plain"
+unblank
 
 if killall -0 midori; then 
   midori --class="Browser" --name="Browser"  -e ScrollDown &

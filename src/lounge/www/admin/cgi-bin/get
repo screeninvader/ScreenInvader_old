@@ -18,8 +18,8 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 
-. /lounge/bin/initcgi "application/json"
+. ./initcgi "application/json"
 
 GET="`echo $QUERY_STRING | sed 's/=/ /g;s/&/ /g'`"
 
-sudo /lounge/bin/gainroot "/lounge/bin/janosh -j $GET"
+sudo /lounge/bin/gainroot "/lounge/bin/janosh -j $GET" 2> /dev/null

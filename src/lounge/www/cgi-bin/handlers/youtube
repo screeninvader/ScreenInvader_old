@@ -18,12 +18,33 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 
-
-
 . ./initcgi "text/html"
+l_unblank
+l_notify "Loading youtube..." 1
 
-./reset
-export QUERY_STRING="http://10.20.30.51/cgi-bin/printtext?$QUERY_STRING"
-browse
+function selectVideo() {
+  info="`echo $1 |  sed 's/%2Curl%3D/\n/g'`"
+  prefered="large medium small"
+  nonflv="`echo "$info" | fgrep -v video%252Fx-flv`"
+  [ -n "$nonflv" ] && info="$nonflv"
 
-exit 0
+  for q in $prefered; do
+    quality="`echo "$info" | grep "quality%3D${q}"`"
+
+    if [ -n "$quality" ]; then
+       echo $quality
+       break;
+    fi
+  done
+}
+
+ID="`echo $QUERY_STRING | sed 's/.*v=//g' | sed 's/&.*$//g'`"
+INFO=$(wget -qO- "http://www.youtube.com/get_video_info?&video_id=$ID&el=detailpage")
+SELECT="`selectVideo $INFO`"
+echo "$SELECT"
+TITLE=$(l_urldecode "`echo "$INFO" | sed -n 's/\([^&]*&\)*title=\([^&]*\).*/\2/p'`")
+URL=$(l_urldecode "`echo "$SELECT" |  sed 's/.*url_encoded_fmt_stream_map//g' | sed 's/%26quality.*//g' | sed 's/^=url%3D//g'`")
+URL=$(l_urldecode $URL)
+
+player loadVideo "$URL" "$TITLE"
+
