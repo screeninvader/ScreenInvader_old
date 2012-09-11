@@ -20,7 +20,4 @@
 
 . ./initcgi "text/plain"
 
-set -x
-SET="`echo $QUERY_STRING | sed 's/=/ /g;s/&/ /g'`"
-
-sudo /lounge/bin/gainroot "/lounge/bin/janosh -t -s $SET &>/dev/null"
+cat | sudo /lounge/bin/gainroot "/lounge/bin/janosh -l"

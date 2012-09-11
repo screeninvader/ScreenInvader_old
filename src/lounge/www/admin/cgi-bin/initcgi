@@ -18,9 +18,14 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 
-. ./initcgi "text/plain"
 
-set -x
-SET="`echo $QUERY_STRING | sed 's/=/ /g;s/&/ /g'`"
+export DISPLAY=:0
+export HOME=/lounge
+export PATH="$HOME/bin:/lounge/www/cgi-bin/:$PATH"
+echo "Content-type: $1"
+echo "Access-Control-Allow-Origin: *"
 
-sudo /lounge/bin/gainroot "/lounge/bin/janosh -t -s $SET &>/dev/null"
+echo ""
+
+cd $HOME/www/cgi-bin/
+
