@@ -1,2 +1,0 @@
-export DISPLAY=:0
-export PATH="$PATH:/lounge/bin"

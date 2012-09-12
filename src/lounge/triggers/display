@@ -20,7 +20,7 @@
 
 FUNCTION="$1"
 
-. /lounge/triggers/env
+. /lounge/triggers/functions.sh
 
 declare -A DATA="$(janosh /display/.)"
 

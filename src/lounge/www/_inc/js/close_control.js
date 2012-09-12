@@ -1,7 +1,7 @@
 function CloseControl () {
   this.init = function() {
-    $('#close-control #video').live ('click', function(){
-      $.get('cgi-bin/close/video');
+    $('#close-control #player').live ('click', function(){
+      $.get('cgi-bin/close/player');
     })
 
     $('#close-control #image').live ('click', function(){
@@ -38,12 +38,12 @@ function CloseControl () {
     }
   }
   this.update = function(ScreenInvader) {
-    this.enable('#close-control #video', ScreenInvader.video.active == 'true');
+    this.enable('#close-control #player', ScreenInvader.player.active == 'true');
     this.enable('#close-control #image', ScreenInvader.image.active == 'true');
     this.enable('#close-control #animation', ScreenInvader.animation.active == 'true');
     this.enable('#close-control #pdf', ScreenInvader.pdf.active == 'true');
     this.enable('#close-control #browser', ScreenInvader.browser.active == 'true');
-    this.enable('#close-control #all', ScreenInvader.video.active == 'true' || ScreenInvader.image.active == 'true' || ScreenInvader.animation.active == 'true' || ScreenInvader.pdf.active == 'true' || ScreenInvader.browser.active == 'true'); 
+    this.enable('#close-control #all', ScreenInvader.player.active == 'true' || ScreenInvader.image.active == 'true' || ScreenInvader.animation.active == 'true' || ScreenInvader.pdf.active == 'true' || ScreenInvader.browser.active == 'true'); 
   };
   
   this.loadInto = function(into) {

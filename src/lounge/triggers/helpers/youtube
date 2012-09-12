@@ -18,7 +18,29 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 
-. ./initcgi "text/plain"
+. /lounge/triggers/functions.sh
 
-janosh -e emergencyReset
+function selectVideo() {
+  info="`echo $1 |  sed 's/%2Curl%3D/\n/g'`"
+  prefered="large medium small"
+  nonflv="`echo "$info" | fgrep -v video%252Fx-flv`"
+  [ -n "$nonflv" ] && info="$nonflv"
 
+  for q in $prefered; do
+    quality="`echo "$info" | grep "quality%3D${q}"`"
+
+    if [ -n "$quality" ]; then
+       echo $quality
+       break;
+    fi
+  done
+}
+
+ID="`echo "$1" | sed 's/.*v=//g' | sed 's/&.*$//g'`"
+INFO=$(wget -qO- "http://www.youtube.com/get_video_info?&video_id=$ID&el=detailpage")
+SELECT="`selectVideo "$INFO"`"
+TITLE=$(l_urldecode "`echo "$INFO" | sed -n 's/\([^&]*&\)*title=\([^&]*\).*/\2/p'`")
+URL=$(l_urldecode "`echo "$SELECT" |  sed 's/.*url_encoded_fmt_stream_map//g' | sed 's/%26quality.*//g' | sed 's/^=url%3D//g'`")
+URL=$(l_urldecode "$URL")
+echo $URL
+echo $TITLE

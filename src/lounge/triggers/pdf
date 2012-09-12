@@ -18,10 +18,42 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 
-. ../initcgi "text/plain"
-l_unblank
-l_notify "Loading plain text..."
+. /lounge/triggers/functions.sh
 
-export QUERY_STRING="http://10.20.30.51/cgi-bin/printtext?$QUERY_STRING"
-./browse
+FUNCTION="$1"
+declare -A OBJ="$(janosh /pdf/.)"
+
+function open() {
+  url="${OBJ[/pdf/url]}"
+  l_unblank
+  l_notify "Loading pdf $(basename "$url")"
+
+  if [ -n "`echo "$QUERY_STRING" | grep "^http"`" ]; then
+   tmpfile=`mktemp`
+   wget "$QUERY_STRING" -O $tmpfile
+   QUERY_STRING=$tmpfile
+  fi
+
+  (
+    janosh -s "/pdf/active" true
+    killall xpdf
+    xpdf -fullscreen "$url"
+    [ -f "$tmpfile" ] && rm "$tmpfile"
+# FIXME: found a synchronous way to switch to page width zoom
+#    `sleep 1; xdotool key --clearmodifiers w`
+    janosh -s "/pdf/active" false
+  )  &
+}
+
+function close() {
+  killall xpdf
+  janosh -s "/pdf/active" false
+}
+
+if [ "$(type -t "$FUNCTION")" == "function" ]; then
+  $FUNCTION
+else
+  echo "Unknown command: $FUNCTION" 1>&2
+  exit 1
+fi
 

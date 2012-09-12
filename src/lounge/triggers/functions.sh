@@ -18,15 +18,40 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 
+export DISPLAY=:0
+export HOME=/lounge
+export PATH="$HOME/bin:$PATH"
+export LOGDIR="/var/log/lounge"
 
-. ./initcgi "text/html"
+function l_urlencode() {
+ echo "$1" | sed 's/ /%20/g;s/!/%21/g;s/"/%22/g;s/#/%23/g;s/\$/%24/g;s/\&/%26/g;s/'\''/%27/g;s/(/%28/g;s/)/%29/g;s/:/%3A/g'
+}
 
-l_unblank
-l_notify "Loading web page: $QUERY_STRING"
+function l_urldecode() {
+  echo $1 | sed -e's/%\([0-9A-F][0-9A-F]\)/\\\\\x\1/g' | xargs echo -e | sed 's/+/ /g'
+}
 
-(
-janosh -s "/browser/active" true "/image/active" false
-midori --class="Browser" --name="Browser" "$QUERY_STRING" && midori -e TabCloseOther --class="Browser" --name="Browser" && midori  -e Fullscreen --class="Browser" --name="Browser" "$QUERY_STRING"
+function l_unblank() {
+  xdotool mousemove 1900 1200
+  janosh -t -s /display/blank false
+}
 
-killall -0 midori || janosh -s "/browser/active" false
-) | l_lock "browser" || exit 111
+function l_lock() {
+  lockname="$1"
+  cat | (
+  flock -n 200 | exit 111
+  cat
+  ) 200> "/var/lock/$lockname" &> /dev/null
+}
+
+function l_notify() {
+  timeout=$2
+  [ -z "$timeout" ] && timeout=2
+
+  arg="$1"
+  title=${arg:0:48}
+  killall osd
+  /lounge/bin/osd -t "$timeout" "$title" &
+  disown
+}
+export -f l_unblank l_notify l_urldecode

@@ -19,10 +19,7 @@
 #
 
 
-. ../initcgi "text/plain"
-unblank
+MMS_URL="`wget -O - -q "$1" |  grep "src=.*mms" | cut -d'"' -f2`"
+echo $MMS_URL
+echo orf
 
-if killall -0 midori; then 
-  midori --class="Browser" --name="Browser" -e ScrollUp &
-  disown
-fi

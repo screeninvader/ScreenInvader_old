@@ -27,30 +27,3 @@ echo "Content-type: $1"
 echo ""
 cd $HOME/www/cgi-bin/
 
-function l_urldecode() {
-  echo $1 | sed -e's/%\([0-9A-F][0-9A-F]\)/\\\\\x\1/g' | xargs echo -e | sed 's/+/ /g'
-}
-
-function l_unblank() {
-  xdotool mousemove 1900 1200
-  janosh -t -s /display/blank false
-}
-
-function l_lock() {
-  lockname="$1"
-  cat | (
-  flock -n 200 | exit 111
-  cat
-  ) 200> "/var/lock/$lockname" &> /dev/null
-}
-
-function l_notify() {
-  timeout=$2
-  [ -z "$timeout" ] && timeout=2
-
-  arg="$1"
-  title=${arg:0:48}
-  killall osd
-  /lounge/bin/osd -t "$timeout" "$title" &
-}
-export -f l_unblank l_notify

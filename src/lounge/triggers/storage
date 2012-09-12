@@ -1,6 +1,6 @@
 #!/bin/bash
 
-. /lounge/triggers/env
+. /lounge/triggers/functions.sh
 
 FUNCTION="$1"
 declare -A DATA="$(janosh /storage/.)"

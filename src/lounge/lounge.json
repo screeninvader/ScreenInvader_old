@@ -13,23 +13,33 @@
     "queue": "false"
   },
 
-  "video": {
-    "active": "false"
+  "player": {
+    "active": "false",
+    "url": " ",
+    "category": " "
   },
 
   "animation": {
-    "active": "false"
+    "active": "false",
+    "url": " ",
+    "category": " "
   },
 
   "image": {
-    "active": "false"
+    "active": "false",
+    "url": "",
+    "category": ""
   },
 
   "browser": {
-    "active": "false"
+    "active": "false",
+    "url": "",
+    "category": ""
   },
 
   "pdf": {
-    "active": "false"
+    "active": "false",
+    "url": "",
+    "category": ""
   }
 }

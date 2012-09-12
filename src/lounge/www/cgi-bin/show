@@ -17,12 +17,9 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-
-echo "Content-type: text/html"
-echo ""
+. ./initcgi "text/html"
 
 (
-set -x
 declare -A VIDEO_HOSTS="( \
 [youtube.com/]='youtube' \
 [tvthek.orf.at/]='orf' \
@@ -33,19 +30,18 @@ declare -A VIDEO_HOSTS="( \
 )"
 
 declare -A CATEGORY_MAP="( \
-[video]='./video' \
-[audio]='./video' \
-[image]='./image' \
-[animation]='./animation' \
-[radio]='./radio' \
-[text]='./browse' \
-[pdf]='./pdf' \
-[youtube]='./youtube' \
-[orf]='./orf' \
-[arte7]='./arte7' \
-[vimeo]='./vimeo' \
-[soundcloud]='./soundcloud' \
-[soup]='./soup' \
+[video]='player' \
+[audio]='player' \
+[image]='browser' \
+[animation]='browser' \
+[radio]='radio' \
+[text]='browser' \
+[pdf]='pdf' \
+[youtube]='player' \
+[orf]='player' \
+[arte7]='player' \
+[vimeo]='player' \
+[soundcloud]='player'
 )"
 
 declare -A CATEGORY_FIX="( \
@@ -57,6 +53,7 @@ declare -A CATEGORY_FIX="( \
 )"
 
 function getCategory() {
+ set -x
   url="$1"
   for host in "${!VIDEO_HOSTS[@]}"
   do
@@ -73,13 +70,14 @@ function getCategory() {
     location="$url"
     while [ -n "$location" ]; do
       head="$( curl --head "$location" | dos2unix )"
-      location="$( echo "$head" | grep -Po 'Location: \K(.*)?(?=)' )"
+      location="$( echo "$head" | grep -iPo 'Location: \K(.*)?(?=)' )"
     done
-    mime_type="$( echo "$head" | grep -Po 'Content-Type: \K(.*)?(?=)' )"
+    mime_type="$( echo "$head" | grep -iPo 'Content-Type: \K(.*)?(?=)' )"
   elif  [[ $( readlink -e "$url" ) == /share/* ]]; then
     file=$( l_urldecode "$url" )
     mime_type=$( file -i "$file" | sed 's/.*: \([a-zA-Z]*\/[a-zA-Z]*\).*/\1/p' )
   fi
+
 
   category="${CATEGORY_FIX[$mime_type]}"
   if [ -z "$category" ]; then
@@ -88,7 +86,11 @@ function getCategory() {
   echo "$category"
 }
 
-/lounge/www/cgi-bin/handlers/${CATEGORY_MAP["$(getCategory "$QUERY_STRING")"]}
+url="$QUERY_STRING"
+category="$(getCategory "$url")"
+handler="${CATEGORY_MAP[$category]}"
+
+/lounge/bin/janosh -t -s "/$handler/url" "$url" "/$handler/category" "$category"
 ) &>/dev/null &
 
 cat /lounge/www/close.html

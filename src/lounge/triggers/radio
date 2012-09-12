@@ -17,18 +17,25 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
+. /lounge/triggers/functions.sh
 
+FUNCTION="$1"
+declare -A OBJ="$(janosh /radio/.)"
 
-. ./initcgi "text/html"
+function open() {
+  url="${OBJ[/radio/url]}"
+  l_unblank
+  l_notify "Loading playlist $(basename "$url")" 1
 
-l_unblank
-l_notify "Loading image: `basename "$QUERY_STRING"`"
+  wget -q -O - "$url" | while read line; do
+    player playlistEnqueue "$(l_urlencode "$url")"
+  done
+}
 
-QUERY_STRING="http://localhost/cgi-bin/makeImageView?$QUERY_STRING"
+if [ "$(type -t "$FUNCTION")" == "function" ]; then
+  $FUNCTION
+else
+  echo "Unknown command: $FUNCTION" 1>&2
+  exit 1
+fi
 
-(
-janosh -s "/animation/active" true "/browser/active" false
-midori  --class="Browser" --name="Browser" "$QUERY_STRING" && midori -e TabCloseOther --class="Browser" --name="Browser"
-
-killall -0 midori || janosh -s "/animation/active" false
-) | l_lock "image" || exit 111
