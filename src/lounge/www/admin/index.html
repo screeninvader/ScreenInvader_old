@@ -1,41 +1,27 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
   <head>
-    <link href="_inc/admin/css/admin.css" rel="stylesheet" type="text/css" />
-    <script type="text/javascript" src="_inc/js/jquery.min.js"></script>
-    <script type="text/javascript" src="_inc/admin/js/admin.main.js"></script>
+    <link href="/_inc/css/lounge.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="/_inc/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/admin/_inc/admin/js/admin.main.js"></script>
   </head>
   <body>
     <div id="wrapper">
-      <header class="main">
-        <h1>screeninvader admin interface</h1>
-        <a href="http://10.20.30.51">back to screeninvader</a>
-      </header>
       <div id="content">
         <form id="admin-form">
-          <fieldset>
-            <div id="fieldset-hostname" class="panel-row displayblock">
-              <header>
-                <h1>hostname:</h1>
-              </header>
-              <div class="input-container">
-                <input type="text" name="hostname" id="hostname" />
-              </div>
+          <fieldset class="panel-column">
+            <div id="fieldset-hostname" style="display: block;">
+              <h3>hostname:</h3>
+              <input type="text" name="hostname" id="hostname" />
             </div>
-            <div id="fieldset-connection" class="panel-row  aligntop">
-              <header>
-                <h1>internet connection:</h1>
-              </header>
-              <div id="connection-container" class="input-container">
-                <input type="radio" name="connection" value="Wifi" id="connection-wifi" class="connection-radio" /><label for="connection">Wifi</label>
-                <input type="radio" name="connection" value="Ethernet" id="connection-ethernet" class="connection-radio" /><label for="connection">Ethernet</label>
-              </div>
+
+            <div id="fieldset-connection" style="display: block;">
+              <h3>internet connection:</h3>
+              <input type="radio" name="connection" value="Wifi" id="connection-wifi" class="connection-radio" /><label for="connection">Wifi</label>
+              <input type="radio" name="connection" value="Ethernet" id="connection-ethernet" class="connection-radio" /><label for="connection">Ethernet</label>
             </div>
-            <div id="fieldset-wifi" class="panel-row displaynone aligntop connection-hidden">
-              <header>
-                <h1>wifi settings:</h1>
-              </header>
-              <div class="input-container">
+            <div id="fieldset-wifi">
+                <h3>wifi settings:</h3>
                 <div>
                   <label for="wifi-essid">essid:</label>
                   <input type="text" name="wifi-essid" id="wifi-essid" />
@@ -53,13 +39,9 @@
                     <option class="encryption-option" value="WPA-PSK">WPA-PSK</option>
                   </select>
                 </div>
-              </div>
             </div>
-            <div id="fieldset-ip" class="panel-row displayblock">
-              <header>
-                <h1>ip configuration:</h1>
-              </header>
-              <div class="input-container">
+            <div id="fieldset-ip">
+              <h3>ip configuration:</h3>
                 <div class="input-div">
                   <label for="ip-address">address:</label>
                   <input type="text" name="ip-address" id="ip-address" />
@@ -80,45 +62,29 @@
                     <option class="ip-mode-option">Manual</option>
                   </select>
                 </div>
-              </div>
             </div>
-            <div id="fieldset-display" class="panel-row displayblock">
+            <div id="fieldset-display">
               <div class="input-container">                
-                <header>
-                  <h1>display:</h1>
-                </header>
+                  <h3>display:</h3>
                 
-                <div class="input-div">
                   <label for="display-adapter">adapter:</label>
                   <select name="display-adapter" id="display-adapter">
                     <option class="loading">loading...</option>
                   </select>
-                </div>
                 
-                <div class="input-div">
                   <label for="display-resolution">resolution:</label>
                   <select name="display-resolution" id="display-resolution">
                     <option class="loading">loading...</option>
                   </select>
-                </div>
               </div>
             </div>
-            <div id="fieldset-storage" class="panel-row displayblock">
-              <div class="input-container">                
-                <header>
-                  <h1>storage:</h1>
-                </header>
-                
-                <div class="input-div">
-                  <ul id="storage-ul">
-                    <li class="loading">loading...</li>
-                  </ul>
-                </div>
-              </div>
+            <div id="fieldset-storage">
+              <h3>storage:</h3>
+              <ul id="storage-ul">
+                <li class="loading">loading...</li>
+              </ul>
             </div>
-            <div id="submit-container">
-              <input type="submit" name="submit" value="submit" id="submit" />
-            </div>
+            <input type="submit" name="submit" value="submit" id="submit" />
           </fieldset>
         </form>
       </div><!-- end of content-->
