@@ -20,7 +20,7 @@
 
 
 
-. ./initcgi "text/plain"
+. /lounge/www/cgi-bin/initcgi "text/plain"
 
 janosh -e browserClose
 janosh -e videoClose
