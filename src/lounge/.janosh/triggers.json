@@ -21,6 +21,7 @@
       "/player/url"
     ] ],
 
+  "playerPause": [ "player pause", [ ] ],  
   "playerClose": [ "player close", [ ] ],
   "playerNext": [ "player next", [ ] ],
   "playerPrevious": [ "player previous", [ ] ],

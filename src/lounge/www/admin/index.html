@@ -1,94 +1,112 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <link href="/_inc/css/lounge.css" rel="stylesheet" type="text/css" />
-    <script type="text/javascript" src="/_inc/js/jquery.min.js"></script>
-    <script type="text/javascript" src="/admin/_inc/admin/js/admin.main.js"></script>
+    <title>Admin Page</title>
+    <link href="../_inc/css/lounge.css" rel="stylesheet" type="text/css"/>
+    <script type="text/javascript" src="../_inc/js/jquery.min.js"></script>
+    <script type="text/javascript" src="_inc/js/admin.js"></script>
   </head>
   <body>
-    <div id="wrapper">
-      <div id="content">
-        <form id="admin-form">
-          <fieldset class="panel-column">
-            <div id="fieldset-hostname" style="display: block;">
-              <h3>hostname:</h3>
-              <input type="text" name="hostname" id="hostname" />
-            </div>
+    <form id="admin" action="">
+	<table>
+	  <tr>
+	    <td class="left">Name</td>
+	    <td class="right">
+	      <input type="text" name="hostname" id="hostname"/>
+	    </td>
+	  </tr>
+	</table>
 
-            <div id="fieldset-connection" style="display: block;">
-              <h3>internet connection:</h3>
-              <input type="radio" name="connection" value="Wifi" id="connection-wifi" class="connection-radio" /><label for="connection">Wifi</label>
-              <input type="radio" name="connection" value="Ethernet" id="connection-ethernet" class="connection-radio" /><label for="connection">Ethernet</label>
-            </div>
-            <div id="fieldset-wifi">
-                <h3>wifi settings:</h3>
-                <div>
-                  <label for="wifi-essid">essid:</label>
-                  <input type="text" name="wifi-essid" id="wifi-essid" />
-                </div>
-                <div>
-                  <label for="wifi-pass">pass:</label>
-                  <input type="text" name="wifi-pass" id="wifi-pass" />
-                </div>
-                
-                <div class="floatright">
-                  <label for="encryption-select">encryption:</label>
-                  <select name="encryption-select" id="encryption-select">
-                    <option class="encryption-option" value="None">None</option>
-                    <option class="encryption-option" value="WEP">wep</option>
-                    <option class="encryption-option" value="WPA-PSK">WPA-PSK</option>
-                  </select>
-                </div>
-            </div>
-            <div id="fieldset-ip">
-              <h3>ip configuration:</h3>
-                <div class="input-div">
-                  <label for="ip-address">address:</label>
-                  <input type="text" name="ip-address" id="ip-address" />
-                </div>
-                <div class="input-div">
-                  <label for="ip-netmask">netmask:</label>
-                  <input type="text" name="ip-netmask" id="ip-netmask" />
-                </div>
-                <div class="input-div">
-                  <label for="ip-gateway">gateway:</label>
-                  <input type="text" name="ip-gateway" id="ip-gateway" />
-                </div>
-                
-                <div class="floatright" class="input-div">
-                  <label for="ip-mode-select">mode:</label>
-                  <select name="ip-mode-select" id="ip-mode-select">
-                    <option class="ip-mode-option">DHCP</option>
-                    <option class="ip-mode-option">Manual</option>
-                  </select>
-                </div>
-            </div>
-            <div id="fieldset-display">
-              <div class="input-container">                
-                  <h3>display:</h3>
-                
-                  <label for="display-adapter">adapter:</label>
-                  <select name="display-adapter" id="display-adapter">
-                    <option class="loading">loading...</option>
-                  </select>
-                
-                  <label for="display-resolution">resolution:</label>
-                  <select name="display-resolution" id="display-resolution">
-                    <option class="loading">loading...</option>
-                  </select>
-              </div>
-            </div>
-            <div id="fieldset-storage">
-              <h3>storage:</h3>
-              <ul id="storage-ul">
-                <li class="loading">loading...</li>
-              </ul>
-            </div>
-            <input type="submit" name="submit" value="submit" id="submit" />
-          </fieldset>
-        </form>
-      </div><!-- end of content-->
-    </div><!-- end of wrapper-->
+  <table>
+    <tr>
+      <td class="left">Resolution</td>
+      <td class="right">
+        <select name="resolution" id="resolution-choices">
+        </select>
+      </td>
+    </tr>
+  </table>
+
+	<table>
+	  <tr>
+      <td class="left">Connection</td>
+      <td class="right">
+        <select name="connection" id="connection-choices">
+        </select>
+      </td>
+	  </tr>
+	</table>
+
+  <table>
+    <tr>
+      <td class="left">Configuration</td>
+      <td class="right">
+        <select name="mode" id="mode-choices">
+        </select>
+      </td>
+    </tr>
+  </table>
+  <hr/>
+	<table id="wifi">
+	  <tr><td colspan="2" class="header">Wifi Settings</td></tr>
+	  <tr>
+	    <td class="left">Encryption:</td>
+	    <td class="right">
+	      <select name="encryption" id="encryption-choices">
+	      </select>
+	    </td>
+	  </tr>
+	  <tr>
+	    <td class="left">SSID:</td>
+	    <td class="right">
+	      <input type="text" name="ssid"/>
+	    </td>
+	  </tr>
+	  <tr>
+	    <td class="left">Passphrase:</td>
+	    <td class="right">
+	      <input type="text" name="passphrase"/>
+	    </td>
+	  </tr>
+	</table>
+
+	<table id="ipconf">
+	  <tr><td colspan="2" class="header">IP Configuration</td></tr>
+	  <tr>
+	    <td class="left">Address:</td>
+	    <td class="right">
+	      <input type="text" name="address" id="address" />
+	    </td>
+	  </tr>
+	  <tr>
+	    <td class="left">Netmask:</td>
+	    <td class="right">
+	      <input type="text" name="netmask" id="netmask" />
+	    </td>
+	  </tr>
+	  <tr>
+	    <td class="left">Gateway:</td>
+	    <td class="right">
+		<input type="text" name="gateway" id="gateway" />
+	    </td>
+	  </tr>
+	</table>
+
+<!--
+	<table>
+	  <tr><td colspan="2" class="header">Storage</td></tr>
+	  <tr><td>
+	    <ul id="storage-ul">
+	      <li>loading...</li>
+	    </ul>
+	  </td></tr>
+	</table>
+-->
+	<hr/>
+	<input type="button" name="save" value="Save & Apply" id="save" />
+    </form>
   </body>
 </html>
 
