@@ -45,6 +45,7 @@ function open() {
 
 function close() {
   killall midori
+  player refresh
   janosh -s "/image/active" false "/browser/active" false "/animation/active" false
 }
 
