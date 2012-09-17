@@ -3,5 +3,3 @@
 # for examples
 HOME="/lounge"
 PATH="$HOME/bin:$PATH"
-unset HISTFILE
-HISTSIZE=0

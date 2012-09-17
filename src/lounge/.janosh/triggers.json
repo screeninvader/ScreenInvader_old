@@ -9,5 +9,43 @@
 
   "setBlank": [ "display setBlank", [
       "/display/blank"
+    ] ],
+
+  "browserOpen": [ "browser open", [
+      "/browser/url"
+    ] ],
+
+  "browserClose": [ "browser close", [ ] ],
+
+  "playerOpen": [ "player open", [
+      "/player/url"
+    ] ],
+
+  "playerPause": [ "player pause", [ ] ],  
+  "playerClose": [ "player close", [ ] ],
+  "playerNext": [ "player next", [ ] ],
+  "playerPrevious": [ "player previous", [ ] ],
+  "playerForward": [ "player forward", [ ] ],
+  "playerRewind": [ "player rewind", [ ] ],
+  "playerForwardMore": [ "player forwardMore", [ ] ],
+  "playerRewindMore": [ "player rewindMore", [ ] ],
+  "browserPageUp" : [ "browser pageUp", [ ] ],
+  "browserPageDown" : [ "browser pageDown", [ ] ],
+  "browserScrollUp" : [ "browser scrollUp", [ ] ],
+  "browserScrollDown" : [ "browser scrollDown", [ ] ],
+  "browserZoomIn" : [ "browser zoomIn", [ ] ],
+  "browserZoomOut" : [ "browser zoomOut", [ ] ],
+
+  "pdfOpen": [ "pdf open", [
+      "/pdf/url"
+    ] ],
+
+  "pdfClose": [ "pdf close", [ ] ],
+
+  "radioOpen": [ "radio open", [
+      "/radio/url"
+    ] ],
+
+  "radioOpen": [ "radio open", [
     ] ]
 }

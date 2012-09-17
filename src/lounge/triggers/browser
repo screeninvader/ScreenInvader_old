@@ -1,0 +1,93 @@
+#!/bin/bash
+#
+# ScreenInvader - A shared media experience. Instant and seamless.
+#  Copyright (C) 2012 Amir Hassan <amir@viel-zu.org>
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+#
+
+
+. /lounge/triggers/functions.sh
+
+FUNCTION="$1"
+declare -A OBJ="$(janosh /browser/.)"
+l_unblank
+
+function open() {
+  url="${OBJ[/browser/url]}"
+  category="${OBJ[/browser/category]}"
+  active="browser"
+
+  if [ "$category" == "image" -o "$category" == "animation" ]; then
+    url="http://localhost/cgi-bin/makeImageView?$url"
+    active="$category"
+  fi
+
+  l_notify "Loading $category: $url" 1
+
+  ( midori "$url" &&  midori -e TabCloseOther ) &
+
+  janosh -s "/image/active" false "/browser/active" false "/animation/active" false
+  janosh -s "/$active/active" true
+}
+
+function close() {
+  killall midori
+  player refresh
+  janosh -s "/image/active" false "/browser/active" false "/animation/active" false
+}
+
+function pageDown() { 
+  if killall -0 midori; then 
+    xdotool key Page_Down
+  fi
+}
+
+function pageUp() {
+  if killall -0 midori; then 
+    xdotool key Page_Up
+  fi
+}
+
+function scrollDown() {
+  if killall -0 midori; then 
+    midori -e ScrollDown
+  fi
+}
+
+function scrollUp() {
+  if killall -0 midori; then 
+    midori -e ScrollUp
+  fi
+}
+
+function zoomIn() {
+  if killall -0 midori; then
+    midori -e ZoomIn
+  fi
+}
+function zoomOut() {
+  if killall -0 midori; then
+    midori -e ZoomOut
+  fi
+}
+
+if [ "$(type -t "$FUNCTION")" == "function" ]; then
+  $FUNCTION
+else
+  echo "Unknown command: $FUNCTION" 1>&2
+  exit 1
+fi
+

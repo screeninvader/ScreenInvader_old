@@ -1,0 +1,140 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>Admin Page</title>
+    <link href="../_inc/css/lounge.css" rel="stylesheet" type="text/css"/>
+    <script type="text/javascript" src="../_inc/js/jquery.min.js"></script>
+    <script type="text/javascript" src="_inc/js/admin.js"></script>
+  </head>
+  <body>
+    <form id="admin" action="">
+	<table>
+	  <tr>
+	    <td class="left">Name</td>
+	    <td class="right">
+	      <input type="text" name="hostname" id="hostname"/>
+	    </td>
+	  </tr>
+	</table>
+
+  <table>
+    <tr>
+      <td class="left">Display</td>
+      <td class="right">
+        <select name="adapter" id="adapter-choices">
+        </select>
+      </td>
+    </tr>
+  </table>
+
+  <table>
+    <tr>
+      <td class="left">Resolution</td>
+      <td class="right">
+        <select name="resolution" id="resolution-choices">
+        </select>
+      </td>
+    </tr>
+  </table>
+
+	<table>
+	  <tr>
+      <td class="left">Connection</td>
+      <td class="right">
+        <select name="connection" id="connection-choices">
+        </select>
+      </td>
+	  </tr>
+	</table>
+
+  <table>
+    <tr>
+      <td class="left">Interface</td>
+      <td class="right">
+        <select name="interface" id="interface-choices">
+        </select>
+      </td>
+    </tr>
+  </table>
+
+  <table>
+    <tr>
+      <td class="left">Configuration</td>
+      <td class="right">
+        <select name="mode" id="mode-choices">
+        </select>
+      </td>
+    </tr>
+  </table>
+  <hr/>
+	<table id="wifi">
+	  <tr><td colspan="2" class="header">Wifi Settings</td></tr>
+	  <tr>
+	    <td class="left">Encryption</td>
+	    <td class="right">
+	      <select name="encryption" id="encryption-choices">
+	      </select>
+	    </td>
+	  </tr>
+	  <tr>
+	    <td class="left">SSID</td>
+	    <td class="right">
+	      <input type="text" name="ssid" id="ssid-value" />
+	    </td>
+	  </tr>
+	  <tr id="passphrase">
+	    <td class="left">Passphrase</td>
+	    <td class="right">
+	      <input type="text" name="passphrase" id="passphrase-value" />
+	    </td>
+	  </tr>
+	</table>
+
+	<table id="ipconf">
+	  <tr><td colspan="2" class="header">IP Configuration</td></tr>
+	  <tr>
+	    <td class="left">Address</td>
+	    <td class="right">
+	      <input type="text" name="address" id="address" />
+	    </td>
+	  </tr>
+	  <tr>
+	    <td class="left">Netmask</td>
+	    <td class="right">
+	      <input type="text" name="netmask" id="netmask" />
+	    </td>
+	  </tr>
+	  <tr>
+	    <td class="left">Gateway</td>
+	    <td class="right">
+		<input type="text" name="gateway" id="gateway" />
+	    </td>
+	  </tr>
+    <tr>
+      <td class="left">Nameserver</td>
+      <td class="right">
+    <input type="text" name="gateway" id="nameserver" />
+      </td>
+    </tr>
+	</table>
+
+<!--
+	<table>
+	  <tr><td colspan="2" class="header">Storage</td></tr>
+	  <tr><td>
+	    <ul id="storage-ul">
+	      <li>loading...</li>
+	    </ul>
+	  </td></tr>
+	</table>
+-->
+	<hr/>
+	<input type="button" name="save" value="Save & Apply" id="save" />
+    </form>
+  </body>
+</html>
+
+
+
