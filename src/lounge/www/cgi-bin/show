@@ -22,6 +22,7 @@
 (
 declare -A VIDEO_HOSTS="( \
 [youtube.com/]='youtube' \
+[youtu.be/]='youtube' \
 [tvthek.orf.at/]='orf' \
 [videos.arte.tv/]='arte7' \
 [vimeo.com/]='vimeo' \
