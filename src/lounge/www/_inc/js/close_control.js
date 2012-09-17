@@ -1,27 +1,29 @@
 function CloseControl () {
   this.init = function() {
     $('#close-control #player').live ('click', function(){
-      $.get('cgi-bin/close/player');
+      $.get('cgi-bin/trigger?playerClose');
     })
 
     $('#close-control #image').live ('click', function(){
-      $.get('cgi-bin/close/image');
+      $.get('cgi-bin/trigger?browserClose');
     })
 
     $('#close-control #animation').live ('click', function(){
-      $.get('cgi-bin/close/animation');
+      $.get('cgi-bin/trigger?browserClose');
     })
 
     $('#close-control #pdf').live ('click', function(){
-      $.get('cgi-bin/close/pdf');
+      $.get('cgi-bin/trigger?pdfClose');
     })
 
     $('#close-control #browser').live ('click', function(){
-      $.get('cgi-bin/close/browser');
+      $.get('cgi-bin/trigger?browserClose');
     })
 
     $('#close-control #all').live ('click', function(){
-      $.get('cgi-bin/clean');
+      $.get('cgi-bin/trigger?playerClose');
+      $.get('cgi-bin/trigger?browserClose');
+      $.get('cgi-bin/trigger?pdfClose');
     })
   };
   

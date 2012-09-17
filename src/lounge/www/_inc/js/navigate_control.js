@@ -1,35 +1,35 @@
 function NavigateControl () {
   this.init = function() {
     $('#navigate-control #start').live ('click', function(){
-      $.get('cgi-bin/nav/start');
+      $.get('cgi-bin/trigger?browserJumpStart');
     })
 
     $('#navigate-control #pageup').live ('click', function(){
-      $.get('cgi-bin/nav/pageup');
+      $.get('cgi-bin/trigger?browserPageUp');
     })
 
     $('#navigate-control #scrollup').live ('click', function(){
-      $.get('cgi-bin/nav/scrollup');
+      $.get('cgi-bin//trigger?browserScrollUp');
     })
 
     $('#navigate-control #scrolldown').live ('click', function(){
-      $.get('cgi-bin/nav/scrolldown');
+      $.get('cgi-bin//trigger?browserScrollDown');
     })
 
     $('#navigate-control #pagedown').live ('click', function(){
-      $.get('cgi-bin/nav/pagedown');
+      $.get('cgi-bin/trigger?browserPageDown');
     })
 
     $('#navigate-control #end').live ('click', function(){
-      $.get('cgi-bin/nav/end');
+      $.get('cgi-bin/trigger?browserJumpEnd');
     })
 
    $('#navigate-control #zoomout').live ('click', function(){
-      $.get('cgi-bin/nav/zoomout');
+      $.get('cgi-bin/trigger?browserZoomOut');
     })
 
     $('#navigate-control #zoomin').live ('click', function(){
-      $.get('cgi-bin/nav/zoomin');
+      $.get('cgi-bin/trigger?browserZoomIn');
     })
   };
   
