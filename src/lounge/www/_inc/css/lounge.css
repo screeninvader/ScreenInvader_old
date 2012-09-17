@@ -45,20 +45,6 @@ table {
   border-radius: 9px;
 }
 
-#admin {
-  padding-left: 20px;
-  padding-right: 20px; 
-  padding-top: 10px;
-  padding-bottom: 15px; 
-  margin: 3px;
-  background-color: #000;
-  border: 1px outset #fff;
-  border-radius: 9px;
-  width: 360px; 
-  background-color:#000; 
-  height: 100%;
-}
-
 td {
   text-align:left;
   text-overflow:clip;
@@ -66,6 +52,7 @@ td {
 }
 
 input {
+  width: 100%;
   border: 1px solid #fff;
   border-top: 0px;
   border-bottom: 0px;
@@ -91,7 +78,7 @@ input {
 .button {
   -moz-user-select: none;
   -webkit-user-select: none;
-
+  text-align: center;
   color: #fff;
   margin: 0px;
   padding: 2px;
@@ -106,6 +93,7 @@ input {
 .toggle {
   -moz-user-select: none;
   -webkit-user-select: none;
+  text-align: center;
   padding: 2px;
   padding-left: 5px;
   padding-right: 5px;
@@ -143,10 +131,6 @@ td {
   padding: 0px 10px 0 10px;
 }
 
-select { 
- width: 105px;
-}
-
 .left {
   width: 105px;
   background-color: #222;
@@ -168,5 +152,31 @@ li {
   text-align:left;
   text-overflow:clip;
   font-size: 70%;
+}
+
+#admin {
+  padding-left: 10px;
+  padding-right: 20px;
+  padding-top: 10px;
+  padding-bottom: 15px;
+  margin: 3px;
+  background-color: #000;
+  border: 1px outset #fff;
+  border-radius: 9px;
+  width: 280px;
+  background-color:#000;
+  height: 100%;
+}
+
+#admin input {
+  width: 120px;
+  border: 1px solid #fff;
+  border-top: 0px;
+  border-bottom: 0px;
+  border-radius: 4px;
+}
+
+#admin select {
+ width: 120px;
 }
 

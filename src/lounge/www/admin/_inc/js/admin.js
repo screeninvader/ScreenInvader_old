@@ -46,10 +46,29 @@ function AdminControl () {
   }
 
   this.save = function() {
-    $.postJSON('/admin/cgi-bin/save', admin.data, function(){});
+    $.postJSON('/admin/cgi-bin/save', admin.data, function(){
+      $.get('/admin/cgi-bin/trigger?apply', function() {
+        admin.reload();
+      });
+    });
   }
 
   this.refresh = function()  {
+    admin.data.display.adapter.value = $('#adapter-choices').val();
+    admin.data.display.resolution.value = $('#resolution-choices').val();
+    admin.data.network.connection.value = $('#connection-choices').val();
+    admin.data.display.resolution.value = $('#resolution-choices').val();
+    admin.data.network.connection.value = $('#connection-choices').val();
+    admin.data.network.connection.interface = $('#interface-choices').val();
+    admin.data.network.mode.value = $('#mode-choices').val();
+    admin.data.network.wifi.encryption.value = $('#encryption-choices').val();
+    admin.data.network.hostname = $('#hostname').val();
+    admin.data.network.wifi.ssid = $('#ssid-value').val();
+    admin.data.network.wifi.ssid = $('#passphrase-value').val();
+    admin.data.network.address = $('#address').val();
+    admin.data.network.gateway = $('#gateway').val();
+    admin.data.network.nameserver = $('#nameserver').val();
+    admin.data.network.netmask = $('#netmask').val();
     admin.update(admin.data);
   } 
 
@@ -64,66 +83,99 @@ function AdminControl () {
     this.data = adminData;
 
     this.setVisible('#wifi', adminData.network.connection.value == "Wifi");
-    this.setVisible('#passphrase', adminData.network.wifi.encryption.value == 'None');
+    this.setVisible('#passphrase', adminData.network.wifi.encryption.value != 'NONE');
     this.setVisible('#ipconf', adminData.network.mode.value == "Manual");
 
     $('#resolution-choices option').remove();
     $('#connection-choices option').remove();
     $('#mode-choices option').remove();
     $('#encryption-choices option').remove();
+    $('#interface-choices option').remove();
+    $('#adapter-choices option').remove();
 
     this.makeOptions('#resolution-choices',adminData.display.resolution);
     this.makeOptions('#connection-choices',adminData.network.connection);
     this.makeOptions('#mode-choices', adminData.network.mode);
     this.makeOptions('#encryption-choices', adminData.network.wifi.encryption);
+    this.makeOptions('#adapter-choices', adminData.display.adapter);
+
+    if(adminData.network.connection.value == "Wifi") {
+      this.makeOptions('#interface-choices', adminData.network.connection.wireless);
+    } else {
+      this.makeOptions('#interface-choices', adminData.network.connection.wired);
+    }
 
     $('#hostname').val(adminData.network.hostname);
-    $('#ssid').val(adminData.network.wifi.ssid);
+    $('#ssid-value').val(adminData.network.wifi.ssid);
+    $('#passphrase-value').val(adminData.network.wifi.passphrase);
     $('#address').val(adminData.network.address);
     $('#gateway').val(adminData.network.gateway);
     $('#netmask').val(adminData.network.netmask);
+    $('#nameserver').val(adminData.network.nameserver);
+    admin.data.network.connection.interface = $('#interface-choices').val(); 
+    admin.data.network.connection.interface = $('#interface-choices').val();
   };
 
+  this.reload = function() {
+    $.get('/admin/cgi-bin/trigger?reload', function () {
+      $.get('/admin/cgi-bin/get?/.', function(data) {
+        admin.update(data);
+      });
+    });
+  }
+
   this.init = function() {
-    $.get('/admin/cgi-bin/get?/.', function(data) {
-      admin.update(data);
-    });
-
-    $('#resolution-choices').change( function() {
-       admin.data.display.resolution.value = $('#encryption-choices').val();
-    });
-
-    $('#connection-choices').change( function() {
-       admin.data.network.connection.value = $('#connection-choices').val();
+    admin.reload();
+    $('#adapter-choices').change( function() {
        admin.refresh();
     });
 
+    $('#resolution-choices').change( function() {
+      admin.refresh();
+    });
+
+    $('#connection-choices').change( function() {
+       admin.refresh();
+    });
+
+    $('#interface-choices').change( function() {
+      admin.refresh();
+    });
+
     $('#mode-choices').change( function() {
-       admin.data.network.mode.value = $('#mode-choices').val();
        admin.refresh();
     });
 
     $('#encryption-choices').change( function() {
-       admin.data.wifi.encryption.value = $('#encryption-choices').val();
        admin.refresh();
     });
 
     $('#hostname').change( function() {
-       admin.data.network.hostname = $('#hostname').val();
+      admin.refresh();
     });
 
-    $('#ssid').change( function() {
-       admin.data.network.wifi.ssid = $('#ssid').val();
+    $('#ssid-value').change( function() {
+      admin.refresh();
+    });
+
+    $('#passphrase-value').change( function() {
+      admin.refresh();
     });
 
     $('#address').change( function() {
-      admin.data.network.address = $('#address').val();
+      admin.refresh();
     });
-     $('#gateway').change( function() {
-      admin.data.network.gateway = $('#gateway').val();
+
+    $('#gateway').change( function() {
+      admin.refresh();
     });
+
+    $('#nameserver').change( function() {
+      admin.refresh();
+    });
+
     $('#netmask').change( function() {
-      admin.data.network.netmask = $('#netmask').val();
+      admin.refresh();
     });
 
     $('#save').live ('click', function(){

@@ -21,6 +21,16 @@
 
   <table>
     <tr>
+      <td class="left">Display</td>
+      <td class="right">
+        <select name="adapter" id="adapter-choices">
+        </select>
+      </td>
+    </tr>
+  </table>
+
+  <table>
+    <tr>
       <td class="left">Resolution</td>
       <td class="right">
         <select name="resolution" id="resolution-choices">
@@ -41,6 +51,16 @@
 
   <table>
     <tr>
+      <td class="left">Interface</td>
+      <td class="right">
+        <select name="interface" id="interface-choices">
+        </select>
+      </td>
+    </tr>
+  </table>
+
+  <table>
+    <tr>
       <td class="left">Configuration</td>
       <td class="right">
         <select name="mode" id="mode-choices">
@@ -52,22 +72,22 @@
 	<table id="wifi">
 	  <tr><td colspan="2" class="header">Wifi Settings</td></tr>
 	  <tr>
-	    <td class="left">Encryption:</td>
+	    <td class="left">Encryption</td>
 	    <td class="right">
 	      <select name="encryption" id="encryption-choices">
 	      </select>
 	    </td>
 	  </tr>
 	  <tr>
-	    <td class="left">SSID:</td>
+	    <td class="left">SSID</td>
 	    <td class="right">
-	      <input type="text" name="ssid"/>
+	      <input type="text" name="ssid" id="ssid-value" />
 	    </td>
 	  </tr>
-	  <tr>
-	    <td class="left">Passphrase:</td>
+	  <tr id="passphrase">
+	    <td class="left">Passphrase</td>
 	    <td class="right">
-	      <input type="text" name="passphrase"/>
+	      <input type="text" name="passphrase" id="passphrase-value" />
 	    </td>
 	  </tr>
 	</table>
@@ -75,23 +95,29 @@
 	<table id="ipconf">
 	  <tr><td colspan="2" class="header">IP Configuration</td></tr>
 	  <tr>
-	    <td class="left">Address:</td>
+	    <td class="left">Address</td>
 	    <td class="right">
 	      <input type="text" name="address" id="address" />
 	    </td>
 	  </tr>
 	  <tr>
-	    <td class="left">Netmask:</td>
+	    <td class="left">Netmask</td>
 	    <td class="right">
 	      <input type="text" name="netmask" id="netmask" />
 	    </td>
 	  </tr>
 	  <tr>
-	    <td class="left">Gateway:</td>
+	    <td class="left">Gateway</td>
 	    <td class="right">
 		<input type="text" name="gateway" id="gateway" />
 	    </td>
 	  </tr>
+    <tr>
+      <td class="left">Nameserver</td>
+      <td class="right">
+    <input type="text" name="gateway" id="nameserver" />
+      </td>
+    </tr>
 	</table>
 
 <!--
