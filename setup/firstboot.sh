@@ -85,15 +85,15 @@ function makeDNS() {
 }
 
 function makeDHCPNet() {
-  $janosh -e makeNetworkDhcp -s /network/interface "$1"
+  $janosh -e makeNetworkDhcp -s /network/connection/interface "$1"
 }
 
 function makeManualNet() {
-  $janosh -e makeNetworkMan -s /network/interface "$1" /network/address "$2" /network/netmask "$3" /network/gateway "$4"
+  $janosh -e makeNetworkMan -s /network/connection/interface "$1" /network/address "$2" /network/netmask "$3" /network/gateway "$4"
 }
 
 function makeWifi() {
-  $janosh -t -s /network/wifi/inteface "$1" /network/wifi/ssid "$2" /network/wifi/encryption/value "$3" /network/wifi/passphrase "$4"
+  $janosh -t -s /network/connection/interface "$1" /network/wifi/ssid "$2" /network/wifi/encryption/value "$3" /network/wifi/passphrase "$4"
 }
 
 function doConf() {
@@ -119,7 +119,7 @@ function connectionConf() {
     if [ "$howconf" == "Wifi" ]; then
       doConf "wireless"
     elif  [ "$howconf" == "Ethernet" ]; then
-      export INTERFACE="`/lounge/triggers/network readWiredNic`"
+      export INTERFACE="`/root/triggers/network readWiredNics`"
       doConf "network"
     fi
   else
@@ -134,7 +134,7 @@ function wirelessConf() {
     if [ "$encrypt" == "WPA-PSK" -o "$encrypt" == "WEP" ]; then
       passphrase=$(askWifiPassphrase)
     fi
-    export INTERFACE="`/lounge/triggers/network readWirelessNic`"
+    export INTERFACE="`/root/triggers/network readWirelessNics`"
     makeWifi "$INTERFACE" "$ssid" "$encrypt" "$passphrase"
     doConf "network"
   else
