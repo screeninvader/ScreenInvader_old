@@ -26,13 +26,16 @@
         <div id="find_panel"></div>
         <div id="upload_panel"></div>
         <div id="sound_panel" style="padding-top: 10px;"></div>
+        <div id="close_panel"></div>
         <div id="active" style="padding-top: 10px;">
-          <table style="background-color: #222; padding-top: 5px;"><tr><td>
-            <div id="close_panel"></div>
-            <div id="player_panel"></div>
-            <div id="navigate_panel"></div>
-            <div id="sound_panel"></div>
-          </td></tr></table>
+          <table style="background-color: #222; height:75px;padding-top: 5px; z-index: -1;">
+            <tr><td>
+              <div style="z-index: 0; position:absolute; text-align:center; width: 325px; padding-top: 20px; font-weight:bold;">(no activity)</div>
+              <div style="z-index: 1; position:relative;" id="player_panel"></div>
+              <div style="z-index: 1; position:relative;" id="navigate_panel"></div>
+              <div style="z-index: 1; position:relative;" id="sound_panel"></div>
+            </td></tr>
+          </table>
         </div>
       </div>
     </div>
