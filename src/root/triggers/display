@@ -20,11 +20,53 @@
 
 FUNCTION="$1"
 
-. /lounge/triggers/env
+. /root/triggers/env
 
 declare -A DATA="$(janosh /display/.)"
 
-# just a stub
+function setResolution() {
+  xrandr --output "${DATA[/display/adapter/value]}" --mode "${DATA[/display/resolution/value]}" --primary
+}
+
+function readAvailableAdapters() {
+  xrandr -q | grep -Po '^\K(.*)(?= connected)'
+}
+
+function readAvailableResolutions() {
+  xrandr -q | sed "1,/^$1/d" | while read line; do
+    if ! echo $line | grep -Po '^\s*\K([0-9]*x[0-9]*)(?=)'; then
+      break
+    fi
+  done 
+}
+
+function readCurrentResolution() {
+  xrandr -q | grep -m1 -Po 'current \K([0-9]* x [0-9]*)(?=)' | sed 's/ //g'
+} 
+
+function reload() {
+  janosh -s /display/resolution/value $(readCurrentResolution)
+  i=0
+
+  readAvailableResolutions "${DATA[/display/adapter/value]}"| while read r; do
+    janosh -s /display/resolution/choices/$i "$r"
+    i=$[$i+1]
+  done
+
+  i=0
+  readAvailableAdapters | while read a; do
+    janosh -s /display/adapter/choices/$i "$a"
+    i=$[$i+1]
+  done
+}
+
+function apply() {
+  setResolution
+}
+
+function restart() {
+  return 0;
+}
 
 if [ "$(type -t "$FUNCTION")" == "function" ]; then
   $FUNCTION
