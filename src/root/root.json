@@ -6,9 +6,15 @@
     },
     "connection": {
       "choices" : ["Wifi", "Ethernet"],
-      "value": "Wifi"
+      "value": "Wifi",
+      "interface": "",
+      "wired" : {
+        "choices" : []
+      },
+      "wireless" : {
+        "choices" : []
+      }
     },
-    "interface": "",
     "address": "",
     "netmask": "255.255.255.0",
     "gateway": "",
@@ -16,7 +22,7 @@
     "hostname": "",
     "wifi": {
       "encryption": {
-        "choices" : [ "None", "WEP", "WPA-PSK" ],
+        "choices" : [ "NONE", "WEP", "WPA-PSK" ],
         "value": "WPA-PSK"
       },
       "ssid": "",
@@ -36,12 +42,12 @@
 
   "display": {
     "adapter": {
-      "choices" : [ "VGA-0", "LCD" ],
-       "value": "VGA-0"
+      "choices" : [ ],
+       "value": ""
     },
     "resolution": {
-      "choices" : [ "800x600", "1024x768" ],
-      "value": "1024x768"
+      "choices" : [],
+      "value": ""
     }
   }
 }

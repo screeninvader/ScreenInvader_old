@@ -23,6 +23,10 @@
 
   "makeDefaultInittab": [ "system makeInittab", [] ],
 
+  "setResolution": [ "display setResolution", [
+      "/display/resolution/value"
+    ] ],
   "reload": [ "reload", [] ],
-  "restart": [ "restart", [] ]
+  "restart": [ "restart", [] ],
+  "apply": [ "apply", [] ]
 }
