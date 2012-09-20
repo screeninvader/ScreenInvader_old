@@ -40,8 +40,8 @@ function askHowNet() {
 
 function askNetConnection() {
   $ask --radiolist "Network Connection" 9 32 2 \
-    Wifi "Wireless" on \
-    Ethernet "Wired" off
+    Ethernet "Wired" on \
+    Wifi "Wireless" off
 }
 
 function askWifiSSID() {
