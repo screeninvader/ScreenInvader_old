@@ -191,7 +191,7 @@ function doCopy() {
     "cd $BOOTSTRAP_DIR/src; rsync -axh --delete root $CHROOT_DIR/"
 
   check "Sync setup changes" \
-    "cd $BOOTSTRAP_DIR/; rsync -axh --delete setup $CHROOT_DIR/"
+    "cd $BOOTSTRAP_DIR/src; rsync -axh --delete setup $CHROOT_DIR/"
 
   check "Copy plymouth theme" \
     "cp -a $BOOTSTRAP_DIR/themes/screeninvader $CHROOT_DIR/usr/share/plymouth/themes/"
