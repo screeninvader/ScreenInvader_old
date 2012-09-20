@@ -199,12 +199,6 @@ function doCopy() {
   check "Copy xosd lib" \
     "cp -a $BOOTSTRAP_DIR/build/xosd-2.2.14/src/libxosd/.libs/libxosd.so.2.2.14 $CHROOT_DIR/usr/lib/"
 
-  check "Copy kyotocabinet" \
-    "cp -a $BOOTSTRAP_DIR/build/libkyotocabinet* $CHROOT_DIR/usr/lib/"
-
-  check "Copy json-spirit" \
-    "cp -a $BOOTSTRAP_DIR/build/libjson_spirit.a $CHROOT_DIR/usr/lib/"
-
   check "ldconfig" \
     "$CHRT ldconfig"
 
