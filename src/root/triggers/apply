@@ -1,0 +1,5 @@
+#!/bin/bash
+/root/triggers/network apply
+/root/triggers/storage apply
+/root/triggers/display apply
+
