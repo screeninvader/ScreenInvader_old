@@ -33,7 +33,7 @@ function l_urldecode() {
 
 function l_unblank() {
   xdotool mousemove 1900 1200
-  janosh -t -s /display/blank false
+  janosh -t set /display/blank false
 }
 
 function l_lock() {

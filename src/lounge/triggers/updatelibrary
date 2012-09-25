@@ -3,11 +3,11 @@
 . ./initcgi "text/plain"
 export PATH=$PATH:/lounge/bin/locate/
 
-[ "`janosh /media/updating`" == "true" ] && exit 0;
+[ "`janosh -r get /media/updating`" == "true" ] && exit 0;
 
-janosh -s /media/updating true
+janosh set /media/updating true
 updatemovie
 updateimage
-janosh -s /media/updating false
+janosh set /media/updating false
 
 

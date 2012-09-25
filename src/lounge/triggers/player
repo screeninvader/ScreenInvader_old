@@ -23,16 +23,12 @@
 RUN_DIR="/var/run/player"
 CMD_FIFO="$RUN_DIR/cmdfifo"
 CMD_LOCK="$RUN_DIR/cmdlock"
-PLAYLIST="$RUN_DIR/playlist"
 PLAYLIST_CACHE="$RUN_DIR/playlist_cache"
-PLAYLIST_TITLES="$RUN_DIR/playlist_titles"
-PLAYLIST_IDX="$RUN_DIR/playlist_idx"
-PLAYLIST_LOCK="$RUN_DIR/playlist_lock"
 MPLAYERSTDIN="$RUN_DIR/mplayerstdin"
 
 function open() {
 set -x
-  declare -A OBJ="$(janosh /player/.)"
+  declare -A OBJ="$(janosh get /player/.)"
   url="${OBJ[/player/url]}"
   category="${OBJ[/player/category]}"
   title=
@@ -54,7 +50,7 @@ set -x
   else
     loadVideo "$url" "$title"
   fi
-  janosh -s "/player/active" true
+  janosh set "/player/active" true
 }
 
 function close() {
@@ -69,14 +65,11 @@ function refresh() {
 function mplayer_start {
   rm -f "$CMD_FIFO"
   rm -f "$CMD_LOCK"
-  rm -f "$PLAYLIST_IDX"
   rm -f "$MPLAYERSTDIN"
-  rm -f "$PLAYLIST_LOCK"
 
   mkdir -p "$RUN_DIR"
   mkfifo "$CMD_FIFO";
   touch "$PLAYLIST_CACHE"
-  touch "$PLAYLIST"
 
   while [ 0 ]; do 
     sleep 1; 
@@ -106,25 +99,20 @@ function hideText() {
 }
 
 function jump() {
-set -x
-  (
-    flock -x 300
-    idx=$1
-    PLLEN="`wc -l "$PLAYLIST" | cut -d" " -f1`"
-
-    [ $idx -gt $PLLEN ] && idx=$PLLEN
-    file="`sed -n "${idx}p" $PLAYLIST`"
-    mplayer_cmd "pause"
-    refresh
-    janosh -s /player/active true
-    mplayer_cmd "loadfile $file"
-    echo "$idx" >  "$PLAYLIST_IDX"
-    touch $PLAYLIST
-  ) 300>$PLAYLIST_LOCK
+  idx=$1
+  PLLEN="$(janosh size /playlist/items)"
+  [ $idx -gt $PLLEN ] && idx=$PLLEN
+  file="$(janosh -r get /playlist/items/$idx)"
+  mplayer_cmd "pause"
+  refresh
+  janosh set /player/active true
+  mplayer_cmd "loadfile $file"
+  janosh set /playlist/index $idx
+  touch "$PLAYLIST_CACHE"
 }
 
 function isQueueMode() {
-  [ "$(janosh -r /playlist/queue)" == "true" ] && return 0 || return 1;
+  [ "$(janosh -r get /playlist/queue)" == "true" ] && return 0 || return 1;
 }
 
 function playlistAdd() {
@@ -138,7 +126,7 @@ function playlistAdd() {
   fi
   notify "$action: $2"
 
-  if [ "`janosh -r /player/active`" == "false" -o "$mode" == "post" ]; then
+  if [ "`janosh -r get /player/active`" == "false" -o "$mode" == "post" ]; then
     lines="`wc -l "$PLAYLIST" | cut -d" " -f1`"
     jump "$lines"
   fi
@@ -146,25 +134,24 @@ function playlistAdd() {
 }
 
 function playlistEnqueue() {
-  (
-    flock -x 300
-    path="$1"
-    title="$2"
-    [ -z "$title" ] && title="(no title)"
-    echo "$path" >> "$PLAYLIST"
-    echo "$title" >> "$PLAYLIST_TITLES"
-  ) 300>$PLAYLIST_LOCK
+  path="$1"
+  title="$2"
+  [ -z "$title" ] && title="(no title)"
+
+  $(janosh append /playlist/items/. "$path")
+  $(janosh append /playlist/titles/. "$title")
+  touch "$PLAYLIST_CACHE"
 }
 function loadStdin() {
-    notify "Play live upload"
-    rm -f "$MPLAYERSTDIN"
-    mkfifo "$MPLAYERSTDIN"
-    mplayer_cmd "pause"
-    refresh
-    janosh -s /player/active true
-    mplayer_cmd "loadfile \"$MPLAYERSTDIN\""
-    cat > "$MPLAYERSTDIN"
-    mplayer_cmd "pt_step `cat "$PLAYLIST_IDX"`"
+  notify "Play live upload"
+  rm -f "$MPLAYERSTDIN"
+  mkfifo "$MPLAYERSTDIN"
+  mplayer_cmd "pause"
+  refresh
+  janosh set /player/active true
+  mplayer_cmd "loadfile \"$MPLAYERSTDIN\""
+  cat > "$MPLAYERSTDIN"
+  mplayer_cmd "pt_step `cat "$(janosh -r get /playlist/index)"`"
 }
 
 function loadVideo() {
@@ -178,7 +165,7 @@ function enqueueVideo() {
 function loadList() {
   (
     flock -x 200
-    janosh -s /player/active true
+    janosh set /player/active true
     mplayer_cmd "loadlist $1"
   ) 200>$CMD_LOCK
 }
@@ -191,12 +178,12 @@ function loadAudio() {
 }
 
 function previous() {
-  idx=$(fock -x 200; echo $[ `cat $PLAYLIST_IDX` - 1 ];) 200> /var/run/player/playlist_lock
+  idx=$(janosh set /playlist/index $[ `janosh -r get /playlist/index` - 1 ]) 
   jump "$idx"
 }
 
 function next() {
-  idx=$(fock -x 200; echo $[ `cat $PLAYLIST_IDX` + 1 ];) 200> /var/run/player/playlist_lock
+  idx=$(janosh set /playlist/index $[ `janosh -r get /playlist/index` + 1 ])
   jump "$idx"
 }
 
@@ -239,7 +226,7 @@ function stop() {
   (
     flock -x 200
     mplayer_cmd "stop"
-    janosh -s /player/active false
+    janosh set /player/active false
     refresh
   ) 200>$CMD_LOCK
 }
@@ -274,14 +261,14 @@ function contains() {
 
 function eotrack() {
   set -x 
-  idx="`cat "/var/run/player/playlist_idx"`"
+  idx="$(janosh -r get /playlist/index)"
   [ -z "$idx" ] && idx=0
-  len="`wc -l /var/run/player/playlist | cut -d\" \" -f1`"
+  len="$(janosh size /playlist/items)"
 
   if [ $idx -lt $len ]; then
     jump $[ $idx + 1 ]
   else
-    janosh -s /player/active false
+    janosh set /player/active false
     showip
     stop
   fi
@@ -290,7 +277,7 @@ function eotrack() {
 }
 
 function sotrack() {
-  janosh -s /player/active true  
+  janosh set /player/active true  
   mplayer_cmd "get_property path"
   killall osd
 }

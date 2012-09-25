@@ -3,7 +3,7 @@
 . /lounge/triggers/functions.sh
 
 FUNCTION="$1"
-declare -A DATA="$(janosh /network/.)"
+declare -A DATA="$(janosh get /network/.)"
 
 function makeHostname() {
   echo "${DATA[/network/hostname]}" > "/etc/hostname"

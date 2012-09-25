@@ -21,7 +21,7 @@
 . /lounge/triggers/functions.sh
 
 FUNCTION="$1"
-declare -A OBJ="$(janosh /pdf/.)"
+declare -A OBJ="$(janosh get /pdf/.)"
 
 function open() {
   url="${OBJ[/pdf/url]}"
@@ -35,20 +35,20 @@ function open() {
   fi
 
   (
-    janosh -s "/pdf/active" true
+    janosh set "/pdf/active" true
     killall xpdf
     xpdf -fullscreen "$url"
     [ -f "$tmpfile" ] && rm "$tmpfile"
 # FIXME: found a synchronous way to switch to page width zoom
 #    `sleep 1; xdotool key --clearmodifiers w`
-    janosh -s "/pdf/active" false
+    janosh set "/pdf/active" false
   )  &
 }
 
 function close() {
   killall xpdf
   player refresh
-  janosh -s "/pdf/active" false
+  janosh set "/pdf/active" false
 }
 
 if [ "$(type -t "$FUNCTION")" == "function" ]; then

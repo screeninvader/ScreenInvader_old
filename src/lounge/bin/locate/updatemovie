@@ -4,7 +4,7 @@ find /share -type f \( -iname "*mpeg" -o -iname "*mpg" -o -iname "*avi" -o -inam
 echo "'$line',"
 done
 echo " ] } }" )  > /tmp/movie.json
-#| /lounge/bin/janosh -l
+#| /lounge/bin/janosh load
 
 
 

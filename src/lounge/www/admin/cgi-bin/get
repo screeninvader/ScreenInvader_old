@@ -22,4 +22,6 @@
 
 GET="`echo $QUERY_STRING | sed 's/=/ /g;s/&/ /g'`"
 
-sudo /lounge/bin/gainroot "/lounge/bin/janosh -j $GET" 2> /dev/null
+sudo /lounge/bin/gainroot "/lounge/bin/janosh -j get $GET"  2> /dev/null
+#
+#> /tmp/get

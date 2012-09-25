@@ -22,7 +22,7 @@
 . /lounge/triggers/functions.sh
 
 FUNCTION="$1"
-declare -A DATA="`janosh /sound/.`"
+declare -A DATA="`janosh get /sound/.`"
 
 function setMute() {
   m="on";
@@ -32,7 +32,7 @@ function setMute() {
 
 function setVolume() {
   amixer sset "${DATA[/sound/mixer]}" "${DATA[/sound/volume]}%"
-  janosh -s /sound/volume "$(readVolume)"
+  janosh set /sound/volume "$(readVolume)"
 }
 
 function readVolume() {
@@ -54,7 +54,7 @@ function readMixer() {
 }
 
 function reload() {
-  janosh -s /sound/volume "$(readVolume)" /sound/mute "$(readMute)" /sound/mixer/ "$(readMixer)"
+  janosh set /sound/volume "$(readVolume)" /sound/mute "$(readMute)" /sound/mixer/ "$(readMixer)"
 }
 
 function restart() {

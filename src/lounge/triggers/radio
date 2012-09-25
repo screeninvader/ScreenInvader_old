@@ -20,7 +20,7 @@
 . /lounge/triggers/functions.sh
 
 FUNCTION="$1"
-declare -A OBJ="$(janosh /radio/.)"
+declare -A OBJ="$(janosh get /radio/.)"
 
 function open() {
   url="${OBJ[/radio/url]}"

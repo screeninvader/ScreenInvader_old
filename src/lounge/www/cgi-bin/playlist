@@ -22,28 +22,23 @@
 
 . ./initcgi "text/html"
 
-LIST="/var/run/player/playlist"
-TITLES="/var/run/player/playlist_titles"
-CACHE="/var/run/player/playlist_cache"
-
-set -x
-(
-  flock -x 200
-  mod_p="`stat -c %Y $LIST`"
+  CACHE="/var/run/player/playlist_cache"
+  LAST="`cat /var/run/player/playlist_last`"
+  [ -z "$LAST" ] && LAST=0
   mod_c="`stat -c %Y $CACHE`"
 
-  if [ $mod_p -gt $mod_c ]; then
-    if [ ! -s $LIST ]; then
+  if [ $mod_c -gt $LAST ]; then
+    if [ $(janosh size /playlist/items/.)  -eq 0 ]; then
       echo "<span style=\"color: lightgrey; font-weight: bold;\">(playlist empty)</span>" > "$CACHE"
     else
       (
       echo "<div>"
-      i=1
-      cat "$TITLES" | while read line; do
+      i=0
+      janosh -r get /playlist/titles/. | while read line; do
         title="`echo $line | sed -e 's/\([A-Z]\)/ \1/g' -e 's/^ \([a-z]\)/\1/g'`"
         title=${title:0:70}
-        item="`sed "$[$i]!d" /var/run/player/playlist`"
-  	idx="`cat /var/run/player/playlist_idx`"
+        item="$(janosh -r get /playlist/items/$i)"
+  	idx="$(janosh -r get /playlist/index)"
         current="`cat /var/run/player/currentpath`"
         color="white"
         bgcolor="#555"
@@ -59,8 +54,8 @@ set -x
       done
       echo "</div>"
       ) > "$CACHE"
+      stat -c %Y /var/run/player/playlist_cache > /var/run/player/playlist_last
     fi
   fi
 
   cat "$CACHE"
-) 200> /var/run/player/playlist_lock

@@ -24,4 +24,4 @@
 
 janosh -e browserClose
 janosh -e videoClose
-janosh -s pdfClose
+janosh -e pdfClose

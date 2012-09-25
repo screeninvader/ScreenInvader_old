@@ -10,7 +10,9 @@
   },
 
   "playlist": {
-    "queue": "false"
+    "queue": "false",
+    "items": [],
+    "titles": []
   },
 
   "player": {

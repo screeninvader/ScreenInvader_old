@@ -22,4 +22,4 @@
 
 GET="`echo $QUERY_STRING | sed 's/=/ /g;s/&/ /g'`"
 
-/lounge/bin/janosh -j $GET
+/lounge/bin/janosh -j get $GET

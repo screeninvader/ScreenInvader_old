@@ -1,9 +1,9 @@
 #!/bin/bash
 
-. /lounge/triggers/env
+. /root/triggers/env
 
 FUNCTION="$1"
-declare -A DATA="$(janosh /storage/.)"
+declare -A DATA="$(janosh get /storage/.)"
 
 function makeSmb() {
   user="${DATA[/storage/smb/user]}"

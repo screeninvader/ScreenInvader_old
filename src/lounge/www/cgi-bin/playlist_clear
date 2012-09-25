@@ -22,6 +22,7 @@
 
 . ./initcgi "text/html"
 
-echo -n "" > /var/run/player/playlist
-echo -n "" > /var/run/player/playlist_titles
-echo 0 > /var/run/player/playlist_idx
+janosh remove "/playlist/items/*"
+janosh remove "/playlist/titles/*"
+janosh set /playlist/index 0
+touch /var/run/player/playlist_cache

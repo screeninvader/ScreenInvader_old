@@ -22,7 +22,7 @@
 . /lounge/triggers/functions.sh
 
 FUNCTION="$1"
-declare -A OBJ="$(janosh /browser/.)"
+declare -A OBJ="$(janosh get /browser/.)"
 l_unblank
 
 function open() {
@@ -39,14 +39,14 @@ function open() {
 
   ( midori "$url" &&  midori -e TabCloseOther ) &
 
-  janosh -s "/image/active" false "/browser/active" false "/animation/active" false
-  janosh -s "/$active/active" true
+  janosh set "/image/active" false "/browser/active" false "/animation/active" false
+  janosh set "/$active/active" true
 }
 
 function close() {
   killall midori
   player refresh
-  janosh -s "/image/active" false "/browser/active" false "/animation/active" false
+  janosh set "/image/active" false "/browser/active" false "/animation/active" false
 }
 
 function pageDown() { 

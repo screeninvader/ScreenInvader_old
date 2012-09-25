@@ -64,7 +64,7 @@ function AdminControl () {
     admin.data.network.wifi.encryption.value = $('#encryption-choices').val();
     admin.data.network.hostname = $('#hostname').val();
     admin.data.network.wifi.ssid = $('#ssid-value').val();
-    admin.data.network.wifi.ssid = $('#passphrase-value').val();
+    admin.data.network.wifi.passphrase = $('#passphrase-value').val();
     admin.data.network.address = $('#address').val();
     admin.data.network.gateway = $('#gateway').val();
     admin.data.network.nameserver = $('#nameserver').val();
@@ -118,7 +118,7 @@ function AdminControl () {
 
   this.reload = function() {
     $.get('/admin/cgi-bin/trigger?reload', function () {
-      $.get('/admin/cgi-bin/get?/.', function(data) {
+      $.getJSON('/admin/cgi-bin/get?/.', function(data) {
         admin.update(data);
       });
     });

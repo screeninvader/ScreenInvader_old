@@ -22,7 +22,7 @@ FUNCTION="$1"
 
 . /lounge/triggers/functions.sh
 
-declare -A DATA="$(janosh /display/.)"
+declare -A DATA="$(janosh get /display/.)"
 
 function setBlank() {
   if [ "${DATA["/display/blank"]}" == "true" ]; then
@@ -38,7 +38,7 @@ function readBlank() {
 }
 
 function reload() {
-  janosh -s /display/blank $(readBlank)
+  janosh set /display/blank $(readBlank)
 }
 
 function restart() {

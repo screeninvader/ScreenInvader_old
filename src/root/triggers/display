@@ -22,7 +22,7 @@ FUNCTION="$1"
 
 . /root/triggers/env
 
-declare -A DATA="$(janosh /display/.)"
+declare -A DATA="$(janosh get /display/.)"
 
 function setResolution() {
   xrandr --output "${DATA[/display/adapter/value]}" --mode "${DATA[/display/resolution/value]}" --primary
@@ -45,17 +45,17 @@ function readCurrentResolution() {
 } 
 
 function reload() {
-  janosh -s /display/resolution/value $(readCurrentResolution)
+  janosh set /display/resolution/value $(readCurrentResolution)
   i=0
 
   readAvailableResolutions "${DATA[/display/adapter/value]}"| while read r; do
-    janosh -s /display/resolution/choices/$i "$r"
+    janosh set /display/resolution/choices/$i "$r"
     i=$[$i+1]
   done
 
   i=0
   readAvailableAdapters | while read a; do
-    janosh -s /display/adapter/choices/$i "$a"
+    janosh set /display/adapter/choices/$i "$a"
     i=$[$i+1]
   done
 }

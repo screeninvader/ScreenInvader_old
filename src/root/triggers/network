@@ -3,7 +3,7 @@
 . /root/triggers/env
 
 FUNCTION="$1"
-declare -A DATA="$(janosh /network/.)"
+declare -A DATA="$(janosh get /network/.)"
 
 function makeHostname() {
   echo "${DATA[/network/hostname]}" > "/etc/hostname"
@@ -78,15 +78,15 @@ function readHostname() {
 
 function reload() {
   i=0
-  janosh -s /network/hostname "$(readHostname)"
+  janosh set /network/hostname "$(readHostname)"
 
   readWiredNics | while read c; do
-    janosh -s /network/connection/wired/choices/$i "$c"
+    janosh set /network/connection/wired/choices/$i "$c"
     i=$[$i+1]
   done
 
   readWirelessNics | while read c; do
-    janosh -s /network/connection/wireless/choices/$i "$c"
+    janosh set /network/connection/wireless/choices/$i "$c"
     i=$[$i+1]
   done
 }
