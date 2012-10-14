@@ -46,6 +46,5 @@
       "/radio/url"
     ] ],
 
-  "radioOpen": [ "radio open", [
-    ] ]
+  "radioClose": [ "radio open", [ ] ]
 }
