@@ -4,14 +4,42 @@
 	<head>
 		<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
 		<title>lounge controller 2.0</title>
-		<script type="text/javascript" src="_inc/js/jquery.min.js"></script>
-		<link rel="stylesheet" type="text/css" href="_inc/css/lounge.css">
+		<script type="text/javascript" src="/_inc/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/_inc/js/jquery-ui-1.8.23.custom.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="/_inc/css/lounge.css">
 <script type="text/javascript">
+
    function loadPlaylist() {
      $.get('cgi-bin/playlist', function(data) {
-        $('#playlist').html(data);
+       $('body').html(data);
+       $( "#playlist" ).sortable();
+       $( "#playlist" ).disableSelection();
+       $( "#playlist" ).bind( "sortupdate", function(event, ui) {
+         var from='/playlist/items/' + $(ui.item).attr('id');
+         var to='/playlist/items/' + $(ui.item).index();
+         $.get('/cgi-bin/move?' + from + "&" + to);
+         from='/playlist/titles/' + $(ui.item).attr('id');
+         to='/playlist/titles/' + $(ui.item).index();
+         $.get('/cgi-bin/move?' + from + "&" + to);
+       });
+
+       $( "#playlist" ).bind( "sortstop", function(event, ui) {
+         $.get('/cgi-bin/set?/playlist/index=' + $(".currentItem").index());
+       });
+
      }, "text");
    }
+
+  var playlist_last=0;
+
+  function checkPlaylist() {
+    $.get('cgi-bin/playlist_last', function(data) {
+      if(playlist_last < data) {
+        playlist_last = data;
+        loadPlaylist();
+      }
+     }, "text"); 
+  }
 
   $('.button').live('mousedown', function(){
    $(this).addClass('down');
@@ -22,9 +50,9 @@
   })
 
    loadPlaylist
-   setInterval("loadPlaylist()", 1000);  
+   setInterval("checkPlaylist()", 1000);  
 </script>
 	</head>
-	<body id="playlist" style="background-color: #666; padding-right: 4px;" >
+	<body style="background-color: #666; padding-right: 4px;" >
 	</body>
 </html>

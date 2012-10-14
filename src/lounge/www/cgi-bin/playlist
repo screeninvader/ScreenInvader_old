@@ -21,7 +21,8 @@
 
 
 . ./initcgi "text/html"
-
+(
+  flock -x 200
   CACHE="/var/run/player/playlist_cache"
   LAST="`cat /var/run/player/playlist_last`"
   [ -z "$LAST" ] && LAST=0
@@ -32,13 +33,14 @@
       echo "<span style=\"color: lightgrey; font-weight: bold;\">(playlist empty)</span>" > "$CACHE"
     else
       (
-      echo "<div>"
+      echo "<ul id='playlist'>"
       i=0
       janosh -r get /playlist/titles/. | while read line; do
         title="`echo $line | sed -e 's/\([A-Z]\)/ \1/g' -e 's/^ \([a-z]\)/\1/g'`"
         title=${title:0:70}
         item="$(janosh -r get /playlist/items/$i)"
-  	idx="$(janosh -r get /playlist/index)"
+        class=
+        idx="$(janosh -r get /playlist/index)"
         current="`cat /var/run/player/currentpath`"
         color="white"
         bgcolor="#555"
@@ -46,16 +48,17 @@
 	
         [ $[ $i % 2  ] -eq 0 ] && bgcolor="#777"
         if [ "$i" -eq "$idx" ]; then 
-	  color="orange"
-	  id="currentitem"
-	fi
-        echo "<div id=\"$id\" onclick=\"$.get('cgi-bin/playlist_jump?$i');\" style=\"padding: 2px;text-align:left; width: 100%; cursor: pointer; background-color: $bgcolor; color: $color;  border: 1px outset $bgcolor; \">$title</div>"
+          color="orange"
+          class="currentItem"
+        fi
+        echo "<li id=\"$id\" class=\"$class\" onclick=\"$.get('cgi-bin/playlist_jump?$i');\" style=\"padding: 2px;text-align:left; cursor: pointer; background-color: $bgcolor; color: $color;  border: 1px outset $bgcolor; font-size: 12px; list-style-type: none; \">$title</li>"
         i=$[ $i + 1 ]
       done
-      echo "</div>"
+      echo "</ul>"
       ) > "$CACHE"
       stat -c %Y /var/run/player/playlist_cache > /var/run/player/playlist_last
     fi
   fi
 
   cat "$CACHE"
+) 200> /var/lock/playlist
