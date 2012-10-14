@@ -6,6 +6,15 @@ body {
   font-size: 14px;
 }
 
+ul { 
+  margin: 0px;
+  padding: 0px;
+}
+li {
+  font-size: 14px;
+  width: 100%;
+}
+
 iframe {
   width: 100%;
   padding: 3px;
