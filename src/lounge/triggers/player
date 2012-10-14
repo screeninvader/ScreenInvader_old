@@ -27,28 +27,29 @@ PLAYLIST_CACHE="$RUN_DIR/playlist_cache"
 MPLAYERSTDIN="$RUN_DIR/mplayerstdin"
 
 function open() {
-set -x
   declare -A OBJ="$(janosh get /player/.)"
   url="${OBJ[/player/url]}"
+  video_url=
   category="${OBJ[/player/category]}"
   title=
   l_unblank
 
   if [ "$category" != "video" ]; then
     info="$("/lounge/triggers/helpers/$category" "$url")"
-    url="$(echo "$info" | sed '$d')"
+    video_urls="$(echo "$info" | sed '$d')"
     title="$(echo "$info" | tail -n1)"
   else
     title="$(basename "$url")"
+    video_urls="$url"
   fi
   i=1
-  if [ "`echo "$url" | wc -l`" -gt 1 ]; then
-    echo "$url" | while read line; do
-      loadVideo "$line" "$i - $title"
+  if [ "`echo "$video_urls" | wc -l`" -gt 1 ]; then
+    echo "$video_urls" | while read line; do
+      loadVideo "$line" "$i - $title" "$url"
       i=$[ $i + 1 ]
     done
   else
-    loadVideo "$url" "$title"
+    loadVideo "$video_urls" "$title" "$url"
   fi
   janosh set "/player/active" true
 }
@@ -100,7 +101,7 @@ function hideText() {
 
 function jump() {
   idx=$1
-  PLLEN="$(janosh size /playlist/items)"
+  PLLEN="$(janosh size /playlist/items/.)"
   [ $idx -gt $PLLEN ] && idx=$PLLEN
   file="$(janosh -r get /playlist/items/$idx)"
   mplayer_cmd "pause"
@@ -117,7 +118,7 @@ function isQueueMode() {
 
 function playlistAdd() {
 (
-  playlistEnqueue "$1" "$2"
+  playlistEnqueue "$1" "$2" "$3"
   mode=post
   action=Playing
   if isQueueMode; then
@@ -136,10 +137,14 @@ function playlistAdd() {
 function playlistEnqueue() {
   path="$1"
   title="$2"
+  src="$3"
+
   [ -z "$title" ] && title="(no title)"
 
   $(janosh append /playlist/items/. "$path")
   $(janosh append /playlist/titles/. "$title")
+  $(janosh append /playlist/sources/. "$src")
+
   touch "$PLAYLIST_CACHE"
 }
 function loadStdin() {
@@ -155,11 +160,11 @@ function loadStdin() {
 }
 
 function loadVideo() {
-    playlistAdd "$1" "$2"
+    playlistAdd "$1" "$2" "$3"
 }
 
 function enqueueVideo() {
-    playlistAdd "$1" "$2" 
+    playlistAdd "$1" "$2" "$3"
 }
 
 function loadList() {
@@ -173,18 +178,17 @@ function loadList() {
 function loadAudio() {
   (
     flock -x 200
-    playlistAdd "$1" "$2"
+    playlistAdd "$1" "$2" "$3"
   ) 200>$CMD_LOCK
 }
 
 function previous() {
-  idx=$(janosh set /playlist/index $[ `janosh -r get /playlist/index` - 1 ]) 
-  jump "$idx"
+  jump "$[ `janosh -r get /playlist/index` - 1 ]"
 }
 
 function next() {
-  idx=$(janosh set /playlist/index $[ `janosh -r get /playlist/index` + 1 ])
-  jump "$idx"
+set -x
+  jump "$[ `janosh -r get /playlist/index` + 1 ]"
 }
 
 function forward() {
@@ -252,28 +256,29 @@ EOTRACK="GLOBAL: EOF code: 1"
 PATH_CHANGED="GLOBAL: ANS_path="
 
 function contains() {
- if [[ "$1" == *"$2"* ]]; then
-   return 0
- else
-   return 1
- fi
+  if [[ "$1" == *"$2"* ]]; then
+    return 0
+  else
+    return 1
+  fi
 }
 
 function eotrack() {
-  set -x 
-  idx="$(janosh -r get /playlist/index)"
-  [ -z "$idx" ] && idx=0
-  len="$(janosh size /playlist/items)"
+  (  
+    idx="$(janosh -r get /playlist/index)"
+    [ -z "$idx" ] && idx=0
+    len="$(janosh size /playlist/items/.)"
 
-  if [ $idx -lt $len ]; then
-    jump $[ $idx + 1 ]
-  else
-    janosh set /player/active false
-    showip
-    stop
-  fi
+    if [ $idx -lt $len ]; then
+      jump $[ $idx + 1 ]
+    else
+      janosh set /player/active false
+      showip
+      stop
+    fi
 
-  mplayer_cmd "get_property path"
+    mplayer_cmd "get_property path"
+  ) &> /tmp/eotrack
 }
 
 function sotrack() {
