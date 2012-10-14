@@ -27,7 +27,6 @@ declare -A VIDEO_HOSTS="( \
 [videos.arte.tv/]='arte7' \
 [vimeo.com/]='vimeo' \
 [soundcloud.com/]='soundcloud' \
-[soup.io/post]='soup' \
 )"
 
 declare -A CATEGORY_MAP="( \
@@ -47,6 +46,7 @@ declare -A CATEGORY_MAP="( \
 
 declare -A CATEGORY_FIX="( \
 [application/x-matroska]='video' \
+[audio/x-mpegurl]='radio' \
 [application/pls]='radio' \
 [application/pdf]='pdf' \
 [audio/x-scpls]='radio' \
@@ -74,9 +74,9 @@ function getCategory() {
       location="$( echo "$head" | grep -iPo 'Location: \K(.*)?(?=)' )"
     done
     mime_type="$( echo "$head" | grep -iPo 'Content-Type: \K(.*)?(?=)' )"
-  elif  [[ $( readlink -e "$url" ) == /share/* ]]; then
-    file=$( l_urldecode "$url" )
-    mime_type=$( file -i "$file" | sed 's/.*: \([a-zA-Z]*\/[a-zA-Z]*\).*/\1/p' )
+  elif  [[ $( readlink -e "$url" ) == /tmp/* ]]; then
+    file="$url"
+    mime_type=$( file -i "$file" | sed 's/.*: \([a-zA-Z]*\/[a-zA-Z]*\).*/\1/p' | sed '1d' )
   fi
 
 
@@ -86,13 +86,12 @@ function getCategory() {
   fi
   echo "$category"
 }
-
 url="$QUERY_STRING"
 category="$(getCategory "$url")"
 handler="${CATEGORY_MAP[$category]}"
 
 [ -n "$handler" ] && /lounge/bin/janosh -t set "/$handler/url" "$url" "/$handler/category" "$category"
-) &>/dev/null &
+) &>/tmp/show &
 
 cat /lounge/www/close.html
 
