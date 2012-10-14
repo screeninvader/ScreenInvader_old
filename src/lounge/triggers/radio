@@ -27,8 +27,8 @@ function open() {
   l_unblank
   l_notify "Loading playlist $(basename "$url")" 1
 
-  wget -q -O - "$url" | while read line; do
-    player playlistEnqueue "$(l_urlencode "$url")"
+  wget -q -O - "$url" |  tr -d '\r' | while read line; do
+    player playlistEnqueue "$(l_urldecode "$line")" "" "$url"
   done
 }
 
