@@ -1,47 +1,52 @@
 {
-  "display": {
-    "blank": "false"
-  },
-
-  "sound": {
-    "mixer": "Master",
-    "volume": "100",
-    "mute": "false"    
-  },
-
-  "playlist": {
-    "queue": "false",
-    "items": [],
-    "titles": []
-  },
-
-  "player": {
-    "active": "false",
-    "url": " ",
-    "category": " "
-  },
-
-  "animation": {
-    "active": "false",
-    "url": " ",
-    "category": " "
-  },
-
-  "image": {
-    "active": "false",
-    "url": "",
-    "category": ""
-  },
-
-  "browser": {
-    "active": "false",
-    "url": "",
-    "category": ""
-  },
-
-  "pdf": {
-    "active": "false",
-    "url": "",
-    "category": ""
-  }
+"animation": { 
+"active":"false",
+"category":" ",
+"url":" " } 
+,
+"browser": { 
+"active":"false",
+"category":"",
+"url":"" } 
+,
+"display": { 
+"blank":"false" } 
+,
+"image": { 
+"active":"false",
+"category":"",
+"url":"" } 
+,
+"pdf": { 
+"active":"false",
+"category":"",
+"url":"" } 
+,
+"player": { 
+"active":"true",
+"category":"youtube",
+"url":"" } 
+,
+"playlist": { 
+"index":"0",
+"items": [ 
+ ] 
+,
+"queue":"true",
+"sources": [ 
+ ] 
+,
+"titles": [ 
+ ] 
+ } 
+,
+"radio": { 
+"active":"false",
+"category":"",
+"url":"" } 
+,
+"sound": { 
+"mixer":"Master",
+"mute":"false",
+"volume":"70" } 
 }
