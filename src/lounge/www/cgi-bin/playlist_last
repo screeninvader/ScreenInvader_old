@@ -1,0 +1,7 @@
+#!/bin/bash
+
+. ./initcgi "text/plain"
+
+stat -c %Y /var/run/player/playlist_cache
+
+

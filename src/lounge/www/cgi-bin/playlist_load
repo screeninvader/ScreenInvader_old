@@ -19,13 +19,9 @@
 #
 
 
-
 . ./initcgi "text/html"
 
-janosh remove "/playlist/items/*"
-janosh remove "/playlist/titles/*"
-janosh remove "/playlist/sources/*"
-janosh set /playlist/index 0
-rm /lounge/janosh.db
-janosh load /lounge/lounge.json
-touch /var/run/player/playlist_cache
+  sed '1,4d' | while read line; do
+    export QUERY_STRING="$line"
+    /lounge/www/cgi_bin/show
+  done

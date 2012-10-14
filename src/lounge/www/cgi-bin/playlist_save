@@ -20,12 +20,8 @@
 
 
 
-. ./initcgi "text/html"
+. ./initcgi "application/pls"
 
-janosh remove "/playlist/items/*"
-janosh remove "/playlist/titles/*"
-janosh remove "/playlist/sources/*"
-janosh set /playlist/index 0
-rm /lounge/janosh.db
-janosh load /lounge/lounge.json
-touch /var/run/player/playlist_cache
+janosh get -r /playlist/sources/. 2> /dev/null
+
+
