@@ -42,6 +42,11 @@ $().ready(function () {
   playlistWidget.loadInto('#playlist_panel');
   closeWidget.loadInto('#close_panel');
 
+  $(function() {
+    $( ".playlist" ).sortable();
+    $( ".playlist" ).disableSelection();
+  });
+
   widgets = [
    soundWidget,
    showWidget,
@@ -69,6 +74,11 @@ $().ready(function () {
   bookmarklet();
   updateScreenInvader();
   setInterval("updateScreenInvader()",1000);
+  $(function() {
+    $( ".playlist" ).sortable();
+    $( ".playlist" ).disableSelection();
+  });
+
 });
 
 

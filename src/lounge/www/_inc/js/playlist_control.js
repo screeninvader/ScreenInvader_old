@@ -22,6 +22,11 @@ function PlaylistControl () {
       playlistWidget.setQueuemode(q);
     })
 
+    $('#playlist-control #save-button').live('click', function(e) {
+      e.preventDefault(); 
+      window.location.href = 'cgi-bin/playlist_save';
+    })
+
     $('#playlist-control #clear-button').live ('click', function(){
       $.get('cgi-bin/playlist_clear');
     })
