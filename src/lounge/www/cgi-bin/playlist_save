@@ -22,6 +22,16 @@
 
 . ./initcgi "application/pls"
 
-janosh get -r /playlist/sources/. 2> /dev/null
+declare -A PLAYLIST="$(janosh get /playlist/.)"
+SIZE="$(janosh -r size /playlist/items/.)"
+
+seq 0 $[ $SIZE - 1 ] | while read i; do
+  item="${PLAYLIST[/playlist/items/$i]}"
+  title="${PLAYLIST[/playlist/titles/$i]}"
+  src="${PLAYLIST[/playlist/sources/$i]}"
+  echo "${item}?&screenInvaderSrc=$src"
+done
+
+#janosh get -r /playlist/sources/. 2> /dev/null
 
 
