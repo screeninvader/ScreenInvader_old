@@ -126,10 +126,10 @@ function playlistAdd() {
      action=Queuing
   fi
   notify "$action: $2"
-
+set -x
   if [ "`janosh -r get /player/active`" == "false" -o "$mode" == "post" ]; then
-    lines="`wc -l "$PLAYLIST" | cut -d" " -f1`"
-    jump "$lines"
+    items="`janosh size /playlist/items/.`"
+    jump "$[ $items - 1]"
   fi
 ) &>/tmp/add
 }
