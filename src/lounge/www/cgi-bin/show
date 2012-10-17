@@ -27,6 +27,7 @@ declare -A VIDEO_HOSTS="( \
 [videos.arte.tv/]='arte7' \
 [vimeo.com/]='vimeo' \
 [soundcloud.com/]='soundcloud' \
+[ted.com/]='ted' \
 )"
 
 declare -A CATEGORY_MAP="( \
@@ -41,7 +42,8 @@ declare -A CATEGORY_MAP="( \
 [orf]='player' \
 [arte7]='player' \
 [vimeo]='player' \
-[soundcloud]='player'
+[soundcloud]='player' \
+[ted]='player' \
 )"
 
 declare -A CATEGORY_FIX="( \
@@ -50,7 +52,7 @@ declare -A CATEGORY_FIX="( \
 [application/pls]='radio' \
 [application/pdf]='pdf' \
 [audio/x-scpls]='radio' \
-[image/gif]='animation'
+[image/gif]='animation' \
 )"
 
 function getCategory() {
