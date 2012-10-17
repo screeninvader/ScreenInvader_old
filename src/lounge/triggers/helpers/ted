@@ -1,0 +1,22 @@
+#!/bin/bash
+
+
+function selectVideo() {
+json="$1";
+pref="$2";
+title="$(echo "$json" | grep -Po '"title":"\K.*?(?=")')"
+base="$(echo "$json" | grep -Po '"streamer":"\K.*?(?=")' | sed 's/\\//g')"
+
+file="$(echo "$json" | sed 's/.*"resource"://g' | sed 's/,{/\n{/g' | fgrep "\"bitrate\":$pref" | grep -Po '"file":"\K.*?(?=")' | sed 's/\\//g')"
+if [ -z "$file" ]; then
+  file="$(echo "$json" | sed 's/.*"resource"://g' | sed 's/,{/\n{/g' | head -n1 | grep -Po '"file":"\K.*?(?=")' | sed 's/\\//g')"
+fi
+
+
+echo "$base/$file"
+echo "$title"
+}
+
+INFO="$(l_urldecode `curl -s "$QUERY_STRING" |  grep -Po "playlist:'\K.*?(?=')"`)"
+selectVideo "$INFO" "1500"
+
