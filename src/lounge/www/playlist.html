@@ -17,10 +17,10 @@
        $( "#playlist" ).bind( "sortupdate", function(event, ui) {
          var from='/playlist/items/' + $(ui.item).attr('id');
          var to='/playlist/items/' + $(ui.item).index();
-         $.get('/cgi-bin/shift?' + from + "&" + to);
+         $.get('/cgi-bin/move?' + from + "&" + to);
          from='/playlist/titles/' + $(ui.item).attr('id');
          to='/playlist/titles/' + $(ui.item).index();
-         $.get('/cgi-bin/shift?' + from + "&" + to);
+         $.get('/cgi-bin/move?' + from + "&" + to);
        });
 
        $( "#playlist" ).bind( "sortstop", function(event, ui) {
