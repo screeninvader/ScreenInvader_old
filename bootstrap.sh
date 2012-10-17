@@ -55,7 +55,7 @@ function printUsage() {
   cat 0>&2 <<EOUSAGE
 Bootstrap a ScreenInvader file system.
 
-$0 [-a <arch>][-g <num>][-l <logfile>][-p <apt-cacher-port>][-i -d -u -x] <bootstrapdir>
+$0 [-a <arch>][-g <num>][-l <logfile>][-p <apt-cacher-port>][-c <configfile>][-i -d -u -x] <bootstrapdir>
 Options:
   -a <arch> Bootstrap a system of the given architecture
   -g <num>  Build with selected graphics card
@@ -64,6 +64,7 @@ Options:
   -i        Don't configure and install packages
   -d        Don't debootstrap
   -u        Combined -d and -i
+  -c <file> Specify the config file for non-interactive configuration at first boot
   -x        Install extra packages for debugging
 EOUSAGE
   exit 1
@@ -211,6 +212,10 @@ function doCopy() {
   check "Update plymouth theme" \
     "$CHRT plymouth-set-default-theme -R screeninvader"
 
+  if [ -n "$CONFIG_FILE" ]; then
+    check "Copy config file" \
+      "cp $CONFIG_FILE \"$CHROOT_DIR/setup/answer.sh\""
+  fi
 }
 
 function doCleanupPackages() {
@@ -308,10 +313,11 @@ EOHTML
 
 ###### main
 
-while getopts 'a:l:p:g:idux' c
+while getopts 'a:l:p:g:c:idux' c
 do
   case $c in
     a) ARCH="$OPTARG";;
+    c) CONFIG_FILE="`absPath $OPTARG`";;
     l) BOOTSTRAP_LOG="`absPath $OPTARG`";;
     p) APTCACHER_PORT="$OPTARG";;
     i) NOINSTALL="YES";;
