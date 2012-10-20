@@ -76,7 +76,7 @@ INTERFACE=
 function connectionConf() {
   howconf=$(askNetConnection)
   if [ $? == 0 ]; then
-    $janosh -s /network/connection/value "$howconf"
+    $janosh set /network/connection/value "$howconf"
     if [ "$howconf" == "Wifi" ]; then
       doConf "wireless"
     elif  [ "$howconf" == "Ethernet" ]; then
