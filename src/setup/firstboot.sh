@@ -58,7 +58,7 @@ function makeWifi() {
 }
 
 function doConf() {
-	${1}Conf
+  ${1}Conf
 }
 
 function hostnameConf(){
