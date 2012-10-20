@@ -28,8 +28,8 @@ export HOME=/root
 
 janosh="/lounge/bin/janosh"
 
-sudo -u lounge bash -c "cat /lounge/lounge.json | /lounge/bin/janosh -l"
-cat /root/root.json | $janosh -l
+sudo -u lounge bash -c "/lounge/bin/janosh load /lounge/lounge.json"
+$janosh load /root/root.json
 
 if [ -f ./answer.sh ]; then
   source ./answer.sh
