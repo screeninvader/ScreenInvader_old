@@ -148,7 +148,9 @@ function finish() {
  chown -R lounge:lounge /lounge/
 
  usermod -s /bin/bash root
- $janosh -e makeDefaultInittab
+ 
+ # FIXME: dirty hack to avoid error: set /foo foo
+ $janosh -e makeDefaultInittab set /foo foo
  /sbin/shutdown -r now
 }
 
