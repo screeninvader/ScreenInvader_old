@@ -213,7 +213,7 @@ function doCopy() {
     "$CHRT plymouth-set-default-theme -R screeninvader"
 
   if [ -n "$CONFIG_FILE" ]; then
-    check "Copy config file" \
+    check "Copy firstboot config file" \
       "cp $CONFIG_FILE \"$CHROOT_DIR/setup/answer.sh\""
   fi
 }
@@ -228,7 +228,7 @@ function doCleanupPackages() {
 
 function doCleanupFiles() {
   check "Remove black listed files" \
-              "$CHRT bash -c \"rm -fr $FILES_BLACK\""
+    "$CHRT bash -c \"rm -fr $FILES_BLACK\""
 }
 
 function doPrepareChroot() {
@@ -289,6 +289,11 @@ function doFreeChroot() {
 function doCheckPreCond() {
   check "'debootstrap' installed" \
     "which debootstrap"
+
+  if [ -n "${CONFIG_FILE}" ]; then
+    check "Check firstboot config file" \
+      "[ -f \"${CONFIG_FILE}\" ]"
+  fi
 }
 
 function doCreateBuildHtml() {

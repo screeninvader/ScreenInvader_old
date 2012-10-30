@@ -28,8 +28,8 @@ export HOME=/root
 
 janosh="/lounge/bin/janosh"
 
-sudo -u lounge bash -c "cat /lounge/lounge.json | /lounge/bin/janosh -l"
-cat /root/root.json | $janosh -l
+sudo -u lounge bash -c "/lounge/bin/janosh load /lounge/lounge.json"
+$janosh load /root/root.json
 
 if [ -f ./answer.sh ]; then
   source ./answer.sh
@@ -38,27 +38,27 @@ else
 fi
 
 function makeHostname() {
-  $janosh -t -s /network/hostname "$1"
+  $janosh -t set /network/hostname "$1"
 }
 
 function makeDNS() {
-  $janosh -t -s /network/nameserver "$1"
+  $janosh -t set /network/nameserver "$1"
 }
 
 function makeDHCPNet() {
-  $janosh -e makeNetworkDhcp -s /network/connection/interface "$1"
+  $janosh -e makeNetworkDhcp set /network/connection/interface "$1"
 }
 
 function makeManualNet() {
-  $janosh -e makeNetworkMan -s /network/connection/interface "$1" /network/address "$2" /network/netmask "$3" /network/gateway "$4"
+  $janosh -e makeNetworkMan set /network/connection/interface "$1" /network/address "$2" /network/netmask "$3" /network/gateway "$4"
 }
 
 function makeWifi() {
-  $janosh -t -s /network/connection/interface "$1" /network/wifi/ssid "$2" /network/wifi/encryption/value "$3" /network/wifi/passphrase "$4"
+  $janosh -t set /network/connection/interface "$1" /network/wifi/ssid "$2" /network/wifi/encryption/value "$3" /network/wifi/passphrase "$4"
 }
 
 function doConf() {
-	${1}Conf
+  ${1}Conf
 }
 
 function hostnameConf(){
@@ -76,7 +76,7 @@ INTERFACE=
 function connectionConf() {
   howconf=$(askNetConnection)
   if [ $? == 0 ]; then
-    $janosh -s /network/connection/value "$howconf"
+    $janosh set /network/connection/value "$howconf"
     if [ "$howconf" == "Wifi" ]; then
       doConf "wireless"
     elif  [ "$howconf" == "Ethernet" ]; then
@@ -148,7 +148,9 @@ function finish() {
  chown -R lounge:lounge /lounge/
 
  usermod -s /bin/bash root
- $janosh -e makeDefaultInittab
+ 
+ # FIXME: dirty hack to avoid error: set /foo foo
+ $janosh -e makeDefaultInittab set /foo foo
  /sbin/shutdown -r now
 }
 
