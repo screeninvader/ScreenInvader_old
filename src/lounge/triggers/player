@@ -103,7 +103,7 @@ function jump() {
   idx=$1
   PLLEN="$(janosh size /playlist/items/.)"
   [ $idx -gt $PLLEN ] && idx=$PLLEN
-  file="$(janosh -r get /playlist/items/$idx)"
+  file="$(janosh -r get /playlist/items/#$idx)"
   mplayer_cmd "pause"
   refresh
   janosh set /player/active true
