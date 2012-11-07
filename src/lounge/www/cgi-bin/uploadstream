@@ -28,13 +28,16 @@
   contentType="$(echo $line | grep -iPo 'Content-Type: \K(.*)?(?=)')"
   read 
   if echo $contentType | grep -E "(video|matroska|audio|octet-stream)"; then
-    dd if=/dev/stdin | player loadStdin
+    dd if=/dev/stdin | player loadStdin "$filename"
   else
-    rm /tmp/*
-    tmp="$(mktemp)"
+    tmp="/lounge/www/$(mktemp)"
+    mkdir -p /lounge/www/tmp
     if echo $contentType | fgrep "image"; then
       tmp="$tmp.jpg"  
     fi
+
+    cd /lounge/www/cgi-bin/
+    ./show
 
     dd if=/dev/stdin > "$tmp"
     export QUERY_STRING="http://localhost/tmp/$(basename "$tmp")"
@@ -42,4 +45,3 @@
     cd /lounge/www/cgi-bin/
     ./show
   fi
-
