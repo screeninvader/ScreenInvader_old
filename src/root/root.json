@@ -48,6 +48,7 @@
     "resolution": {
       "choices" : [],
       "value": ""
-    }
+    },
+    "blank":"300"
   }
 }

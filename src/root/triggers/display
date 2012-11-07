@@ -28,6 +28,25 @@ function setResolution() {
   xrandr --output "${DATA[/display/adapter/value]}" --mode "${DATA[/display/resolution/value]}" --primary
 }
 
+function setBlanking() {
+  timeout="${DATA[/display/blank]}"
+  if [ "$timeout" -gt 0 ]; then
+    xset s blank
+    xset s $timeout
+    xset +dpms
+    setterm -blank $[ $timeout / 60 ]
+    setterm -powersave on
+    setterm -powerdown  $[ $timeout / 60 ]
+
+  else
+    xset s off
+    xset -dpms
+    setterm -blank 0
+    setterm -powersave off
+    setterm -powerdown 0
+  fi
+}
+
 function readAvailableAdapters() {
   xrandr -q | grep -Po '^\K(.*)(?= connected)'
 }

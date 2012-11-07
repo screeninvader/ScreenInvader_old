@@ -26,6 +26,9 @@
   "setResolution": [ "display setResolution", [
       "/display/resolution/value"
     ] ],
+  "setBlanking": [ "display setBlanking", [
+      "/display/blank"
+  ] ],
   "reload": [ "reload", [] ],
   "restart": [ "restart", [] ],
   "apply": [ "apply", [] ]
