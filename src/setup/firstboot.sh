@@ -46,11 +46,13 @@ function makeDNS() {
 }
 
 function makeDHCPNet() {
-  $janosh -e makeNetworkDhcp set /network/connection/interface "$1"
+  $janosh set /network/connection/interface "$1"
+  $janosh -e makeNetworkDhcp 
 }
 
 function makeManualNet() {
-  $janosh -e makeNetworkMan set /network/connection/interface "$1" /network/address "$2" /network/netmask "$3" /network/gateway "$4"
+  $janosh set /network/connection/interface "$1" /network/address "$2" /network/netmask "$3" /network/gateway "$4"
+  $janosh -e makeNetworkMan
 }
 
 function makeWifi() {
@@ -150,7 +152,7 @@ function finish() {
  usermod -s /bin/bash root
  
  # FIXME: dirty hack to avoid error: set /foo foo
- $janosh -e makeDefaultInittab set /foo foo
+# $janosh -e makeDefaultInittab set /foo foo
  /sbin/shutdown -r now
 }
 
