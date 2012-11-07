@@ -21,12 +21,13 @@
 export DISPLAY=:0
 export PATH="$PATH:/lounge/bin"
 while [ 0 ]; do
+  sleep 1;
   ADDR="$(getip)"
 
   if [ -z "$ADDR" ]; then
-    notify "No Network" 1 &>/dev/null &
+    notify "No Network" 0 &>/dev/null &
   else
-    notify "http://$ADDR/" 1 &>/dev/null &
+    notify "http://$ADDR/" 0 &>/dev/null &
     exit
   fi
   ADDR=""
