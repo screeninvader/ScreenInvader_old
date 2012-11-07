@@ -24,8 +24,9 @@ sudo -u lounge bash -c "sleep 1; xdotool mousemove 1900 1200"
 setterm -blank 0
 setterm -powersave off
 setterm -powerdown 0
-sudo -u lounge xset s off
-sudo -u lounge xset -dpms
+
+/lounge/bin/janosh -e setBlanking
+
 sudo -u lounge xhost +
 sudo -u lounge /lounge/bin/showip &>/dev/null &
 sudo -u lounge /lounge/bin/player mplayer_start &>/dev/null &
