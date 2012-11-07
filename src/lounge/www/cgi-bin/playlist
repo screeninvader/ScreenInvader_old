@@ -51,7 +51,9 @@
           color="orange"
           class="currentItem"
         fi
-        echo "<li id=\"$id\" class=\"$class\" onclick=\"$.get('cgi-bin/playlist_jump?$i');\" style=\"padding: 2px;text-align:left; cursor: pointer; background-color: $bgcolor; color: $color;  border: 1px outset $bgcolor; font-size: 12px; list-style-type: none; \">$title</li>"
+        echo "<li onclick=\"$.get('cgi-bin/playlist_jump?$i');\" id=\"$id\" class=\"$class\" style=\"padding: 2px;text-align:left; cursor: pointer; background-color: $bgcolor; color: $color;  border: 1px outset $bgcolor; font-size: 12px; list-style-type: none; \">\
+$title</li>"
+# <div onclick=\"$.get('cgi-bin/playlist_remove?$i');\" style=\"float:right;\" class=\"button up\">X</div></li>"
         i=$[ $i + 1 ]
       done
       echo "</ul>"

@@ -21,6 +21,6 @@
 . ./initcgi "text/plain"
 
 MOVE="`echo $QUERY_STRING | sed 's/=/ /g;s/&/ /g;s/%23/#/g'`"
-echo "QS: $QUERY_STRING" >> /tmp/shift
-/lounge/bin/janosh shift $MOVE &>> /tmp/shift
+echo "QS: $QUERY_STRING" 
+/lounge/bin/janosh shift $MOVE
 touch /var/run/player/playlist_cache

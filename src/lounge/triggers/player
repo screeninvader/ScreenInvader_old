@@ -74,7 +74,7 @@ function mplayer_start {
 
   while [ 0 ]; do 
     sleep 1; 
-    bash -c "/usr/bin/mplayer -idle -input file="$CMD_FIFO" 2>&1 | tee /tmp/mplayer | /lounge/bin/player callback"
+    bash -c "/usr/bin/mplayer -idle -input file="$CMD_FIFO" 2>&1 | /lounge/bin/player callback"
  done
 }
 
@@ -117,7 +117,6 @@ function isQueueMode() {
 }
 
 function playlistAdd() {
-(
   playlistEnqueue "$1" "$2" "$3"
   mode=post
   action=Playing
@@ -126,12 +125,10 @@ function playlistAdd() {
      action=Queuing
   fi
   notify "$action: $2"
-set -x
   if [ "`janosh -r get /player/active`" == "false" -o "$mode" == "post" ]; then
     items="`janosh size /playlist/items/.`"
     jump "$[ $items - 1]"
   fi
-) &>/tmp/add
 }
 
 function playlistEnqueue() {
@@ -187,7 +184,6 @@ function previous() {
 }
 
 function next() {
-set -x
   jump "$[ `janosh -r get /playlist/index` + 1 ]"
 }
 
@@ -278,7 +274,7 @@ function eotrack() {
     fi
 
     mplayer_cmd "get_property path"
-  ) &> /tmp/eotrack
+  ) 
 }
 
 function sotrack() {

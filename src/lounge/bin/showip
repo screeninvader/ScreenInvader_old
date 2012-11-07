@@ -28,7 +28,8 @@ while [ 0 ]; do
   if [ -z "$ADDR" ]; then
     notify "No Network" 0 &>/dev/null &
   else
-    notify "$ADDR" 0 &>/dev/null &
+    
+    notify "Wifi: Metalab http://$ADDR/" 0 &>/dev/null &
     exit
   fi
   ADDR=""

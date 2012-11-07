@@ -26,8 +26,6 @@ declare -A OBJ="$(janosh get /browser/.)"
 l_unblank
 
 function open() {
-(
-set -x
   url="${OBJ[/browser/url]}"
   category="${OBJ[/browser/category]}"
   active="browser"
@@ -43,7 +41,6 @@ set -x
 
   janosh set "/image/active" false "/browser/active" false "/animation/active" false
   janosh set "/$active/active" true
-) &>/tmp/browser
 }
 
 function close() {

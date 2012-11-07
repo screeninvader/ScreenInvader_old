@@ -17,9 +17,8 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-
+set -x
 . /lounge/triggers/functions.sh
-
 function selectVideo(){
   info=$(l_urldecode "$1" | sed 's/&url=/\n/g' | sed '1d')
   prefered="large medium small"
@@ -40,5 +39,7 @@ ID="`echo "$1" | sed 's/.*v=//g' | sed 's/&.*$//g'`"
 INFO=$(wget -qO- "http://www.youtube.com/get_video_info?&video_id=$ID&el=detailpage")
 URL="`selectVideo "$INFO"`"
 TITLE=$(l_urldecode "`echo "$INFO" | sed -n 's/\([^&]*&\)*title=\([^&]*\).*/\2/p'`")
+
 echo $URL
 echo $TITLE
+
