@@ -20,16 +20,13 @@
 
 export DISPLAY=:0
 export PATH="$PATH:/lounge/bin"
-set -x
 while [ 0 ]; do
-  sleep 1;
-  ADDR="`/lounge/bin/getip`"
+  ADDR="$(getip)"
 
   if [ -z "$ADDR" ]; then
-    notify "No Network" 0 &>/dev/null &
+    notify "No Network" 1 &>/dev/null &
   else
-    
-    notify "Wifi: Metalab http://$ADDR/" 0 &>/dev/null &
+    notify "http://$ADDR/" 1 &>/dev/null &
     exit
   fi
   ADDR=""

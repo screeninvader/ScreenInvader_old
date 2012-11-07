@@ -18,5 +18,7 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 
-
-/sbin/ifconfig | grep "inet addr" | awk '{ print $2 }' | cut -d":" -f2 | head -n1
+export DISPLAY=:0
+export PATH="$PATH:/lounge/bin"
+INTERFACE="$(janosh get /network/connection/interface)"
+/sbin/ifconfig $INTERFACE | grep -Po 'inet addr:\K.*?(?= )'
