@@ -32,11 +32,11 @@ function setBlanking() {
   timeout="${DATA[/display/blank/value]}"
   if [ "$timeout" -gt 0 ]; then
     xset s blank
-    xset s $timeout
+    xset s $[ $timeout * 60 ]
     xset +dpms
-    setterm -blank $[ $timeout / 60 ]
+    setterm -blank $timeout
     setterm -powersave on
-    setterm -powerdown  $[ $timeout / 60 ]
+    setterm -powerdown $timeout
 
   else
     xset s off
