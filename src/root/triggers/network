@@ -81,12 +81,12 @@ function reload() {
   janosh set /network/hostname "$(readHostname)"
 
   readWiredNics | while read c; do
-    janosh set /network/connection/wired/choices/$i "$c"
+    janosh set "/network/connection/wired/choices/#$i" "$c"
     i=$[$i+1]
   done
 
   readWirelessNics | while read c; do
-    janosh set /network/connection/wireless/choices/$i "$c"
+    janosh set "/network/connection/wireless/choices/#$i" "$c"
     i=$[$i+1]
   done
 }

@@ -29,7 +29,7 @@ function setResolution() {
 }
 
 function setBlanking() {
-  timeout="${DATA[/display/blank]}"
+  timeout="${DATA[/display/blank/value]}"
   if [ "$timeout" -gt 0 ]; then
     xset s blank
     xset s $timeout
@@ -65,22 +65,25 @@ function readCurrentResolution() {
 
 function reload() {
   janosh set /display/resolution/value $(readCurrentResolution)
+  adapter="$(janosh -r get /display/adapter/value)"
   i=0
 
-  readAvailableResolutions "${DATA[/display/adapter/value]}"| while read r; do
-    janosh set /display/resolution/choices/$i "$r"
+  readAvailableAdapters | while read a; do
+    janosh set "/display/adapter/choices/#$i" "$a"
     i=$[$i+1]
   done
 
-  i=0
-  readAvailableAdapters | while read a; do
-    janosh set /display/adapter/choices/$i "$a"
+  [ -z $adapter ] && adapter="$(janosh -r get /display/adapter/choices/#0)"
+
+  readAvailableResolutions "$adapter" | while read r; do
+    janosh set "/display/resolution/choices/#$i" "$r"
     i=$[$i+1]
   done
 }
 
 function apply() {
   setResolution
+  setBlanking
 }
 
 function restart() {

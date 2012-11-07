@@ -21,7 +21,7 @@
 . /root/triggers/env 
 
 FUNCTION="$1"
-declare -A DATA="`janosh get /sound/.`"
+#declare -A DATA="`janosh get /sound/.`"
 
 # just a stub
 

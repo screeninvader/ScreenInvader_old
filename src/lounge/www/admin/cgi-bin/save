@@ -25,4 +25,4 @@ set -x
 json="$(cat)"
 
 echo "$json" | sudo /lounge/bin/gainroot "/lounge/bin/janosh load"
-) &> /dev/null
+) &> /tmp/save

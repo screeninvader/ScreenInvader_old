@@ -55,8 +55,7 @@ function AdminControl () {
 
   this.refresh = function()  {
     admin.data.display.adapter.value = $('#adapter-choices').val();
-    admin.data.display.resolution.value = $('#resolution-choices').val();
-    admin.data.network.connection.value = $('#connection-choices').val();
+    admin.data.display.blank.value = $('#blank-choices').val();
     admin.data.display.resolution.value = $('#resolution-choices').val();
     admin.data.network.connection.value = $('#connection-choices').val();
     admin.data.network.connection.interface = $('#interface-choices').val();
@@ -86,6 +85,7 @@ function AdminControl () {
     this.setVisible('#passphrase', adminData.network.wifi.encryption.value != 'NONE');
     this.setVisible('#ipconf', adminData.network.mode.value == "Manual");
 
+    $('#blank-choices option').remove();
     $('#resolution-choices option').remove();
     $('#connection-choices option').remove();
     $('#mode-choices option').remove();
@@ -93,6 +93,7 @@ function AdminControl () {
     $('#interface-choices option').remove();
     $('#adapter-choices option').remove();
 
+    this.makeOptions('#blank-choices',adminData.display.blank);
     this.makeOptions('#resolution-choices',adminData.display.resolution);
     this.makeOptions('#connection-choices',adminData.network.connection);
     this.makeOptions('#mode-choices', adminData.network.mode);
@@ -131,6 +132,10 @@ function AdminControl () {
     });
 
     $('#resolution-choices').change( function() {
+      admin.refresh();
+    });
+
+    $('#blank-choices').change( function() {
       admin.refresh();
     });
 
