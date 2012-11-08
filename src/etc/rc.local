@@ -1,0 +1,3 @@
+sudo -u lounge /lounge/triggers/sound reload
+
+exit 0
