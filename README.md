@@ -8,7 +8,7 @@ This is what ScreenInvader helps you do: browse the web, watch videos or flip th
 
 #### Get it! #####
 
-Please have a look at the [Getting Started](https://github.com/Metalab/ScreenInvader/wiki/Getting-Started) guide.
+Please checkout the (bit of :)) documentation in the [wiki](ttps://github.com/Metalab/ScreenInvader/wiki/)    and especially the [getting started](https://github.com/Metalab/ScreenInvader/wiki/Getting-Started) guide.
 
 #### Contribute! #####
 
