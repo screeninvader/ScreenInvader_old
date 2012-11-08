@@ -25,9 +25,9 @@ while [ 0 ]; do
   ADDR="$(getip)"
 
   if [ -z "$ADDR" ]; then
-    notify "No Network" 0 &>/dev/null &
+    notify "No Network" 0 &>/dev/null
   else
-    notify "http://$ADDR/" 0 &>/dev/null &
+    notify "http://$ADDR/" 0 &>/dev/null
     exit
   fi
   ADDR=""
