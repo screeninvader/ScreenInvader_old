@@ -78,6 +78,7 @@ function readHostname() {
 
 function reload() {
   i=0
+
   janosh set /network/hostname "$(readHostname)"
 
   readWiredNics | while read c; do
@@ -89,6 +90,10 @@ function reload() {
     janosh set "/network/connection/wireless/choices/#$i" "$c"
     i=$[$i+1]
   done
+
+  restart
+  killall osd
+  sudo -u lounge /lounge/bin/showip &
 }
 
 function restart() {
