@@ -265,7 +265,7 @@ function eotrack() {
     [ -z "$idx" ] && idx=0
     len="$(janosh size /playlist/items/.)"
 
-    if [ $idx -lt $len ]; then
+    if [ $idx -lt $[ $len - 1 ]  ]; then
       jump $[ $idx + 1 ]
     else
       janosh set /player/active false
