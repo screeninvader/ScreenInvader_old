@@ -21,16 +21,13 @@
 export DISPLAY=:0
 
 sudo -u lounge bash -c "sleep 1; xdotool mousemove 1900 1200"
-setterm -blank 0
-setterm -powersave off
-setterm -powerdown 0
-
 /lounge/bin/janosh -e setBlanking
-
+/lounge/bin/janosh -e setResolution
 sudo -u lounge xhost +
 sudo -u lounge /lounge/bin/showip &>/dev/null &
 sudo -u lounge /lounge/bin/player mplayer_start &>/dev/null &
 sudo -u lounge /lounge/bin/player refresh
-exec evilwm -bw 0 -fn "-misc-topaz a500a1000a2000-medium-r-normal--0-240-0-0-c-0-iso8859-1"
+
+exec evilwm -bw 0 -fn "-misc-topaz a500a1000a2000-medium-r-normal--0-240-0-0-c-0-iso8859-1"  -app midori -g "$(/lounge/bin/janosh -r get /display/resolution/value)"+0+0
 #exec evilwm -fn "-misc-topaz a500a1000a2000-medium-r-normal--0-240-0-0-c-0-iso8859-1"
 
