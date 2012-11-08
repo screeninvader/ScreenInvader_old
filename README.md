@@ -1,11 +1,10 @@
 ![The mighty ScreenInvader](http://metalab.github.com/ScreenInvader/images/logo.png)
 
 # ScreenInvader
-## A shared media experience. Instant and seamless.
+## Feed the screen - together.
 
-Ever wished you could play media content from your notebook or smart phone on a TV/screen/projector in an instance?
-Just surf the web, watch video tubes or browse images the way you usually do while being just a click away from presenting it on your TV?
-That's what the ScreenInvader is doing for you and your friends.
+Ever wished you could play media content from your laptop or smart phone on a TV set, screen or projector in just an instant? 
+This is what ScreenInvader helps you do: browse the web, watch videos or flip through images together with your friends on a big screen with just a few simple clicks.     	
 
 #### Get it! #####
 
