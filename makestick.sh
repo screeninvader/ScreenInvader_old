@@ -53,7 +53,7 @@ export BOOTSTRAP_LOG="makestick.log"
 source "$MAKEPARTITION_DIR/.functions.sh"
 
 WRITE_ZEROES=
-SIZES=500
+SIZE=500
 
 while getopts 'zs:' c
 do
