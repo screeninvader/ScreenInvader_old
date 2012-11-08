@@ -51,7 +51,13 @@ function l_notify() {
   arg="$1"
   title=${arg:0:48}
   killall osd
-  /lounge/bin/osd -t "$timeout" "$title" &
+  width="$(janosh -r get /display/resolution/value | cut -d"x" -f1)"
+  if[ $width -gt 1280 ]; then
+    fontsize=400;
+  else
+    fontsize=240;
+  fi  
+  /lounge/bin/osd -f  "-misc-topaz a500a1000a2000-medium-r-normal--0-${fontsize}-0-0-c-0-iso8859-1" -t "$timeout" "$title" &
   disown
 }
 export -f l_unblank l_notify l_urldecode
