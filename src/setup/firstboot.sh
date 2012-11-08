@@ -150,6 +150,8 @@ function finish() {
  chown -R lounge:lounge /lounge/
 
  usermod -s /bin/bash root
+
+ sudo -u lounge "/lounge/triggers/sound reload"
  
  # FIXME: dirty hack to avoid error: set /foo foo
 # $janosh -e makeDefaultInittab set /foo foo
