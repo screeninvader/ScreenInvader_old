@@ -3,3 +3,4 @@
 /root/triggers/storage apply
 /root/triggers/display apply
 
+/etc/init.d/xserver restart

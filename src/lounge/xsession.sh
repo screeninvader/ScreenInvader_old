@@ -21,8 +21,7 @@
 export DISPLAY=:0
 
 sudo -u lounge bash -c "sleep 1; xdotool mousemove 1900 1200"
-/lounge/bin/janosh -e setBlanking
-/lounge/bin/janosh -e setResolution
+/root/triggers/display apply
 sudo -u lounge xhost +
 sudo -u lounge /lounge/bin/showip &>/dev/null &
 sudo -u lounge /lounge/bin/player mplayer_start &>/dev/null &

@@ -64,7 +64,7 @@ function readCurrentResolution() {
 } 
 
 function reload() {
-  janosh set /display/resolution/value $(readCurrentResolution)
+#  janosh set /display/resolution/value $(readCurrentResolution)
   adapter="$(janosh -r get /display/adapter/value)"
   i=0
 
