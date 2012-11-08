@@ -11,6 +11,7 @@ iptables
 wmctrl
 vim-tiny
 vim-common
+vim-runtime
 traceroute
 netcat-traditional
 iputils-ping
