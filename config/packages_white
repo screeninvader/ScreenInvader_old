@@ -17,7 +17,6 @@ xserver-xorg-input-kbd
 xserver-xorg-input-mouse
 x11-xserver-utils
 locate
-plymouth
 kbd
 v86d
 wireless-tools

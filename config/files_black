@@ -6,9 +6,6 @@
 /usr/share/zoneinfo/*
 /usr/share/icons/*
 /root/.bash_history
-/lib/modules/*/kernel/drivers/infiniband/*
-/lib/modules/*/kernel/drivers/bluetooth/*
-/lib/modules/*/kernel/drivers/media/*
 /var/cache/debconf*
 /usr/share/doc-base/*
 /usr/share/fonts/*

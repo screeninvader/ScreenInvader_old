@@ -22,7 +22,7 @@ function getConf() {
   cat "$1" | tr "\n" " "
 }
 
-KERNEL="`getConf config/kernel`"
+#KERNEL="`getConf config/kernel`"
 VIDEO_DRIVERS="`getConf config/video_drivers`"
 KEYRINGS="`getConf config/keyrings`"
 PKG_WHITE="`getConf config/packages_white`"
@@ -42,7 +42,7 @@ DEBIAN_MULTIMEDIA_MIRROR="http://www.deb-multimedia.org/"
 dir="`dirname $0`"
 BOOTSTRAP_DIR="`cd $dir; pwd`"
 BOOTSTRAP_LOG="$BOOTSTRAP_DIR/bootstrap.log"
-ARCH=i386
+ARCH=armel
 APTCACHER_PORT=
 NOINSTALL=
 NODEBOOT=
@@ -137,8 +137,10 @@ function doDebootstrap() {
     HOST="`echo $BOOTSTRAP_MIRROR | sed 's/^http*:\/\///g' | sed 's/\/.*$//g'`"
     echo "http://127.0.0.1:$APTCACHER_PORT/$HOST/debian"
   )
+
  check "Bootstrap debian" \
-    "debootstrap --exclude="`echo $PKG_BLACK | sed 's/ /,/g'`" --arch $ARCH squeeze "$CHROOT_DIR" $BOOTSTRAP_MIRROR"
+   "debootstrap --exclude="`echo $PKG_BLACK | sed 's/ /,/g'`" --arch $ARCH squeeze "$CHROOT_DIR" $BOOTSTRAP_MIRROR"
+
 }
 
 function doPackageConf() {
@@ -171,8 +173,8 @@ function doPackageConf() {
   check "Install sid packages" \
      "$CHRT $APTNI -t sid-grip install $PKG_SID"
 
-  check "Install kernel" \
-    "$CHRT $APTNI -t squeeze install $KERNEL"
+#  check "Install kernel" \
+#    "$CHRT $APTNI -t squeeze install $KERNEL"
 
   check "Upgrade packages" \
     "$CHRT $APTNI upgrade"
@@ -194,9 +196,6 @@ function doCopy() {
   check "Sync setup changes" \
     "cd $BOOTSTRAP_DIR/src; rsync -axh --delete setup $CHROOT_DIR/"
 
-  check "Copy plymouth theme" \
-    "cp -a $BOOTSTRAP_DIR/themes/screeninvader $CHROOT_DIR/usr/share/plymouth/themes/"
-
   check "Copy xosd lib" \
     "cp -a $BOOTSTRAP_DIR/build/xosd-2.2.14/src/libxosd/.libs/libxosd.so.2.2.14 $CHROOT_DIR/usr/lib/"
 
@@ -208,9 +207,6 @@ function doCopy() {
 
   check "Copy janosh binary"  \
     "cp -a $BOOTSTRAP_DIR/build/janosh $CHROOT_DIR/lounge/bin/"
-
-  check "Update plymouth theme" \
-    "$CHRT plymouth-set-default-theme -R screeninvader"
 
   if [ -n "$CONFIG_FILE" ]; then
     check "Copy firstboot config file" \
