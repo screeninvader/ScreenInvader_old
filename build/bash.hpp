@@ -1,10 +1,11 @@
 #ifndef _JANOSH_BASH_HPP
 #define _JANOSH_BASH_HPP
 
-#include "dbpath.hpp"
+#include "record.hpp"
 #include <string>
 #include <stack>
 #include <iostream>
+#include <boost/algorithm/string.hpp>
 
 using std::string;
 using std::cerr;
@@ -19,16 +20,16 @@ namespace janosh {
         out(out){
     }
 
-    void beginArray(const string& key, bool first) {
+    void beginArray(const Path& p, bool first) {
     }
 
-    void endArray(const string& key) {
+    void endArray(const Path& p) {
     }
 
-    void beginObject(const string& key, bool first) {
+    void beginObject(const Path& p, bool first) {
     }
 
-    void endObject(const string& key) {
+    void endObject(const Path& p) {
     }
 
     void begin() {
@@ -39,10 +40,12 @@ namespace janosh {
       out << ")" << endl;
     }
 
-    void record(const string& key, const string& value, bool array, bool first) {
+    void record(const Path& p, const string& value, bool array, bool first) {
         string stripped = value;
         replace(stripped.begin(), stripped.end(), '\n', ' ');
-        out  << '[' << key << "]='" << stripped << "' ";
+        boost::algorithm::replace_all(stripped, "&",  "&#39;");
+
+        out  << '[' << p.pretty() << "]='" << stripped << "' ";
     }
   };
 }

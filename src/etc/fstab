@@ -1,5 +1,7 @@
-rootfs / rootfs defaults,data=writeback,noatime,nodiratime 0 1
-none /var/log/ tmpfs rw,noatime       0 0
-none /var/run/ tmpfs rw,noatime       0 0
-none /tmp/     tmpfs rw,noatime       0 0
-
+/dev/mmcblk0p1  /  ext4  defaults,noatime 0 0
+/dev/mmcblk0p3  /boot  vfat  defaults,noatime 0 0
+/dev/mmcblk1p3  swap  swap  defaults,noatime 0 0
+devpts     /dev/pts  devpts  gid=5,mode=620   0 0
+tmpfs      /dev/shm  tmpfs   defaults         0 0
+proc       /proc     proc    defaults         0 0
+sysfs      /sys      sysfs   defaults         0 0

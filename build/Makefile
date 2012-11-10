@@ -1,9 +1,9 @@
     TARGET  := janosh 
-    SRCS    := janosh.cpp Logger.cpp tri_logger/tri_logger.cpp
+    SRCS    := janosh.cpp Logger.cpp tri_logger/tri_logger.cpp record.cpp
     OBJS    := ${SRCS:.cpp=.o} 
     DEPS    := ${SRCS:.cpp=.dep} 
 
-    CXXFLAGS = -std=c++0x -I/usr/local/include/ -Os -Wall -DETLOG
+    CXXFLAGS = -std=c++0x -I/usr/include/ -I/usr/local/include/ -Os -Wall -DETLOG
     LDFLAGS = -s 
     LIBS    = -Wl,-Bstatic -lboost_system -lboost_filesystem -L/usr/local/lib /usr/local/lib/libjson_spirit.a -Wl,-Bdynamic -lkyotocabinet
 

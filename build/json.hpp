@@ -1,7 +1,7 @@
 #ifndef _JANOSH_JSON_HPP
 #define _JANOSH_JSON_HPP
 
-#include "dbpath.hpp"
+#include "record.hpp"
 #include <string>
 #include <stack>
 #include <iostream>
@@ -26,15 +26,24 @@ namespace janosh {
 
     std::ostream& out;
     std::stack<Frame> hierachy;
-
+    const string escape(const string& s) {
+      size_t index = 0;
+      string ns = s;
+      while (true) {
+           index = ns.find("\"", index);
+           if (index == string::npos) break;
+           ns.replace(index, 1, "\\\"");
+           index+=2;
+      }
+      return ns;
+    }
   public:
     JsonPrintVisitor(std::ostream& out) :
         out(out){
     }
 
-    void beginArray(const string& key, bool first) {
-      DBPath p(key);
-      string name = p.name();
+    void beginArray(const Path& p, bool first) {
+      string name = p.name().pretty();
 
       if (!first) {
         this->out << ',' << endl;
@@ -43,16 +52,15 @@ namespace janosh {
       if (name.length() == 0)
         this->out << "[ " << endl;
       else
-        this->out << '"' << name.erase(0, 1) << "\": [ " << endl;
+        this->out << '"' << name << "\": [ " << endl;
     }
 
-    void endArray(const string& key) {
+    void endArray(const Path& p) {
       this->out << " ] " << endl;
     }
 
-    void beginObject(const string& key, bool first) {
-      DBPath p(key);
-      string name = p.name();
+    void beginObject(const Path& p, bool first) {
+      string name = p.name().pretty();
 
       if (!first) {
         this->out << ',' << endl;
@@ -61,38 +69,36 @@ namespace janosh {
       if (name.length() == 0)
         this->out << "{ " << endl;
       else
-        this->out << '"' << name.erase(0, 1) << "\": { " << endl;
+        this->out << '"' << name << "\": { " << endl;
     }
 
-    void endObject(const string& key) {
+    void endObject(const Path& p) {
       this->out << " } " << endl;
     }
 
-    void record(const string& key, const string& value, bool array, bool first) {
-      DBPath p(key);
-      string name = p.name();
+    void record(const Path& p, const string& value, bool array, bool first) {
+      string name = p.name().pretty();
+      string jsonValue = escape(value);
 
       if (array) {
         if (!first) {
           this->out << ',' << endl;
         }
 
-        this->out << '\"' << value << '\"';
+        this->out << '\"' << jsonValue << '\"';
       } else {
         if (!first) {
           this->out << ',' << endl;
         }
 
-        this->out << '"' << name.erase(0, 1) << "\":\"" << value << "\"";
+        this->out << '"' << name << "\":\"" << jsonValue << "\"";
       }
     }
 
     void begin() {
-      this->out << "{" << endl;
     }
 
     void close() {
-      this->out << "}" << endl;
     }
   };
 }

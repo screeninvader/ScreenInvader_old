@@ -10,222 +10,139 @@
 #include <boost/smart_ptr.hpp>
 #include <kcpolydb.h>
 #include "Logger.hpp"
-
-using std::string;
+#include <bitset>
 
 namespace janosh {
   namespace kc = kyotocabinet;
-  enum EntryType {
-    Array,
-    Object,
-    Value
-  };
+  typedef kc::DB::Cursor Cursor;
 
+  struct Component {
+      string _key;
+      string _pretty;
 
-  class DBPath {
+      const string keyEncodeIndex(const size_t& n) const {
+        using namespace std;
+        return bitset<std::numeric_limits<size_t>::digits>(n).to_string<char, char_traits<char>, allocator<char> >();
+      }
+
+      const size_t keyDecodeIndex(const string& s) const {
+        return std::bitset<std::numeric_limits<size_t>::digits>(s).to_ulong();
+      }
+
+    public:
+      Component() {}
+
+      Component(const string& c) {
+        if(!c.empty()) {
+          if(c.at(0) == '#') {
+            size_t i = boost::lexical_cast<size_t>(c.substr(1));
+            this->_key = "$" + keyEncodeIndex(i);
+            this->_pretty = "#" + boost::lexical_cast<string>(i);
+          } else if(c.at(0) == '$') {
+            const string enc = c.substr(1);
+            size_t dec = keyDecodeIndex(enc);
+            this->_key = "$" + enc;
+            this->_pretty = "#" + boost::lexical_cast<string>(dec);
+          } else if(c.at(0) == '.'){
+            this->_key = "!";
+            this->_pretty = c;
+          } else if(c.at(0) == '!'){
+            this->_key = "!";
+            this->_pretty = ".";
+          } else {
+            this->_key = c;
+            this->_pretty = this->_key;
+          }
+        }
+      }
+
+      bool operator==(const Component& other) const {
+        return this->key() == other.key();
+      }
+
+      bool operator!=(const Component& other) const {
+        return !(*this == other);
+      }
+
+      bool operator<(const Component& other) const {
+        return this->key() <  other.key();
+      }
+
+      bool isIndex() {
+        return _pretty.at(0) == '#';
+      }
+
+      bool isValid() {
+        return !_pretty.empty() && !_key.empty();
+      }
+
+      bool isDirectory() {
+        return _pretty == ".";
+      }
+
+      bool isWildcard() {
+        return _pretty == "*";
+      }
+
+      const string& key() const {
+        return this->_key;
+      }
+
+      const string& pretty() const {
+        return this->_pretty;
+      }
+
+    /*  operator string() const {
+        return this->key();
+      }*/
+    };
+
+  class Path {
     string keyStr;
-    string valueStr;
-
-    bool hasKey;
-    bool hasValue;
-
-    std::vector<string> components;
-    bool container;
+    string prettyStr;
+    std::vector<Component> components;
+    bool directory;
     bool wildcard;
-    bool doesExist;
 
     string compilePathString() const {
       std::stringstream ss;
 
       for (auto it = this->components.begin(); it != this->components.end(); ++it) {
-        ss << *it;
+        ss << '/' << (*it).key();
       }
       return ss.str();
     }
-  public:
-    static kc::TreeDB db;
 
-    class Cursor : private boost::shared_ptr<kc::DB::Cursor> {
-      typedef  boost::shared_ptr<kc::DB::Cursor> parent;
+public:
+    Path() :
+      directory(false),
+      wildcard(false)
+    {}
 
-      kc::DB::Cursor* getCursorPtr() {
-        return parent::operator->();
-      }
-    public:
-      Cursor() :
-        parent()
-      {};
-
-      Cursor(kc::DB::Cursor* cur) : parent(cur) {
-      }
-
-      Cursor(const DBPath& path) :
-        parent(DBPath::db.cursor()) {
-
-        if(path.isWildcard()) {
-          parent::operator->()->jump(path.basePath());
-          parent::operator->()->step();
-        } else if(path.isRoot()) {
-          parent::operator->()->jump();
-        } else {
-          parent::operator->()->jump(path.key());
-        }
-      }
-
-      bool isValid() {
-        return (*this) != NULL;
-      }
-
-      bool remove() {
-        assert(isValid());
-        return getCursorPtr()->remove();
-      }
-
-      bool setValue(const string& v) {
-        assert(isValid());
-        return getCursorPtr()->set_value_str(v);
-      }
-
-      bool get(string& k, string& v) {
-        assert(isValid());
-        return getCursorPtr()->get(&k,&v);
-      }
-
-      bool jump(const string& k) {
-        assert(isValid());
-        if(getCursorPtr()->jump(k)) {
-          string rkey;
-          getKey(rkey);
-          return rkey == k;
-        } else
-          return false;
-      }
-
-      bool jump_back(const string& k) {
-        assert(isValid());
-        return getCursorPtr()->jump_back(k);
-      }
-
-      bool getValue(string& v) {
-        assert(isValid());
-        return getCursorPtr()->get_value(&v);
-      }
-
-      bool getKey(string& v) {
-        assert(isValid());
-        return getCursorPtr()->get_key(&v);
-      }
-
-      bool step() {
-        assert(isValid());
-        return getCursorPtr()->step();
-      }
-
-      bool step_back() {
-        assert(isValid());
-        return getCursorPtr()->step_back();
-      }
-
-      bool next() {
-        assert(isValid());
-        DBPath p(*this);
-
-        if(p.isContainer()) {
-          bool success = this->step();
-          size_t s = p.getSize();
-
-          for(size_t i = 0; success && i < s; ++i) {
-            success &= this->step();
-          }
-
-          LOG_DEBUG_MSG("next", p.key() + "->" + DBPath(*this).key());
-          return success;
-        } else {
-          bool success = this->step();
-          LOG_DEBUG_MSG("next", p.key() + "->" + DBPath(*this).key());
-          return success;
-        }
-      }
-
-      bool previous() {
-        assert(isValid());
-        DBPath p(*this);
-        DBPath parent = p.parent();
-
-        DBPath prev;
-        DBPath prevParent;
-
-        do {
-          if(!this->step_back())
-            return false;
-          prev = *this;
-          prevParent = prev.parent();
-        } while(prevParent != parent && parent.above(prev));
-        return true;
-      }
-    };
-
-    DBPath(const char* path) :
-        hasKey(false),
-        hasValue(false),
-        container(false),
-        wildcard(false),
-        doesExist(false) {
+    Path(const char* path) :
+        directory(false),
+        wildcard(false) {
       update(path);
     }
 
-    DBPath(const string& strPath) :
-        hasKey(false),
-        hasValue(false),
-        container(false),
-        wildcard(false),
-        doesExist(false) {
+    Path(const string& strPath) :
+        directory(false),
+        wildcard(false) {
       update(strPath);
     }
 
-    DBPath(Cursor& cur):
-        hasKey(false),
-        hasValue(false),
-        container(false),
-        wildcard(false),
-        doesExist(false) {
-      read(cur);
-    }
-
-    DBPath() :
-      hasKey(false),
-      hasValue(false),
-      container(false),
-      wildcard(false),
-      doesExist(false){
-    }
-
-    DBPath(const DBPath& other) {
-      keyStr = other.keyStr;
-      valueStr = other.valueStr;
-      hasKey = other.hasKey;
-      hasValue = other.hasValue;
-      container = other.container;
-      wildcard = other.wildcard;
-      doesExist = other.doesExist;
-      components = other.components;
-    }
-
-    void clear() {
-      this->keyStr.clear();
-      this->valueStr.clear();
-      this->hasKey=false;
-      this->hasValue=false;
-      this->container=false;
-      this->wildcard=false;
-      this->container=false;
-      this->components.clear();
+    Path(const Path& other) {
+      this->keyStr = other.keyStr;
+      this->prettyStr = other.prettyStr;
+      this->directory = other.directory;
+      this->wildcard = other.wildcard;
+      this->components = other.components;
     }
 
     void update(const string& p) {
       using namespace boost;
       if(p.empty()) {
-        this->clear();
+        this->reset();
         return;
       }
 
@@ -247,171 +164,86 @@ namespace janosh {
             LOG_ERR_MSG("Illegal Path", p);
             exit(1);
           }
-          this->components.push_back('/' + c);
+          this->components.push_back(Component(c));
         }
 
-        this->keyStr = p;
-        this->hasKey = true;
-        this->container = !this->components.empty() && this->components.back() == "/.";
-        this->wildcard =  !this->components.empty() && this->components.back() == "/*";
+        this->keyStr.clear();
+        this->prettyStr.clear();
+        for(auto it = this->components.begin(); it != this->components.end(); ++it) {
+          this->keyStr+= "/" + (*it).key();
+          this->prettyStr+= "/" + (*it).pretty();
+        }
+
+        this->directory = !this->components.empty() && this->components.back().isDirectory();
+        this->wildcard = !this->components.empty() && this->components.back().isWildcard();
       } else {
-        clear();
+        reset();
       }
     }
 
-    const bool isContainer() const {
-      return this->container;
+    operator string() const {
+      return this->key();
     }
 
-    const bool isArray() const {
-      return this->getType() == Array;
+    bool operator<(const Path& other) const {
+      return this->key() < other.key();
     }
 
-    const bool isValue() const {
-      return !this->isContainer() || this->getType() == Value;
+    bool operator==(const string& other) const {
+      return this->keyStr == other;
     }
 
-    const bool isObject() const {
-      return this->getType() == Object;
+    bool operator==(const Path& other) const {
+      return this->keyStr == other.keyStr;
+    }
+
+    const string key() const {
+      return this->keyStr;
+    }
+
+    const string pretty() const {
+      return this->prettyStr;
     }
 
     const bool isWildcard() const {
       return this->wildcard;
     }
 
-    const bool isComplete() const {
-      return hasValue;
+    const bool isDirectory() const {
+      return this->directory;
     }
 
-    const bool exists() const {
-      return this->doesExist;
-    }
-
-    const bool empty() const {
-      return !hasKey;
-    }
-
-    const string& val() const {
-      assert(isComplete());
-      return this->valueStr;
-    }
-
-    DBPath prune(Cursor cur = Cursor()) {
-      if(!isComplete()) {
-        if(!read(getCursor(cur)).isValid()) {
-          this->doesExist = false;
-        }
-      }
-
-      return *this;
-    }
-
-    Cursor getCursor(Cursor cur = Cursor()) {
-      if(this->empty()) {
-        return Cursor();
-      } else if(!cur.isValid()) {
-        cur = Cursor(DBPath::db.cursor());
-      }
-
-      if(this->isWildcard()) {
-        if(!cur.jump(this->basePath() + "/."))
-          return Cursor();
-
-        if(!cur.step())
-          return Cursor();
-      } else {
-        if(!cur.jump(this->key()))
-          return Cursor();
-      }
-
-      return cur;
-    }
-
-    DBPath makeDirectoryPath() {
-      return DBPath(this->basePath() + "/.");
-    }
-
-    DBPath makeWildcardPath() {
-      return DBPath(this->basePath() + "/*");
-    }
-
-    DBPath makeChildPath(const string& name) {
-      return DBPath(this->basePath() + '/' + name);
-    }
-
-    DBPath makeChildPath(const size_t& i) {
-      return DBPath(this->basePath() + '/' + boost::lexical_cast<string>(i));
-    }
-
-    Cursor read(Cursor cur = Cursor()) {
-      if(this->empty()) {
-        if(!cur.isValid()) {
-          return Cursor();
-        }
-        string k;
-        if(cur.get(k,valueStr)) {
-          this->hasValue = true;
-          this->doesExist = true;
-          update(k);
-        } else {
-          this->hasKey = false;
-          this->hasValue = false;
-          this->doesExist = false;
-          return Cursor();
-        }
-      } else {
-        if (!cur.isValid()) {
-          string k;
-          cur = Cursor(DBPath::db.cursor());
-          cur.jump(this->keyStr);
-          cur.getKey(k);
-          if (k == this->keyStr && cur.getValue(this->valueStr)) {
-            this->hasValue = true;
-            this->doesExist = true;
-            update(k);
-          } else {
-            this->doesExist = false;
-            return Cursor();
-          }
-        } else if (cur.getValue(this->valueStr)) {
-          this->hasValue = true;
-          this->doesExist = true;
-        } else {
-          this->doesExist = false;
-          return Cursor();
-        }
-      }
-
-      return cur;
+    bool isEmpty() const {
+      return this->keyStr.empty();
     }
 
     bool isRoot() const {
-      return this->key() == "/.";
+      return this->prettyStr == "/.";
     }
 
-    const string& key() const {
-      return this->keyStr;
+    Path asDirectory() const {
+      return Path(this->basePath().key() + "/!");
     }
 
-    bool operator<(const DBPath& other) const {
-      return this->key() < other.key();
+    Path asWildcard() const {
+      return Path(this->basePath().key() + "/*");
     }
 
-    bool operator==(const DBPath& other) const {
-      return this->key() == other.key();
+    Path withChild(const Component& c) const{
+      return Path(this->basePath().key() + '/' + c.key());
     }
 
-    bool operator!=(const DBPath& other) const {
-      return this->key() != other.key();
+    Path withChild(const size_t& i) const {
+      return Path(this->basePath().key() + "/#" + boost::lexical_cast<string>(i));
     }
 
     void pushMember(const string& name) {
-      components.push_back((boost::format("/%s") % name).str());
+      components.push_back((boost::format("%s") % name).str());
       update(compilePathString());
     }
 
     void pushIndex(const size_t& index) {
-      components.push_back((boost::format("/%d") % index).str());
+      components.push_back((boost::format("#%d") % index).str());
       update(compilePathString());
     }
 
@@ -420,94 +252,74 @@ namespace janosh {
       if(doUpdate) update(compilePathString());
     }
 
-    string basePath() const {
-      if(isContainer() || isWildcard()) {
-        return this->keyStr.substr(0, this->keyStr.size() - 2);
+    Path basePath() const {
+      if(isDirectory() || isWildcard()) {
+        return Path(this->keyStr.substr(0, this->keyStr.size() - 2));
       } else {
-        return this->key();
+        return Path(*this);
       }
     }
 
-    string name() const {
+    Component name() const {
       size_t d = 1;
 
-      if(isContainer())
+      if(isDirectory())
         ++d;
 
       if(components.size() >= d)
-        return *(components.end() - d);
+        return (*(components.end() - d));
       else
-        return "";
+        return Component();
     }
 
     size_t parseIndex() const {
-        return boost::lexical_cast<size_t>(this->name().substr(1));
+        return boost::lexical_cast<size_t>(this->name().pretty().substr(1));
     }
 
-    DBPath parent() const {
-      DBPath parent(this->basePath());
-      if(!parent.empty())
+    Path parent() const {
+      Path parent(this->basePath());
+      if(!parent.isEmpty() && !this->isWildcard())
         parent.pop(false);
       parent.pushMember(".");
 
       return parent;
     }
 
-    string parentName() const {
+    Component parentName() const {
       size_t d = 2;
-      if(isContainer())
+      if(isDirectory())
         ++d;
 
       if(components.size() >= d)
-        return *(components.end() - d);
+        return (*(components.end() - d)).key();
       else
-        return "";
+        return Component();
     }
 
     string root() const {
-      return components.front();
+      return components.front().key();
     }
 
-    const EntryType getType()  const {
-      if(this->isContainer()) {
-        assert(isComplete());
-        char c = valueStr.at(0);
-        if(c == 'A') {
-          return Array;
-        } else if(c == 'O') {
-          return Object;
-        } else {
-          assert(!"Unknown container descriptor");
-        }
-      }
-
-      return Value;
+    void reset() {
+      this->keyStr.clear();
+      this->prettyStr.clear();
+      this->components.clear();
+      this->directory = false;
+      this->wildcard = false;
     }
 
-    const size_t getSize() const {
-      assert(isComplete());
-
-      if(this->isContainer()) {
-        return boost::lexical_cast<size_t>(valueStr.substr(1));
-      } else {
-        return 0;
-      }
-
-
-    }
-
-    bool above(const DBPath& other) const {
+    bool above(const Path& other) const {
       if(other.components.size() >= this->components.size() ) {
         size_t depth = this->components.size();
-        if(this->isContainer()) {
+        if(this->isDirectory()) {
           depth--;
         }
 
         size_t i;
         for(i = 0; i < depth; ++i) {
 
-          const string& tc = this->components[i];
-          const string& oc = other.components[i];
+          const string& tc = this->components[i].key();
+          const string& oc = other.components[i].key();
 
           if(oc != tc) {
             return false;
@@ -521,8 +333,395 @@ namespace janosh {
     }
   };
 
-  typedef DBPath::Cursor Cursor;
+  class Value {
+  public:
+    enum Type {
+      Null,
+      String,
+      Array,
+      Object,
+      Range
+    };
+
+    Value() : strObj(), type(Null), initalized(false) {}
+
+    Value(Type t) :
+      initalized(true) {
+      init("", t == String);
+    }
+
+    Value(const string& v, Type t) :
+      initalized(true) {
+      init(v, t == String);
+    }
+
+    Value(const string v, bool dir) :
+      initalized(true) {
+      init(v, !dir);
+    }
+
+    Value(const Value& other) {
+      this->strObj = other.strObj;
+      this->type = other.type;
+      this->size = other.size;
+      this->initalized = other.initalized;
+    }
+
+    bool isInitialized() const {
+      return initalized;
+    }
+
+    bool isEmpty() const {
+      return strObj.empty();
+    }
+
+    void reset() {
+      this->strObj.clear();
+      this->initalized = false;
+    }
+
+    const string& str() const {
+      assert(initalized);
+      return this->strObj;
+    }
+
+    operator string() const {
+      assert(initalized);
+      return this->strObj;
+    }
+
+    operator string() {
+      assert(initalized);
+      return this->strObj;
+    }
+
+    const Type getType()  const {
+      assert(isInitialized());
+      assert(!isEmpty());
+
+      return this->type;
+    }
+
+    const size_t getSize() const {
+      assert(isInitialized());
+      assert(!isEmpty());
+
+      return this->size;
+    }
+private:
+    void init(const string& v, bool value) {
+      if(!value) {
+        char c = v.at(0);
+        if(c == 'A') {
+          this->type = Array;
+        } else if(c == 'O') {
+          this->type = Object;
+        } else {
+          assert(!"Unknown directory descriptor");
+        }
+
+        this->size = boost::lexical_cast<size_t>(v.substr(1));
+      } else {
+        this->type = Type::String;
+        this->size = 1;
+      }
+
+      this->strObj = v;
+    }
+    string strObj;
+    Type type;
+    size_t size;
+    bool initalized;
+  };
+
+  class Record : private boost::shared_ptr<kc::DB::Cursor> {
+    typedef  boost::shared_ptr<kc::DB::Cursor> Base;
+
+    Path pathObj;
+    Value valueObj;
+    bool doesExist;
+
+    void init(const Path path) {
+      if(path.isWildcard()) {
+        if(this->jump(path.asDirectory())) {
+          this->doesExist = true;
+          this->pathObj = path;
+          assert(this->readValue());
+          getCursorPtr()->step();
+        } else {
+          this->doesExist = false;
+        }
+      } else if(path.isRoot()) {
+        getCursorPtr()->jump("/!");
+        this->pathObj = path;
+        assert(this->readValue());
+        this->doesExist = true;
+      } else {
+        if(this->jump(path)) {
+          this->doesExist = true;
+          assert(this->readValue());
+        } else {
+          this->doesExist = false;
+        }
+        this->pathObj = path;
+      }
+    }
+  public:
+    static kc::TreeDB db;
+
+    //exact copy referring to the same Cursor*
+    Record(const Record& other) :
+      Base(other),
+      pathObj(other.pathObj),
+      valueObj(other.valueObj),
+      doesExist(other.doesExist) {}
+
+    //clone the cursor position not the Cursor*
+    Record clone() {
+      return Record(this->path());
+    }
+
+    Record(const Path& path) :
+      Base(Record::db.cursor()),
+      pathObj(path),
+      doesExist(false)
+    {}
+
+    Record() : Base(),
+      doesExist(false){
+    }
+
+    kc::DB::Cursor* getCursorPtr() {
+      return Base::operator->();
+    }
+  public:
+    const Value::Type getType()  const {
+      if(this->isDirectory()) {
+        assert(this->hasData());
+        return value().getType();
+      }
+
+      return Value::String;
+    }
+
+    const size_t getSize() const {
+      assert(hasData());
+      return value().getSize();
+    }
+
+    const size_t getIndex() const {
+      assert(isInitialized());
+      return path().parseIndex();
+    }
+
+    bool remove() {
+      assert(isInitialized());
+      assert(getCursorPtr()->remove());
+      this->clear();
+      readPath();
+      return true;
+    }
+
+    bool setValue(const string& v) {
+      assert(isInitialized());
+      return getCursorPtr()->set_value_str(v);
+    }
+
+    bool get(string& k, string& v) {
+      assert(isInitialized());
+      return getCursorPtr()->get(&k,&v);
+    }
+
+    bool jump(const Path& p) {
+      assert(isInitialized());
+      if(getCursorPtr()->jump(p.key())) {
+        readPath();
+        return this->path() == p;
+      } else
+        return false;
+    }
+
+    bool jump_back(const Path& p) {
+      assert(isInitialized());
+      return getCursorPtr()->jump_back(p.key());
+    }
+
+    bool step() {
+      assert(isInitialized());
+      bool r = getCursorPtr()->step();
+      if(r) {
+        this->clear();
+        readPath();
+      }
+      return r;
+    }
+
+    bool step_back() {
+      assert(isInitialized());
+      bool r = getCursorPtr()->step_back();
+      if(r) {
+        this->clear();
+        readPath();
+      }
+      return r;
+    }
+
+    bool next() {
+      assert(isInitialized());
+      bool success;
+
+      if(this->isDirectory()) {
+        size_t s = this->getSize();
+        success = this->step();
+
+        for(size_t i = 0; success && i < s; ++i) {
+          success &= this->step();
+        }
+      } else {
+        success = this->step();
+      }
+
+      if(success) {
+        this->clear();
+        readPath();
+      }
+
+      return success;
+    }
+
+    bool previous() {
+      assert(isInitialized());
+      Record parent = this->parent();
+
+      Record prev;
+      Record prevParent;
+
+      do {
+        if(!this->step_back())
+          return false;
+        prev = *this;
+        prevParent = prev.parent();
+      } while(prevParent != parent && parent.isAncestorOf(prev));
+
+      this->clear();
+      readPath();
+
+      return true;
+    }
+
+    bool isAncestorOf(const Record& other) {
+      return this->path().above(other.path());
+    }
+
+    void clear() {
+      this->pathObj.reset();
+      this->valueObj.reset();
+    }
+
+    Record parent() const {
+      return Record(this->path().parent());
+    }
+
+    const bool isArray() const {
+      return this->getType() == Value::Array;
+    }
+
+    const bool isDirectory() const {
+      return this->path().isDirectory();
+    }
+
+    const bool isRange() const {
+      return this->getType() == Value::Range;
+    }
+
+    const bool isValue() const {
+      return !this->path().isDirectory() || this->getType() == Value::String;
+    }
+
+    const bool isObject() const {
+      return this->getType() == Value::Object;
+    }
+
+    const bool isInitialized() const {
+      return (*this) != NULL;
+    }
+
+    const bool hasData() const {
+      return valueObj.isInitialized();
+    }
+
+    const bool exists() const {
+      return this->doesExist;
+    }
+
+    const bool empty() const {
+      return path().isEmpty();
+    }
+
+    const Path& path() const {
+      return this->pathObj;
+    }
+
+    const Value& value() const {
+      assert(isInitialized());
+      return this->valueObj;
+    }
+
+    bool readValue() {
+      assert(isInitialized());
+      assert(!empty());
+      string v;
+      bool s = getCursorPtr()->get_value(&v);
+
+      if(path().isDirectory()) {
+        valueObj = Value(v, true);
+      } else if(path().isWildcard()) {
+        valueObj = Value(v, Value::Range);
+      } else {
+        valueObj = Value(v, false);
+      }
+
+      return s;
+    }
+
+    bool readPath() {
+      assert(isInitialized());
+      string k;
+      bool s = getCursorPtr()->get_key(&k);
+      pathObj = k;
+      return s;
+    }
+
+    bool read() {
+      return readPath() && readValue();
+    }
+
+    Record fetch() {
+      assert(isInitialized());
+      if(!hasData()) {
+        init(this->path());
+      }
+      return *this;
+    }
+
+    bool operator==(const Record& other) const {
+      return this->path() == other.path();
+    }
+
+    bool operator!=(const Record& other) const {
+      return !(this->path() == other.path());
+    }
+  };
 }
 
+std::ostream& operator<< (std::ostream& os, const janosh::Path& p) {
+    os << p.key();
+    return os;
+}
+
+std::ostream& operator<< (std::ostream& os, const janosh::Value& v) {
+    os << v.str();
+    return os;
+}
 
 #endif

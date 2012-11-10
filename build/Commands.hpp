@@ -42,7 +42,7 @@ namespace janosh {
         BOOST_FOREACH(const string& p, params) {
           LOG_DEBUG_MSG("Removing", p);
 //FIXME use cursors for batch operations
-          DBPath path(p);
+          Record path(p);
           cnt += janosh->remove(path);
           LOG_DEBUG(cnt);
         }
@@ -101,7 +101,7 @@ namespace janosh {
       if (params.size() != 1)
         return {0, "Expected one path" };
 
-      if(janosh->makeArray(params.front()))
+      if(janosh->makeArray(Record(params.front())))
         return {1, "Successful"};
       else
         return {0, "Failed"};
@@ -118,7 +118,7 @@ namespace janosh {
       if (params.size() != 1)
         return {0, "Expected one path" };
 
-      if(janosh->makeObject(params.front()))
+      if(janosh->makeObject(Record(params.front())))
         return {1, "Successful"};
       else
         return {0, "Failed"};
@@ -152,7 +152,7 @@ namespace janosh {
         const string path = params.front();
 
         for (auto it = params.begin(); it != params.end(); it+=2) {
-          if(!janosh->add(*it, *(it+1)))
+          if(!janosh->add(Record(*it), *(it+1)))
             return {0, "Failed"};
         }
 
@@ -172,7 +172,7 @@ namespace janosh {
         return {-1, "Expected a list of path/value pairs"};
       } else {
         for (auto it = params.begin(); it != params.end(); it += 2) {
-          if(!janosh->replace(DBPath(*it), *(it + 1)))
+          if(!janosh->replace(Record(*it), *(it + 1)))
             return {0, "Failed"};
         }
 
@@ -192,7 +192,7 @@ namespace janosh {
         return {-1, "Expected a list of path/value pairs"};
       } else {
         for (auto it = params.begin(); it != params.end(); it += 2) {
-          janosh->set(DBPath(*it), *(it + 1));
+          janosh->set(Record(*it), *(it + 1));
         }
 
         return {params.size()/2, "Successful"};
@@ -210,9 +210,9 @@ namespace janosh {
       if (params.size() != 2) {
         return {-1, "Expected two paths"};
       } else {
-        DBPath src(params.front());
-        DBPath dest(params.back());
-        src.prune();
+        Record src(params.front());
+        Record dest(params.back());
+        src.fetch();
 
         if(!src.exists())
           return {-1, "Source path doesn't exist"};
@@ -233,9 +233,9 @@ namespace janosh {
       if (params.size() != 2) {
         return {-1, "Expected two paths"};
       } else {
-        DBPath src(params.front());
-        DBPath dest(params.back());
-        src.prune();
+        Record src(params.front());
+        Record dest(params.back());
+        src.fetch();
 
         if(!src.exists())
           return {-1, "Source path doesn't exist"};
@@ -256,7 +256,7 @@ namespace janosh {
       if (params.size() < 2) {
         return {-1, "Expected a path and a list of values"};
       } else {
-        DBPath target(params.front());
+        Record target(params.front());
         size_t cnt = janosh->append(params.begin() + 1, params.end(), target);
         return {cnt, "Successful"};
       }
@@ -289,7 +289,7 @@ namespace janosh {
       if (params.size() != 1) {
         return {-1, "Expected a path"};
       } else {
-        DBPath p(params.front());
+        Record p(params.front());
         std::cout << janosh->size(p) << std::endl;
       }
       return {0, "Successful"};
@@ -307,7 +307,7 @@ namespace janosh {
         return {-1, "Expected a list of triggers"};
       } else {
         BOOST_FOREACH(const string& p, params) {
-          janosh->triggers.executeTrigger(p);
+          janosh->triggers.executeTrigger(Path(p));
         }
 
         return {params.size(), "Successful"};
@@ -327,8 +327,8 @@ namespace janosh {
       } else {
         bool found_all = true;
         BOOST_FOREACH(const string& p, params) {
-          DBPath path(p);
-          found_all = found_all && janosh->print(path, std::cout);
+          Record rec(p);
+          found_all = found_all && janosh->print(rec, std::cout);
         }
 
         if (!found_all)

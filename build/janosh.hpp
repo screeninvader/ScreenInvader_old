@@ -13,7 +13,7 @@
 #include <boost/algorithm/string/predicate.hpp>
 #include <kcpolydb.h>
 
-#include "dbpath.hpp"
+#include "record.hpp"
 #include "json.hpp"
 #include "bash.hpp"
 
@@ -43,14 +43,14 @@ namespace janosh {
     typedef typename TargetMap::value_type Target;
 
     vector<fs::path> targetDirs;
-    map<DBPath, std::set<string> > triggers;
+    map<Path, std::set<string> > triggers;
     TargetMap targets;
 public:
     TriggerBase(const fs::path& config, const vector<fs::path>& targetDirs);
 
     int executeTarget(const string& name);
 
-    void executeTrigger(const DBPath p);
+    void executeTrigger(const Path& p);
     bool findAbsoluteCommand(const string& cmd, string& abs);
     void load(const fs::path& config);
     void load(std::ifstream& is);
@@ -85,16 +85,16 @@ public:
         out(out){
     }
 
-    void beginArray(const string& key, bool first) {
+    void beginArray(const Path& p, bool first) {
     }
 
-    void endArray(const string& key) {
+    void endArray(const Path& p) {
     }
 
-    void beginObject(const string& key, bool first) {
+    void beginObject(const Path& p, bool first) {
     }
 
-    void endObject(const string& key) {
+    void endObject(const Path& p) {
     }
 
     void begin() {
@@ -103,7 +103,7 @@ public:
     void close() {
     }
 
-    void record(const string& key, const string& value, bool array, bool first) {
+    void record(const Path& p, const string& value, bool array, bool first) {
         string stripped = value;
         replace(stripped.begin(), stripped.end(), '\n', ' ');
         out << stripped << endl;
@@ -130,105 +130,104 @@ public:
     void close();
     size_t loadJson(const string& jsonfile);
     size_t loadJson(std::istream& is);
-    size_t makeArray(DBPath target, size_t size = 0, bool boundsCheck=true);
-    size_t makeObject(DBPath target, size_t size = 0);
-    size_t makeDirectory(DBPath target, EntryType type, size_t size = 0);
-    size_t print(DBPath path, std::ostream& out);
-    size_t print(Cursor cur, std::ostream& out);
 
-    size_t add(DBPath path, const string& value);
-    size_t replace(DBPath path, const string& value);
-    size_t set(Cursor cur, const string& value);
-    size_t set(DBPath path, const string& value);
-    size_t remove(DBPath cur);
-    size_t remove(Cursor cur, size_t n);
-    size_t removeChildren(Cursor cur);
+    size_t makeArray(Record target, size_t size = 0, bool boundsCheck=true);
+    size_t makeObject(Record target, size_t size = 0);
+    size_t makeDirectory(Record target, Value::Type type, size_t size = 0);
+    size_t print(Record target, std::ostream& out);
+    size_t size(Record target);
+    size_t remove(Record& target);
+
+    size_t add(Record target, const string& value);
+    size_t replace(Record target, const string& value);
+    size_t set(Record target, const string& value);
+    size_t append(Record target, const string& value);
+    size_t append(vector<string>::const_iterator begin, vector<string>::const_iterator end, Record dest);
+
+    size_t move(Record& src, Record& dest);
+    size_t replace(Record& src, Record& dest);
+    size_t append(Record& src, Record& dest);
+    size_t copy(Record& src, Record& dest);
+    size_t shift(Record& src, Record& dest);
+
     size_t dump();
     size_t hash();
     size_t truncate();
-    size_t size(DBPath path);
-    size_t size(Cursor cur);
-    size_t append(const string& value, Cursor dest);
-    size_t append(vector<string>::const_iterator begin, vector<string>::const_iterator end, Cursor dest);
-    size_t append(Cursor srcCur, Cursor destCur, size_t n);
-    size_t appendChildren(Cursor srcCur, Cursor destCur);
-    size_t copy(Cursor srcCursor, Cursor destCursor);
-    size_t shift(Cursor srcCur, Cursor destCur);
   private:
     string filename;
     js::Value rootValue;
 
-    void setContainerSize(Cursor cur, const size_t s);
-    void changeContainerSize(Cursor cur, const size_t by);
+    void setContainerSize(Record rec, const size_t s);
+    void changeContainerSize(Record rec, const size_t by);
 
-    size_t load(DBPath path, const string& value);
-    size_t load(js::Value& v, DBPath& path);
-    size_t load(js::Object& obj, DBPath& path);
-    size_t load(js::Array& array, DBPath& path);
-    bool boundsCheck(DBPath p);
-    DBPath makeTemp(EntryType t);
+    size_t load(const Path& path, const string& value);
+    size_t load(js::Value& v, Path& path);
+    size_t load(js::Object& obj, Path& path);
+    size_t load(js::Array& array, Path& path);
+    bool boundsCheck(Record p);
+    Record makeTemp(const Value::Type& t);
 
     template<typename Tvisitor>
-     size_t recurse(Cursor cur, Tvisitor vis)  {
+     size_t recurse(Record& travRoot, Tvisitor vis)  {
        size_t cnt = 0;
-       std::stack<std::pair<const string, const EntryType> > hierachy;
-       DBPath travRoot(cur);
-       DBPath root("/.");
-       if(travRoot == DBPath("/."))
-         cur.step();
+       std::stack<std::pair<const Component, const Value::Type> > hierachy;
+       Record root("/.");
 
+       Record rec(travRoot);
        vis.begin();
 
-       DBPath last;
-
+       Path last;
        do {
-         const DBPath p(cur);
-         const EntryType& t = p.getType();
-         const string& name = p.name();
-         const DBPath& parent = p.parent();
-         const string& parentName = parent.name();
+         rec.fetch();
+         const Path& path = rec.path();
+         const Value& value = rec.value();
+         const Value::Type& t = rec.getType();
+         const Path& parent = path.parent();
+
+         const Component& name = path.name();
+         const Component& parentName = parent.name();
 
          if (!hierachy.empty()) {
-           if (!travRoot.above(p)) {
+           if (!travRoot.isAncestorOf(path)) {
              break;
            }
 
-           if(!last.above(p) && (
-               (!last.isContainer() && parentName != last.parentName()) ||
-               (last.isContainer() && parentName != last.name()))){
+           if(!last.above(path) && (
+               (!last.isDirectory() && parentName != last.parentName()) ||
+               (last.isDirectory() && parentName != last.name()))){
              while(!hierachy.empty() && hierachy.top().first != parentName) {
-               if (hierachy.top().second == EntryType::Array) {
-                 vis.endArray(p.key());
-               } else if (hierachy.top().second == EntryType::Object) {
-                 vis.endObject(p.key());
+               if (hierachy.top().second == Value::Array) {
+                 vis.endArray(path);
+               } else if (hierachy.top().second == Value::Object) {
+                 vis.endObject(path);
                }
                hierachy.pop();
              }
            }
          }
 
-         if (t == EntryType::Array) {
-           hierachy.push({name, EntryType::Array});
-           vis.beginArray(p.key(), last.empty() || last == parent);
-         } else if (t == EntryType::Object) {
-           hierachy.push({name, EntryType::Object});
-           vis.beginObject(p.key(), last.empty() || last == parent);
+         if (t == Value::Array) {
+           hierachy.push({name, Value::Array});
+           vis.beginArray(path, last.isEmpty() || last == parent);
+         } else if (t == Value::Object) {
+           hierachy.push({name, Value::Object});
+           vis.beginObject(path, last.isEmpty() || last == parent);
          } else {
-           bool first = last.empty() || last == parent;
+           bool first = last.isEmpty() || last == parent;
            if(!hierachy.empty()){
-             vis.record(p.key(), p.val(), hierachy.top().second == EntryType::Array, first);
+             vis.record(path, value, hierachy.top().second == Value::Array, first);
            } else {
-             vis.record(p.key(), p.val(), false, first);
+             vis.record(path, value, false, first);
            }
          }
-         last = p;
+         last = path;
          ++cnt;
-       } while (cur.step());
+       } while (rec.step());
 
        while (!hierachy.empty()) {
-           if (hierachy.top().second == EntryType::Array) {
+           if (hierachy.top().second == Value::Array) {
              vis.endArray("");
-           } else if (hierachy.top().second == EntryType::Object) {
+           } else if (hierachy.top().second == Value::Object) {
              vis.endObject("");
            }
            hierachy.pop();

@@ -18,18 +18,38 @@
  */
 
 #include "Logger.hpp"
+#include "record.hpp"
+#include <iostream>
+#include <sstream>
 
-Logger* Logger::instance = NULL;
+namespace janosh {
+  Logger* Logger::instance = NULL;
 
-void Logger::init(const LogLevel l) {
-  Logger::instance = new Logger(l);
-}
+  void Logger::init(const LogLevel l) {
+    Logger::instance = new Logger(l);
+  }
 
-Logger& Logger::getInstance() {
-  assert(Logger::instance != NULL);
-  return *Logger::instance;
-}
+  Logger& Logger::getInstance() {
+    assert(Logger::instance != NULL);
+    return *Logger::instance;
+  }
 
-LogLevel Logger::getLevel() {
-  return Logger::getInstance().level;
+  LogLevel Logger::getLevel() {
+    return Logger::getInstance().level;
+  }
+
+  void Logger::trace(const string& caller, std::initializer_list<janosh::Record> records) {
+    TRI_LOG_LEVEL_STR("TRACE", makeCallString(caller, records));
+  }
+
+  const string Logger::makeCallString(const string& caller, std::initializer_list<janosh::Record> records) {
+    std::stringstream ss;
+
+    for(auto& rec : records) {
+      ss << "\"" << rec.path().pretty() << "\",";
+    }
+
+    string arguments = ss.str();
+    return caller + "(" + arguments.substr(0, arguments.size() - 1) + ")";
+  }
 }

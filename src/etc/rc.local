@@ -1,3 +1,4 @@
+ifconfig wlan0 hw ether 00:24:7C:AB:C4:53
 sudo -u lounge /lounge/triggers/sound reload
 
 exit 0

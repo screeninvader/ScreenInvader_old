@@ -25,7 +25,6 @@ set -x
 cd `dirname $0`
 chvt 2
 export HOME=/root
-
 janosh="/lounge/bin/janosh"
 
 sudo -u lounge bash -c "/lounge/bin/janosh load /lounge/lounge.json"
@@ -135,6 +134,7 @@ function rebootConf(){
 }
 
 function finish() {
+ echo "noauto phonet0 upnlink0 wlan0 wmaster0" >> /etc/network/interfaces
  update-rc.d autofs defaults
  update-rc.d thttpd defaults
  update-rc.d mpd defaults

@@ -22736,7 +22736,7 @@ _ACEOF
 
 EXTRA_DIST=xosd.spec
 
-                                                                                                              ac_config_files="$ac_config_files Makefile src/Makefile src/libxosd/Makefile src/xmms_plugin/Makefile src/bmp_plugin/Makefile macros/Makefile man/Makefile pixmaps/Makefile script/Makefile script/xosd-config xosd.spec"
+                                                                                                              ac_config_files="$ac_config_files Makefile src/Makefile src/libxosd/Makefile macros/Makefile man/Makefile pixmaps/Makefile script/Makefile script/xosd-config xosd.spec"
 
           ac_config_commands="$ac_config_commands default"
 
@@ -23354,8 +23354,6 @@ do
   "Makefile" ) CONFIG_FILES="$CONFIG_FILES Makefile" ;;
   "src/Makefile" ) CONFIG_FILES="$CONFIG_FILES src/Makefile" ;;
   "src/libxosd/Makefile" ) CONFIG_FILES="$CONFIG_FILES src/libxosd/Makefile" ;;
-  "src/xmms_plugin/Makefile" ) CONFIG_FILES="$CONFIG_FILES src/xmms_plugin/Makefile" ;;
-  "src/bmp_plugin/Makefile" ) CONFIG_FILES="$CONFIG_FILES src/bmp_plugin/Makefile" ;;
   "macros/Makefile" ) CONFIG_FILES="$CONFIG_FILES macros/Makefile" ;;
   "man/Makefile" ) CONFIG_FILES="$CONFIG_FILES man/Makefile" ;;
   "pixmaps/Makefile" ) CONFIG_FILES="$CONFIG_FILES pixmaps/Makefile" ;;
