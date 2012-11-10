@@ -1,0 +1,94 @@
+.\" Emacs, -*- nroff -*- please
+.TH XOSD 3xosd "December 2000" "X OSD Library"
+.SH NAME
+xosd - X on-screen display library
+.SH SYNOPSIS
+.nf
+.B #include <xosd.h>
+.sp
+.BI "xosd* xosd_create(int " number_lines ); 
+.sp
+.BI "int xosd_uninit (xosd* " osd );
+.sp
+.BI "int xosd_display (xosd* " osd ", int " line ,
+.BI "                  xosd_command " command ", " ... );
+.sp
+.BI "int xosd_is_onscreen(xosd* " osd );
+.sp
+.BI "int xosd_wait_until_no_display(xosd* " osd );
+.sp
+.BI "int xosd_hide (xosd* " osd );
+.sp
+.BI "int xosd_show (xosd* " osd );
+.sp
+.BI "int xosd_set_pos (xosd* " osd ", xosd_pos " pos );
+.sp
+.BI "int xosd_set_vertical_offset (xosd* " osd ", int " offset );
+.sp
+.BI "int xosd_set_horizontal_offset (xosd* " osd ", int " offset );
+.sp
+.BI "int xosd_set_align (xosd* " osd ", xosd_align " align)
+.sp
+.BI "int xosd_set_shadow_offset (xosd* " osd ", int " shadow_offset );
+.sp
+.BI "int xosd_set_timeout (xosd* " osd ", int " timeout );
+.sp
+.BI "int xosd_set_font (xosd* " osd ", char* " font );
+.sp
+.BI "int xosd_set_colour (xosd* " osd ", char* " colour );
+.sp
+.BI "int xosd_get_colour (xosd* " osd ,
+.BI "                     int* " red ", int* " green ", int* " blue );
+.sp
+.BI "int xosd_scroll (xosd* "osd ", int " lines );
+.sp
+.BI "int xosd_get_number_lines ( xosd* "osd "); "
+.fi
+
+.SH DESCRIPTION
+xosd is a library for displaying an on-screen display (like the one on
+many TVs) on your X display. Each function should have it's own manpage.
+.sp
+The latest version can be found on
+http://www.ignavus.net/software.html
+.PP
+It is distributed under the GNU General Public License.
+
+.SH BUGS
+No known bugs at the moment. There are probably functions that aren't listed here.
+.sp
+Bug reports can be sent to tnw13@cosc.canterbury.ac.nz
+
+.SH EXAMPLE
+.nf
+#include <xosd.h>
+
+int main (int argc, char *argv[])
+{
+	xosd *osd;
+
+	osd = xosd_create (1);
+
+	xosd_set_font(osd, "fixed");
+	xosd_set_colour(osd, "LawnGreen");
+	xosd_set_timeout(osd, 3);
+	xosd_set_shadow_offset(osd, 1);
+	
+	xosd_display (osd, 0, XOSD_string, "Example XOSD output");
+
+	xosd_wait_until_no_display(osd);
+
+	xosd_uninit (osd);
+
+	return EXIT_SUCCESS;
+}
+.fi
+
+.SH AUTHOR
+Martijn van de Streek <martijn@foodfight.org>, Some patching by Malcolm Valentine <farkit@iprimus.com.au> and Tim Wright <tim@ignavus.net>.
+.PP
+xosd was written by Andre Renaud <andre@ignavus.net> and is maintained by Tim Wright <tim@ignavus.net>.
+.SH SEE ALSO
+More information on the X OSD Library and its author can be found on
+http://www.ignavus.net/software.html. Each function has its own man-page.
+See there for more information.

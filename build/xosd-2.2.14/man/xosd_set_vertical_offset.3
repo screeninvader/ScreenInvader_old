@@ -1,0 +1,26 @@
+.\" Hey Emacs! This file is -*- nroff -*- source.
+.TH xosd_set_vertical_offset 3xosd "2002-06-25" "X OSD Library"
+.SH NAME
+xosd_set_vertical_offset \- Change the offset of the XOSD window
+.SH SYNOPSIS
+.B #include <xosd.h>
+.sp
+.BI "int xosd_set_vertical_offset (xosd* " osd ", int " offset );
+.fi
+.SH DESCRIPTION
+.B xosd_set_vertical_offset 
+changes the number of pixels the XOSD window is offset from the top or
+bottom of the screen.
+This is normally set to a value such as 48 to avoid desktop-panels,
+such as those provided by GNOME or KDE.
+.SH ARGUMENTS
+.IP \fIosd\fP 1i
+The on-screen display object to act on.
+.IP \fIoffset\fP 1i
+Offset from the top or bottom of the screen, in pixels.
+.SH "RETURN VALUE"
+On success, a zero is returned.
+On error, \-1 is returned.
+.SH "SEE ALSO"
+.BR xosd_init (3xosd),
+.BR xosd_set_pos (3xosd)

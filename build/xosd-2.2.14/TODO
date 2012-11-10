@@ -1,0 +1,29 @@
+Unordered TODOs
+---------------
+* Documentation on http://ldots.org/xosd-guide/
+* More Xinerema configuration:
+  - Use Xinerama at all ?
+  - Which screen(s) to use ?
+  - libxinerama or libxinerama_pic ?
+* Co-op with screensavers #145417.
+
+* There's a bug in libtool that updates libtool when configure is run. This
+  stuffs the Mandrake maintainer. Gotta update libtool when a new version
+  is out.
+  PMH: AM_MAINTAINER_MODE ?
+
+* xosd window does not stay on top if the window manager is restarted
+
+* report that xmms plugin displays volumne instead of title on song change.
+  PMH: xmms_get_volume() returns -1 during song changes, which gets interpreted as a volume change.
+
+* Fix outline which is no outline
+  echo . | osd_cat -O 50 -p middle -A center
+* Only update lines which were changed: Add a flag to each line
+* Optimize line drawing to now always use full screen width.
+* Rewrite libxosd, so that one X11-thread can handle multiple displays.
+
+The Beep Media Plugin shares significant amounts of code with the xmms
+plugin (not surprisingly seeing that BMP is based on XMMS:). It'd be
+nice to merge the two codebases so that we don't need to apply patches
+to both. 

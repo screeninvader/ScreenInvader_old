@@ -1,0 +1,26 @@
+Author:
+Andre Renaud <andre@ignavus.net>
+
+Maintainer:
+Tim Wright <tim@ignavus.net>
+
+Source Contributions:
+Martynas Kunigelis
+Harvey Chapman
+JR Boyens
+Alex Shinn
+Martijn van de Streek <martijn@foodfight.org>
+Philipp Hahn <pmhahn@titan.lahn.de>
+Adrian Brewt
+Tim Wright
+Andre Renaud
+Michael JasonSmith
++ others listed in the ChangeLog
+
+
+Autoconf packaging:
+Chris Weyl <cweyl@hotmail.com>
+
+Thanks:
+Tim Wright (intial beta testing... ha!)
+Martijn van de Streek (Debian packaging, and numerous bug reports)
