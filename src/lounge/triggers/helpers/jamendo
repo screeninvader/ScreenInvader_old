@@ -1,0 +1,29 @@
+#!/bin/bash
+#
+# ScreenInvader - A shared media experience. Instant and seamless.
+#  Copyright (C) 2012 Amir Hassan <amir@viel-zu.org>
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+#
+
+TRACK_ID=`echo ${1} | sed 's/^https\?:\/\/www\.jamendo\.com\/[a-zA-Z]\+\/track\/\([0-9]\+\).*$/\1/'`
+
+if [ -n "`echo ${TRACK_ID} | grep '^[0-9]\+$'`" ]; then
+  URL="http://storage-new.newjamendo.com/?trackid=$TRACK_ID&format=ogg2&u=0"
+  TITLE=`wget -qO- "http://api.jamendo.com/get2/artist_name+track_name/album/plain/?track_id=${TRACK_ID}" | sed 's/\t/ - /g'`
+fi
+
+echo $URL
+echo $TITLE
