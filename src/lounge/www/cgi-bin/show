@@ -20,6 +20,7 @@
 . ./initcgi "text/html"
 
 (
+set -x
 declare -A VIDEO_HOSTS="( \
 [youtube.com/]='youtube' \
 [youtu.be/]='youtube' \
@@ -93,7 +94,7 @@ category="$(getCategory "$url")"
 handler="${CATEGORY_MAP[$category]}"
 
 [ -n "$handler" ] && /lounge/bin/janosh -t set "/$handler/url" "$url" "/$handler/category" "$category"
-) &>/dev/null &
+) &>/tmp/show &
 
 cat /lounge/www/close.html
 
