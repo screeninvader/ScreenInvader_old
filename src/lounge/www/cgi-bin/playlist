@@ -38,7 +38,7 @@
       janosh -r get /playlist/titles/. | while read line; do
         title="`echo $line | sed -e 's/\([A-Z]\)/ \1/g' -e 's/^ \([a-z]\)/\1/g'`"
         title=${title:0:70}
-        item="$(janosh -r get /playlist/items/$i)"
+        item="$(janosh -r get /playlist/items/#$i)"
         class=
         idx="$(janosh -r get /playlist/index)"
         current="`cat /var/run/player/currentpath`"
