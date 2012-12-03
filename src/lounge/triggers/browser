@@ -37,7 +37,7 @@ function open() {
 
   l_notify "Loading $category: $url" 1
 
-  ( midori -p "$url" &&  midori -e TabCloseOther ) &
+  ( midori "$url" &&  midori -e TabCloseOther ) &
 
   janosh set "/image/active" false "/browser/active" false "/animation/active" false
   janosh set "/$active/active" true
