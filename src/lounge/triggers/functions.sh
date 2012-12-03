@@ -20,6 +20,7 @@
 
 export DISPLAY=:0
 export HOME=/lounge
+export USER=lounge
 export PATH="$HOME/bin:$PATH"
 export LOGDIR="/var/log/lounge"
 

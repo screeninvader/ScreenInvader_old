@@ -25,7 +25,7 @@ set -x
 cd `dirname $0`
 chvt 2
 export HOME=/root
-
+export USER=root
 janosh="/lounge/bin/janosh"
 
 sudo -u lounge bash -c "/lounge/bin/janosh load /lounge/lounge.json"

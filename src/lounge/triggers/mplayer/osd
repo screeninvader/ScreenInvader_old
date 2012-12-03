@@ -20,6 +20,7 @@
 
 
 export HOME="/lounge"
+export USER=lounge
 export DISPLAY=:0
 /lounge/bin/notify "OSD" &
 /lounge/bin/player osd 

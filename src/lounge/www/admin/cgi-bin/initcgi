@@ -21,6 +21,8 @@
 
 export DISPLAY=:0
 export HOME=/lounge
+export USER=lounge
+
 export PATH="$HOME/bin:/lounge/www/cgi-bin/:$PATH"
 echo "Content-type: $1"
 echo ""

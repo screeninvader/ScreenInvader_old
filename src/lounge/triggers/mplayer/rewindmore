@@ -21,5 +21,6 @@
 
 export HOME="/lounge"
 export DISPLAY=:0
+export USER=lounge
 /lounge/bin/notify "<<" 1
 /lounge/bin/player rewindMore
