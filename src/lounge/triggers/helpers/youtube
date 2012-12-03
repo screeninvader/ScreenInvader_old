@@ -17,7 +17,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-set -x
+
 . /lounge/triggers/functions.sh
 function selectVideo(){
   info=$(l_urldecode "$1" | sed 's/&url=/\n/g' | sed '1d')
