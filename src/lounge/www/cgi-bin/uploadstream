@@ -30,8 +30,7 @@
   if echo $contentType | grep -E "(video|matroska|audio|octet-stream)"; then
     dd if=/dev/stdin | player loadStdin "$filename"
   else
-    tmp="/lounge/www/$(mktemp)"
-    mkdir -p /lounge/www/tmp
+    tmp="$(mktemp)"
     if echo $contentType | fgrep "image"; then
       tmp="$tmp.jpg"  
     fi
