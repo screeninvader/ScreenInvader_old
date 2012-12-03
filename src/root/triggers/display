@@ -84,6 +84,8 @@ function reload() {
 function apply() {
   setResolution
   setBlanking
+  #make sure the mouse cursor isn't visible even if -nocursur fails
+  xdotool mousemove 1900 1200
 }
 
 function restart() {
