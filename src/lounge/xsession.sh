@@ -1,9 +1,11 @@
 export DISPLAY=:0
+export USER=root
+export HOME=/root
+killall janosh
 
-killall janosh -d &
-sudo /lounge/bin/gainroot /lounge/bin/janosh -d &
-sudo -u lounge /lounge/bin/janosh -d &
-
+sudo /lounge/bin/janosh -d &
+sudo -u lounge bash -c "/lounge/bin/janosh -d &"
+sleep 1
 /root/triggers/display apply
 
 sudo -u lounge xhost +
