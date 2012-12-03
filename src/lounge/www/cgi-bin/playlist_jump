@@ -21,8 +21,6 @@
 
 
 . ./initcgi "text/html"
-set -x
 player jump "$QUERY_STRING"
 touch /var/run/player/playlist_cache
-
 
