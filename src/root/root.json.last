@@ -1,0 +1,57 @@
+{
+  "network": {
+    "mode": {
+      "choices" : [ "DHCP", "Manual" ],
+      "value": "DHCP"
+    },
+    "connection": {
+      "choices" : ["Wifi", "Ethernet"],
+      "value": "Wifi",
+      "interface": "",
+      "wired" : {
+        "choices" : []
+      },
+      "wireless" : {
+        "choices" : []
+      }
+    },
+    "address": "",
+    "netmask": "255.255.255.0",
+    "gateway": "",
+    "nameserver": "",
+    "hostname": "",
+    "wifi": {
+      "encryption": {
+        "choices" : [ "NONE", "WEP", "WPA-PSK" ],
+        "value": "WPA-PSK"
+      },
+      "ssid": "",
+      "passphrase": ""
+    }
+  },
+
+  "storage": {
+    "smb": {
+      "user":"u",
+      "password":"p",
+      "domain":"d",
+      "host":"h",
+      "directory":"d"
+    }
+  },
+
+  "display": {
+    "adapter": {
+      "choices" : [ ],
+       "value": ""
+    },
+    "resolution": {
+      "choices" : [],
+      "value": ""
+    },
+    "blank": {
+      "choices" : [ "0", "5", "15", "30", "60", "300" ],
+      "value": "30"
+    }
+  }
+}
