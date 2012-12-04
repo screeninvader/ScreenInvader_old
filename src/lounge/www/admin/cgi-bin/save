@@ -21,8 +21,8 @@
 . ./initcgi "text/plain"
 
 (
-set -x
-json="$(cat)"
-
-echo "$json" | sudo /lounge/bin/gainroot "/lounge/bin/janosh load"
-) &> /tmp/save
+rm /tmp/tmp.*
+tmpfile="$(mktemp)"
+cat > $tmpfile
+sudo /lounge/bin/gainroot "/lounge/bin/janosh load $tmpfile"
+) &> /dev/null

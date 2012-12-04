@@ -51,7 +51,7 @@ EOINITTAB
 function emergencyReset() {
   /etc/init.d/xserver stop
   rm /lounge/janosh.db
-  sudo -u lounge "cat /lounge/lounge.json | janosh load"
+  sudo -u lounge "janosh load /lounge/lounge.json"
   /etc/init.d/xserver start
 }
 
