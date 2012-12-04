@@ -1,11 +1,7 @@
 export DISPLAY=:0
-export USER=root
-export HOME=/root
-killall janosh
-
-sudo /lounge/bin/janosh -d &
-sudo -u lounge bash -c "/lounge/bin/janosh -d &"
-sleep 1
+mkdir -p /var/run/player/
+chown lounge:lounge /var/run/player/
+sudo -u lounge /lounge/triggers/sound reload
 /root/triggers/display apply
 
 sudo -u lounge xhost +
