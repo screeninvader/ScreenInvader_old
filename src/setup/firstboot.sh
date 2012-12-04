@@ -24,23 +24,27 @@ set -x
 [ -z "$LC_ALL" ] && export LC_ALL=C
 cd `dirname $0`
 chvt 2
+
 rm /dev/shm/Janosh*
 rm /lounge/janosh.db*
 rm /root/janosh.db*
-
-export HOME=/root
-export USER=root
 chown root:root /etc/sudoers
 chmod 0440 /etc/sudoers
 
-janosh="/lounge/bin/janosh"
-$janosh -d &
-sudo -u lounge bash -c "/lounge/bin/janosh -d &"
+/etc/init.d/janosh-root restart
+/etc/init.d/janosh-lounge restart
 
 sleep 1
 
+export HOME=/lounge
+export USER=lounge
+
+$janosh load /lounge/lounge.json
+
+export HOME=/root
+export USER=root
+
 $janosh load /root/root.json
-sudo -u lounge bash -c "/lounge/bin/janosh load /lounge/lounge.json"
 
 if [ -f ./answer.sh ]; then
   source ./answer.sh
