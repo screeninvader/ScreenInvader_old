@@ -1,0 +1,26 @@
+#!/bin/bash
+export HOME=/lounge
+export USER=lounge
+child=""
+
+trap 'kill $(jobs -p); exit 0;' EXIT
+
+janosh=/lounge/bin/janosh
+
+while [ 0 ]; do
+  sudo -u lounge $janosh -d &
+  child=$!
+  while kill -0 $child; do
+    size="$($janosh size /.)"
+    
+    if [ $? -ne 1 -o $size -eq 0 ]; then 
+	$janosh load /lounge/lounge.json.last
+    else 
+	$janosh -j get /. > /lounge/lounge.json.last	
+    fi
+
+    sleep 1;
+  done
+done
+
+

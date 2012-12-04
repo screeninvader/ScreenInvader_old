@@ -1,0 +1,27 @@
+#!/bin/bash
+export HOME=/root
+export USER=root
+
+trap 'kill $(jobs -p); exit 0;' EXIT
+
+janosh=/lounge/bin/janosh
+while [ 0 ]; do
+  $janosh -d &
+  child=$!
+  while kill -0 $child; do
+    size="$($janosh size /.)"
+    
+    if [ $? -ne 1 -o $size -eq 0 ]; then 
+	$janosh load /root/root.json.last
+    else 
+	$janosh -j get /. > /root/root.json.last	
+    fi
+
+    sleep 1;
+  done
+done
+
+
+done
+
+
