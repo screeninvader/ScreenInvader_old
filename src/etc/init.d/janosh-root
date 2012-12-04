@@ -2,8 +2,8 @@
 
 ### BEGIN INIT INFO
 # Provides:          janosh-root
-# Required-Start:
-# Required-Stop:
+# Required-Start:    $remote_fs $syslog
+# Required-Stop:     $remote_fs $syslog
 # Should-Start:
 # Should-Stop:
 # Default-Start:     2 3 4 5

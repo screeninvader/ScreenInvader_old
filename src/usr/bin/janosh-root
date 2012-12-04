@@ -5,23 +5,33 @@ export USER=root
 trap 'kill $(jobs -p); exit 0;' EXIT
 
 janosh=/lounge/bin/janosh
+(
+set -x
 while [ 0 ]; do
   $janosh -d &
   child=$!
   while kill -0 $child; do
+    d=$(date +%s)
     size="$($janosh size /.)"
-    
-    if [ $? -ne 1 -o $size -eq 0 ]; then 
-	$janosh load /root/root.json.last
-    else 
-	$janosh -j get /. > /root/root.json.last	
+
+    if [ $? -ne 1 -o $size -eq 0 ]; then
+        $janosh truncate
+        $janosh load /root/root.json.last
+    else
+      d=$(date +%s)
+      $janosh set /check "$d"
+      if [ "$($janosh -r get /check)" == "$d" ]; then
+        $janosh -j get /. > /root/root.json.last
+      else
+        $janosh truncate
+        $janosh load /root/root.json.last
+      fi
     fi
 
     sleep 1;
   done
 done
 
-
-done
+) &>/var/log/janosh-root.log
 
 

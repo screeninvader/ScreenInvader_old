@@ -1,57 +1,85 @@
-{
-  "network": {
-    "mode": {
-      "choices" : [ "DHCP", "Manual" ],
-      "value": "DHCP"
-    },
-    "connection": {
-      "choices" : ["Wifi", "Ethernet"],
-      "value": "Wifi",
-      "interface": "",
-      "wired" : {
-        "choices" : []
-      },
-      "wireless" : {
-        "choices" : []
-      }
-    },
-    "address": "",
-    "netmask": "255.255.255.0",
-    "gateway": "",
-    "nameserver": "",
-    "hostname": "",
-    "wifi": {
-      "encryption": {
-        "choices" : [ "NONE", "WEP", "WPA-PSK" ],
-        "value": "WPA-PSK"
-      },
-      "ssid": "",
-      "passphrase": ""
-    }
-  },
-
-  "storage": {
-    "smb": {
-      "user":"u",
-      "password":"p",
-      "domain":"d",
-      "host":"h",
-      "directory":"d"
-    }
-  },
-
-  "display": {
-    "adapter": {
-      "choices" : [ ],
-       "value": ""
-    },
-    "resolution": {
-      "choices" : [],
-      "value": ""
-    },
-    "blank": {
-      "choices" : [ "0", "5", "15", "30", "60", "300" ],
-      "value": "30"
-    }
-  }
-}
+{ 
+"check":"1354623958",
+"display": { 
+"adapter": { 
+"choices": [ 
+"VGA-0",
+"LVDS" ] 
+,
+"value":"VGA-0" } 
+,
+"blank": { 
+"choices": [ 
+"0",
+"5",
+"15",
+"30",
+"60",
+"300" ] 
+,
+"value":"300" } 
+,
+"resolution": { 
+"choices": [ 
+"1360x768",
+"1024x768",
+"800x600",
+"848x480",
+"640x480" ] 
+,
+"value":"1024x768" } 
+ } 
+,
+"network": { 
+"address":"10.20.30.51",
+"connection": { 
+"choices": [ 
+"Wifi",
+"Ethernet" ] 
+,
+"interface":"eth0",
+"value":"Ethernet",
+"wired": { 
+"choices": [ 
+"eth0" ] 
+ } 
+,
+"wireless": { 
+"choices": [ 
+"wlan0" ] 
+ } 
+ } 
+,
+"gateway":"10.20.30.1",
+"hostname":"lounge",
+"mode": { 
+"choices": [ 
+"DHCP",
+"Manual" ] 
+,
+"value":"Manual" } 
+,
+"nameserver":"10.20.30.1",
+"netmask":"255.255.255.0",
+"wifi": { 
+"encryption": { 
+"choices": [ 
+"NONE",
+"WEP",
+"WPA-PSK" ] 
+,
+"value":"NONE" } 
+,
+"passphrase":"",
+"ssid":"LoungeNet" } 
+ } 
+,
+"storage": { 
+"smb": { 
+"directory":"d",
+"domain":"d",
+"host":"h",
+"password":"p",
+"user":"u" } 
+ } 
+ } 
