@@ -1,63 +1,38 @@
-#!/bin/sh
-
-### BEGIN INIT INFO
-# Provides:          janosh-lounge
-# Required-Start:    $remote_fs $syslog
-# Required-Stop:     $remote_fs $syslog
-# Should-Start:
-# Should-Stop:
-# Default-Start:     2 3 4 5
-# Default-Stop:      0 1 6
-# Short-Description: Starts janosh for user lounge
-# Description:
-### END INIT INFO
-
-export USER=lounge
+#!/bin/bash
 export HOME=/lounge
-DAEMON="/bin/bash /usr/bin/janosh-lounge"
-DESC="lounge instance"
-NAME=janosh
-PIDFILE=/tmp/janosh-lounge.pid
+export USER=lounge
+child=""
 
-set -e
+trap 'kill $(jobs -p); exit 0;' EXIT
 
-case "$1" in
-        start)
-                echo -n "Starting $DESC: "
-                start-stop-daemon -m -b -S -p $PIDFILE -x $DAEMON --oknodo -- $OPTIONS
-                echo "$NAME."
-                ;;
+janosh=/lounge/bin/janosh
 
-        stop)
-                echo -n "Stopping $DESC: "
-                start-stop-daemon -K -q -p $PIDFILE -x $DAEMON --oknodo --signal 10
-                echo "$NAME."
-                ;;
+(
+set -x
+while [ 0 ]; do
+  sudo -u lounge $janosh -d &
+  child=$!
+  while kill -0 $child; do
+    d=$(date +%s)
+    size="$($janosh size /.)"
+    
+    if [ $? -ne 1 -o $size -eq 0 ]; then 
+	$janosh truncate
+	$janosh load /lounge/lounge.json.last
+    else
+      d=$(date +%s)
+      $janosh set /check "$d"
+      if [ "$($janosh -r get /check)" == "$d" ]; then
+        $janosh -j get /. > /lounge/lounge.json.last	
+      else 
+        $janosh truncate
+        $janosh load /lounge/lounge.json.last
+      fi
+    fi
 
-        force-stop)
-                echo -n "Stopping $DESC: "
-                start-stop-daemon -K -q -p $PIDFILE -x $DAEMON
-                echo "$NAME."
-                ;;
+    sleep 1;
+  done
+done
 
-        force-reload)
-                if start-stop-daemon -K -q -p $PIDFILE -x $DAEMON --test
-                then
-                        $0 restart
-                fi
-                ;;
+) &>/var/log/janosh-lounge.log
 
-        restart)
-                $0 stop
-                sleep 1
-                $0 start
-                ;;
-
-        *)
-                N=/etc/init.d/$NAME
-                echo "Usage: $N {start|stop|force-stop|restart|force-reload}" >&2
-                exit 1
-                ;;
-esac
-
-exit 0
