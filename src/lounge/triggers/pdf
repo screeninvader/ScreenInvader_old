@@ -35,20 +35,19 @@ function open() {
   fi
 
   (
-    janosh set "/pdf/active" true
+    janosh -t set "/pdf/active" true
     killall xpdf
     xpdf -fullscreen "$url"
     [ -f "$tmpfile" ] && rm "$tmpfile"
 # FIXME: found a synchronous way to switch to page width zoom
 #    `sleep 1; xdotool key --clearmodifiers w`
-    janosh set "/pdf/active" false
+    janosh -t set "/pdf/active" false
   )  &
 }
 
 function close() {
   killall xpdf
-  player refresh
-  janosh set "/pdf/active" false
+  janosh -t set "/pdf/active" false
 }
 
 if [ "$(type -t "$FUNCTION")" == "function" ]; then

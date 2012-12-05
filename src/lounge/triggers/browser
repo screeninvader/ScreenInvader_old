@@ -39,14 +39,13 @@ function open() {
 
   ( midori "$url" &&  midori -e TabCloseOther ) &
 
-  janosh set "/image/active" false "/browser/active" false "/animation/active" false
-  janosh set "/$active/active" true
+  janosh -t set "/image/active" false "/browser/active" false "/animation/active" false
+  janosh -t set "/$active/active" true
 }
 
 function close() {
   killall midori
-  player refresh
-  janosh set "/image/active" false "/browser/active" false "/animation/active" false
+  janosh -t set "/image/active" false "/browser/active" false "/animation/active" false
 }
 
 function pageDown() { 

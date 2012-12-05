@@ -55,6 +55,20 @@ function emergencyReset() {
   /etc/init.d/xserver start
 }
 
+function showip () {
+  jrget="janosh -r get"
+
+  if [ "$($jrget /animation/active)" == "true" -o "$($jrget /browser/active)" == "true" -o "$($jrget /image/active)" == "true" -o "$($jrget /pdf/active)" == "true" -o "$($jrget /player/active)" == "true" -o "$($jrget /radio/active)" == "true" ]; then
+    killall showip
+    killall osd
+  else
+    killall showip
+    killall osd
+    /lounge/bin/showip &
+    /lounge/bin/player refresh   
+  fi
+}
+
 function reload() {
   return 0
 }

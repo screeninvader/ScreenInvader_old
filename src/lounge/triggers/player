@@ -51,12 +51,11 @@ function open() {
   else
     loadVideo "$video_urls" "$title" "$url"
   fi
-  janosh set "/player/active" true
+  janosh -t set "/player/active" true
 }
 
 function close() {
   stop
-  refresh
 }
 
 function refresh() {
@@ -74,7 +73,7 @@ function mplayer_start {
 
   while [ 0 ]; do 
     sleep 1; 
-    bash -c "/usr/bin/mplayer -idle -input file="$CMD_FIFO" 2>&1 | /lounge/bin/player callback"
+    bash -c "/usr/bin/mplayer -idle -input file="$CMD_FIFO" 2>&1 | tee /tmp/mplayer | /lounge/bin/player callback"
  done
 }
 
@@ -105,8 +104,7 @@ function jump() {
   [ $idx -gt $PLLEN ] && idx=$PLLEN
   file="$(janosh -r get /playlist/items/#$idx)"
   mplayer_cmd "pause"
-  refresh
-  janosh set /player/active true
+  janosh -t set /player/active true
   mplayer_cmd "loadfile $file"
   janosh set /playlist/index $idx
   touch "$PLAYLIST_CACHE"
@@ -149,8 +147,7 @@ function loadStdin() {
   rm -f "$MPLAYERSTDIN"
   mkfifo "$MPLAYERSTDIN"
   mplayer_cmd "pause"
-  refresh
-  janosh set /player/active true
+  janosh -t set /player/active true
   mplayer_cmd "loadfile \"$MPLAYERSTDIN\""
   cat > "$MPLAYERSTDIN"
   mplayer_cmd "pt_step `cat "$(janosh -r get /playlist/index)"`"
@@ -167,7 +164,7 @@ function enqueueVideo() {
 function loadList() {
   (
     flock -x 200
-    janosh set /player/active true
+    janosh -t set /player/active true
     mplayer_cmd "loadlist $1"
   ) 200>$CMD_LOCK
 }
@@ -225,9 +222,9 @@ function pause() {
 function stop() {
   (
     flock -x 200
+    mplayer_cmd "pause"
     mplayer_cmd "stop"
-    janosh set /player/active false
-    refresh
+    janosh -t set /player/active false
   ) 200>$CMD_LOCK
 }
 
@@ -268,8 +265,7 @@ function eotrack() {
     if [ $idx -lt $[ $len - 1 ]  ]; then
       jump $[ $idx + 1 ]
     else
-      janosh set /player/active false
-      showip
+      janosh -t set /player/active false
       stop
     fi
 
@@ -278,7 +274,7 @@ function eotrack() {
 }
 
 function sotrack() {
-  janosh set /player/active true  
+  janosh -t set /player/active true  
   mplayer_cmd "get_property path"
   killall osd
 }
