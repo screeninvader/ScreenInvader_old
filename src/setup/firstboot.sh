@@ -31,6 +31,8 @@ rm /root/janosh.db*
 chown root:root /etc/sudoers
 chmod 0440 /etc/sudoers
 
+janosh="/lounge/bin/janosh"
+
 update-rc.d janosh-root defaults
 update-rc.d janosh-lounge defaults
 
@@ -69,7 +71,7 @@ function makeDHCPNet() {
 }
 
 function makeManualNet() {
-  $janosh set /network/connection/interface "$1" /network/address "$2" /network/netmask "$3" /network/gateway "$4"
+  $janosh set /network/mode/value Manual /network/connection/interface "$1" /network/address "$2" /network/netmask "$3" /network/gateway "$4"
   $janosh -e makeNetworkMan
 }
 
