@@ -2,8 +2,8 @@
 
 ### BEGIN INIT INFO
 # Provides:          xserver
-# Required-Start:    thttpd mpd dbus
-# Required-Stop:
+# Required-Start:    thttpd dbus janosh-root janosh-lounge
+# Required-Stop:     thttpd dbus janosh-root janosh-lounge
 # Should-Start:
 # Should-Stop:
 # Default-Start:     2 3 4 5
