@@ -31,6 +31,9 @@ rm /root/janosh.db*
 chown root:root /etc/sudoers
 chmod 0440 /etc/sudoers
 
+update-rc.d janosh-root defaults
+update-rc.d janosh-lounge defaults
+
 /etc/init.d/janosh-root restart
 /etc/init.d/janosh-lounge restart
 
