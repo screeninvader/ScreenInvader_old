@@ -19,11 +19,29 @@
 #
 
 . ./initcgi "text/plain"
-
+(
+set -x
 ITEM="`echo $QUERY_STRING | sed 's/=/ /g;s/&/ /g'`"
+janosh=/lounge/bin/janosh
 
-/lounge/bin/janosh remove "/playlist/items/#$ITEM"
-/lounge/bin/janosh remove "/playlist/sources/#$ITEM" 
-/lounge/bin/janosh remove "/playlist/titles/#$ITEM" 
+idx="$($janosh -r get /playlist/index)"
+size="$($janosh -r size /playlist/items/.)"
+
+if [ $size -gt 0 -a $idx -lt $size ]; then
+  $janosh remove "/playlist/items/#$ITEM"
+  $janosh remove "/playlist/sources/#$ITEM" 
+  $janosh remove "/playlist/titles/#$ITEM" 
+
+  if [ $size -eq 1 ]; then
+    /lounge/bin/player stop
+  else 
+    if [ $ITEM -lt $idx ]; then 
+      $janosh set /playlist/index $[ $idx  - 1 ]
+    elif [ $ITEM -eq $idx ]; then
+      /lounge/bin/player jump $idx
+    fi
+  fi
+fi
+) &>/tmp/playlist_remove
 
 touch /var/run/player/playlist_cache 

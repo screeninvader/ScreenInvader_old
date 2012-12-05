@@ -33,7 +33,7 @@
       echo "<span style=\"color: lightgrey; font-weight: bold;\">(playlist empty)</span>" > "$CACHE"
     else
       (
-      echo "<ul id='playlist'>"
+      echo "<ul id='playlist' style=\"margin:0; padding: 5; border: 5px; border-radius: 9px; background-color: inherit; \">"
       i=0
       janosh -r get /playlist/titles/. | while read line; do
         title="`echo $line | sed -e 's/\([A-Z]\)/ \1/g' -e 's/^ \([a-z]\)/\1/g'`"
@@ -51,11 +51,14 @@
           color="orange"
           class="currentItem"
         fi
-        echo "<li onclick=\"$.get('cgi-bin/playlist_jump?$i');\" id=\"$id\" class=\"$class\" style=\"padding: 2px;text-align:left; cursor: pointer; background-color: $bgcolor; color: $color;  border: 1px outset $bgcolor; font-size: 12px; list-style-type: none; \">\
-$title</li>"
-# <div onclick=\"$.get('cgi-bin/playlist_remove?$i');\" style=\"float:right;\" class=\"button up\">X</div></li>"
+        echo "\
+<li id=\"$id\" style=\"width: 100%; margin: 0; padding: 2px;text-align:left; cursor: pointer; background-color: $bgcolor; color: $color;  border: 1px outset $bgcolor; font-size: 12px; list-style-type: none; \" class=\"$class\">\
+<table style=\"border:0; padding:0; margin:0; border-radius: 0; background-color: inherit;\">\
+<tr style=\"padding: 0; margin: 0; border: 0; border-radius: 0;\"><td style=\"width: 100%; padding: 0; margin: 0; border: 0; border-radius: 0;\" onclick=\"$.get('cgi-bin/playlist_jump?$i');\">$title</td>\
+<td onclick=\"$.get('cgi-bin/playlist_remove?$i');\" style=\"padding: 1px 6px 1px 6px; margin: 0; border: 1px outset $bgcolor; border-radius: 0; \" class=\"button up\">X</td></tr></table></li>"
         i=$[ $i + 1 ]
       done
+      
       echo "</ul>"
       ) > "$CACHE"
       stat -c %Y /var/run/player/playlist_cache > /var/run/player/playlist_last
