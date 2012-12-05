@@ -28,6 +28,7 @@ declare -A VIDEO_HOSTS="( \
 [vimeo.com/]='vimeo' \
 [soundcloud.com/]='soundcloud' \
 [ted.com/]='ted' \
+[jamendo.com/]='jamendo' \
 )"
 
 declare -A CATEGORY_MAP="( \
