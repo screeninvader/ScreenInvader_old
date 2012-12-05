@@ -46,5 +46,14 @@
       "/radio/url"
     ] ],
 
-  "radioClose": [ "radio open", [ ] ]
+  "radioClose": [ "radio open", [ ] ],
+
+  "showip" : [ "system showip", [ 
+      "/player/active",
+      "/browser/active",
+      "/image/active",
+      "/animation/active",
+      "/pdf/active",
+      "/radio/active"
+  ] ] 
 }
