@@ -29,18 +29,18 @@
   mod_c="`stat -c %Y $CACHE`"
 
   if [ $mod_c -gt $LAST ]; then
-    if [ $(janosh size /playlist/items/.)  -eq 0 ]; then
+    if [ $(timeout -k 2 1 janosh size /playlist/items/.)  -eq 0 ]; then
       echo "<span style=\"color: lightgrey; font-weight: bold;\">(playlist empty)</span>" > "$CACHE"
     else
       (
       echo "<ul id='playlist' style=\"margin:0; padding: 5; border: 5px; border-radius: 9px; background-color: inherit; \">"
       i=0
-      janosh -r get /playlist/titles/. | while read line; do
+      timeout -k 2 1 janosh -r get /playlist/titles/. | while read line; do
         title="`echo $line | sed -e 's/\([A-Z]\)/ \1/g' -e 's/^ \([a-z]\)/\1/g'`"
         title=${title:0:70}
-        item="$(janosh -r get /playlist/items/#$i)"
+        item="$(timeout -k 2 1 janosh -r get /playlist/items/#$i)"
         class=
-        idx="$(janosh -r get /playlist/index)"
+        idx="$(timeout -k 2 1 janosh -r get /playlist/index)"
         current="`cat /var/run/player/currentpath`"
         color="white"
         bgcolor="#555"
