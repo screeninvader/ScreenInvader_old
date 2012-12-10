@@ -35,7 +35,7 @@ export LC_ALL="C"
 
 APTNI="apt-get -q -y --no-install-recommends --force-yes -o Dpkg::Options::=\"--force-confdef\" -o Dpkg::Options::=\"--force-confold\" ";
 
-DEBIAN_MIRROR="http://ftp.at.debian.org/debian/"
+DEBIAN_MIRROR="http://mirrordirector.raspbian.org/raspbian/"
 EMDEBIAN_MIRROR="http://www.emdebian.org/grip/"
 DEBIAN_MULTIMEDIA_MIRROR="http://www.deb-multimedia.org/"
 
@@ -139,7 +139,7 @@ function doDebootstrap() {
   )
 
  check "Bootstrap debian" \
-   "debootstrap --exclude="`echo $PKG_BLACK | sed 's/ /,/g'`" --arch $ARCH squeeze "$CHROOT_DIR" $BOOTSTRAP_MIRROR"
+   "debootstrap --exclude="`echo $PKG_BLACK | sed 's/ /,/g'`" --arch $ARCH wheezy "$CHROOT_DIR" $BOOTSTRAP_MIRROR"
 
 }
 
@@ -152,26 +152,26 @@ function doPackageConf() {
   check "Prepare package manager" \
     "$CHRT dpkg --configure -a"
 
-  check "Fix dependencies" \
-    "$CHRT $APTNI install -f"
+#  check "Fix dependencies" \
+#    "$CHRT $APTNI install -f"
 
-  check "Update Repositories" \
-    "$CHRT $APTNI update"
+#  check "Update Repositories" \
+#    "$CHRT $APTNI update"
 
-  check "Install keyrings" \
-    "$CHRT $APTNI install $KEYRINGS"
+#  check "Install keyrings" \
+#    "$CHRT $APTNI install $KEYRINGS"
 
-  check "Update Repositories" \
-    "$CHRT $APTNI update"
+#  check "Update Repositories" \
+#    "$CHRT $APTNI update"
 
-  check "Update apt policy" \
-    "$CHRT bash -c 'touch /var/lib/apt/lists/*; apt-cache policy'"
+#  check "Update apt policy" \
+#    "$CHRT bash -c 'touch /var/lib/apt/lists/*; apt-cache policy'"
 
-  check "Install white packages" \
-    "$CHRT $APTNI install $PKG_WHITE"
+#  check "Install white packages" \
+#    "$CHRT $APTNI install $PKG_WHITE"
 
   check "Install sid packages" \
-     "$CHRT $APTNI -t sid-grip install $PKG_SID"
+     "$CHRT $APTNI install $PKG_SID"
 
 #  check "Install kernel" \
 #    "$CHRT $APTNI -t squeeze install $KERNEL"

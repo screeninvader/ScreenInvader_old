@@ -1,7 +1,7 @@
 keyboard-configuration
 sudo
 dialog
-thttpd
+#thttpd
 xdotool
 alsa-utils
 psmisc
@@ -18,12 +18,12 @@ xserver-xorg-input-mouse
 x11-xserver-utils
 locate
 kbd
-v86d
+#v86d
 wireless-tools
 xpdf
 wpasupplicant
-mplayer-nogui
-debconf-english
+mplayer
+#debconf-english
 firmware-linux-nonfree
 apache2-utils
 feh
