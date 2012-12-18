@@ -1,0 +1,44 @@
+#!/bin/bash
+export HOME=/lounge
+export USER=lounge
+child=""
+
+trap 'kill $(jobs -p); exit 0;' EXIT
+
+janosh=/lounge/bin/janosh
+
+(
+set -x
+while [ 0 ]; do
+  sudo -u lounge $janosh -d &
+  child=$!
+  sleep 1
+  while kill -0 $child; do
+    d=$(date +%s)
+    size="$(timeout -k 2 1 $janosh size /.)"
+
+    if [ -z $size -o $? -ne 1 -o $size -eq 0 ]; then 
+      timeout -k 2 1 $janosh truncate
+      if [ $! -ne 0 ]; then
+        rm /dev/shm/Janosh*lounge
+        kill $child
+      else
+        $janosh load /lounge/lounge.json.last
+      fi
+    else
+      d=$(date +%s)
+      $janosh set /check "$d"
+      if [ "$($janosh -r get /check)" == "$d" ]; then
+        $janosh -j get /. > /lounge/lounge.json.last	
+      else 
+        $janosh truncate
+        $janosh load /lounge/lounge.json.last
+      fi
+    fi
+
+    sleep 1;
+  done
+done
+
+) &>/var/log/janosh-lounge.log
+
