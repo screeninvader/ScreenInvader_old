@@ -45,6 +45,7 @@ declare -A CATEGORY_MAP="( \
 [vimeo]='player' \
 [soundcloud]='player' \
 [ted]='player' \
+[jamendo]='player' \
 )"
 
 declare -A CATEGORY_FIX="( \
