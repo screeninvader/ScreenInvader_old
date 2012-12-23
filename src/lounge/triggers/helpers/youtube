@@ -35,9 +35,10 @@ function selectVideo(){
   done
 
 }
+
 ID="`echo "$1" | sed 's/.*v=//g' | sed 's/&.*$//g'`"
-INFO=$(wget -qO- "http://www.youtube.com/get_video_info?&video_id=$ID&el=detailpage")
-URL="`selectVideo "$INFO"`"
+INFO=$(wget -qO- "http://www.youtube.com/get_video_info?&video_id=$ID&ps=default&eurl=&gl=US&hl=en")
+URL="`selectVideo "$INFO"` "
 TITLE=$(l_urldecode "`echo "$INFO" | sed -n 's/\([^&]*&\)*title=\([^&]*\).*/\2/p'`")
 
 echo $URL
