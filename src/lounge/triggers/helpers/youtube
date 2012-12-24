@@ -19,28 +19,43 @@
 #
 
 . /lounge/triggers/functions.sh
-function selectVideo(){
-  info=$(l_urldecode "$1" | sed 's/&url=/\n/g' | sed '1d')
-  prefered="large medium small"
-  nonflv="`echo "$info" | fgrep -v video%2Fx-flv`"
-  [ -n "$nonflv" ] && info="$nonflv"
+function parse_query() {
 
- for q in $prefered; do
-    quality="$(l_urldecode "$info" | sed 's/ http/\nhttp/g' | grep -m1 "$quality=${q}")"
+  IFS="&"
+  KEY=$2
+  array=($@)
 
-    if [ -n "$quality" ]; then
-       echo "$quality" | sed 's/&quality.*//g' | sed 's/type=.*&sig=/signature=/g' 
-       break;
+  for i in "${array[@]}";
+    do IFS="=";
+    set -- $i;
+    #PARAMS[$1]=$2;
+    if [ "$1" == "$KEY" ]
+    then
+      echo $2
+      return 0
     fi
   done
 
 }
 
 ID="`echo "$1" | sed 's/.*v=//g' | sed 's/&.*$//g'`"
-INFO=$(wget -qO- "http://www.youtube.com/get_video_info?&video_id=$ID&ps=default&eurl=&gl=US&hl=en")
-URL="`selectVideo "$INFO"` "
-TITLE=$(l_urldecode "`echo "$INFO" | sed -n 's/\([^&]*&\)*title=\([^&]*\).*/\2/p'`")
+INFO=$(wget -qO- "http://www.youtube.com/get_video_info?&video_id=$ID&el=detailpage")
+STREAMS=$(l_urldecode "`parse_query $INFO "url_encoded_fmt_stream_map"`")
+TITLE=$(l_urldecode "`parse_query $INFO "title"`")
+IFS=","
+set -- $STREAMS
+for SQUERY in $@; do
+  QUALITY=`parse_query $SQUERY "quality"`
+  FORMAT=$(l_urldecode "`parse_query $SQUERY "type"`"|cut -d ';' -f1)
+  #if [ "$QUALITY" == "large" -a "$FORMAT" != "video/x-flv" ];
+  if [ "$FORMAT" != "video/x-flv" ];
+  then
+    SURL=$(l_urldecode "`parse_query $SQUERY "url"`")
+    SIG="`parse_query $SQUERY "sig"`"
+    URL="$SURL&signature=$SIG"
+    break
+  fi
+done
 
 echo $URL
 echo $TITLE
-
