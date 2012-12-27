@@ -62,7 +62,7 @@ function readMixer() {
 
 function reload() {
   readAllMixers | xargs -Imixer -n1 /usr/bin/amixer sset "mixer" "100%"
-  janosh set /sound/volume "$(readVolume)" /sound/mute "$(readMute)" /sound/mixer/ "$(readMixer)"
+  janosh set /sound/volume "$(readVolume)" /sound/mute "$(readMute)" /sound/mixer "$(readMixer)"
 }
 
 function restart() {
