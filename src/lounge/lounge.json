@@ -6,8 +6,8 @@
 ,
 "browser": { 
 "active":"false",
-"category":"image",
-"url":"http://10.20.30.231/Screen%20Shot%202012-09-20%20at%20%20%20%2012.17.40%20AM.png" } 
+"category":"",
+"url":"" } 
 ,
 "display": { 
 "blank":"false" } 
@@ -23,9 +23,9 @@
 "url":"" } 
 ,
 "player": { 
-"active":"true",
-"category":"youtube",
-"url":"http://www.youtube.com/watch?v=K7zNY0I5JNI" } 
+"active":"false",
+"category":"",
+"url":"" } 
 ,
 "playlist": { 
 "index":"0",
