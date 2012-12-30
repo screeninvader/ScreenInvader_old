@@ -18,7 +18,8 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 
-
+(
+set -x
 export DISPLAY=:0
 timeout=$2
 
@@ -26,7 +27,7 @@ timeout=$2
 
 title="$1"
 TITLE=${ARG:0:48}
-killall osd
+#killall osd
 
 width="$( sudo /lounge/bin/gainroot '/lounge/bin/janosh -r get /display/resolution/value | cut -d"x" -f1' )"
 
@@ -38,3 +39,4 @@ fi
 
 /lounge/bin/osd -f  "-misc-topaz a500a1000a2000-medium-r-normal--0-${fontsize}-0-0-c-0-iso8859-1" -t "$timeout" "$title" &
 disown
+) &>> /tmp/osd
