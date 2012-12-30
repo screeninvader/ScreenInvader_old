@@ -276,7 +276,7 @@ function eotrack() {
 function sotrack() {
   janosh -t set /player/active true  
   mplayer_cmd "get_property path"
-  killall osd
+  killall showip
 }
 
 function callback() {
