@@ -13,9 +13,9 @@
 ### END INIT INFO
 
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
-DAEMON=/usr/bin/xinit
+DAEMON="/usr/bin/xinit"
 XINITRC="/lounge/xsession.sh"
-XOPTS="-logfile /dev/null :0"
+XOPTS="-fp /usr/share/fonts/X11/misc -config /etc/X11/xorg.conf -nocursor"
 DESC="xserver"
 NAME=xserver
 
@@ -28,7 +28,7 @@ set -e
 case "$1" in
 	start)
 		echo -n "Starting $DESC: "
-		bash -c "/usr/bin/xinit /lounge/xsession.sh -- -logfile /dev/null :0" &> /dev/null
+		$DAEMON $XINITRC -- /usr/bin/Xorg $XOPTS &> /dev/null
 		echo "$NAME."
 		;;
 
