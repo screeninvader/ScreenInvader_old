@@ -19,7 +19,7 @@
 #
 . ./initcgi "text/html"
 
-(
+( #set -x
 declare -A VIDEO_HOSTS="( \
 [youtube.com/]='youtube' \
 [youtu.be/]='youtube' \
@@ -56,6 +56,7 @@ declare -A CATEGORY_FIX="( \
 [application/pdf]='pdf' \
 [audio/x-scpls]='radio' \
 [image/gif]='animation' \
+[application/ogg]='video' \
 )"
 
 function getCategory() {
@@ -78,12 +79,19 @@ function getCategory() {
       head="$( curl --head "$location" | dos2unix )"
       location="$( echo "$head" | grep -iPo 'Location: \K(.*)?(?=)' )"
     done
-    mime_type="$( echo "$head" | grep -iPo 'Content-Type: \K(.*)?(?=)' )"
+    if [ "$( echo "$head" | head -n 1 | cut -d ' ' -f 2)" -ne 200 ]; then
+      mime_type="video/fixed"
+    else
+      mime_type="$( echo "$head" | grep -iPo 'Content-Type: \K(.*)?(?=)' )"
+    fi
   elif  [[ $( readlink -e "$url" ) == /tmp/* ]]; then
     file="$url"
     mime_type=$( file -i "$file" | sed 's/.*: \([a-zA-Z]*\/[a-zA-Z]*\).*/\1/p' | sed '1d' )
   fi
 
+  if [ -z "$mime_type" ]; then
+    mime_type="video/fixed"
+  fi
 
   category="${CATEGORY_FIX[$mime_type]}"
   if [ -z "$category" ]; then
