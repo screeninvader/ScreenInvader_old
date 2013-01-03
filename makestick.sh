@@ -37,7 +37,7 @@ EOUSAGE
 }
 
 function makeSyslinuxConf() {
-  uuid="`blkid $DEVICE*1 | cut -d '"' -f2`"
+  uuid="`blkid ${LOOPBACK_DEVICE} | cut -d '"' -f2`"
   templates/syslinux_cfg "$uuid" > "$1/boot/syslinux/syslinux.cfg" 
 }
 
@@ -85,21 +85,26 @@ check "Make disk label" \
 check "Make partition" \
   "parted -s $DEVICE mkpart primary ext4 0 ${SIZE}M"
 
+LOOPBACK_DEVICE=`losetup -f`
+OFFSET=`parted -s -m ${DEVICE} unit B print | grep "^1:" | cut -f 2 -d ":" | tr B ' '`
+check "Loopback partition" \
+  "losetup -o ${OFFSET} ${LOOPBACK_DEVICE} ${DEVICE}"
+
 check "Make filesystem" \
-  "mkfs.ext4 $DEVICE*1"
+  "mkfs.ext4 ${LOOPBACK_DEVICE}"
 
 check "Enable writeback mode" \
-  "tune2fs -o journal_data_writeback $DEVICE*1"
+  "tune2fs -o journal_data_writeback ${LOOPBACK_DEVICE}"
 
 check "Disable journaling" \
-  "tune2fs -O ^has_journal $DEVICE*1"
+  "tune2fs -O ^has_journal ${LOOPBACK_DEVICE}"
 
 tmpdir=`mktemp  -d`
 check "Make temporary mount dir" \
   "[ $? -eq 0 ]"
 
 check "Mount file system" \
-	"mount $DEVICE*1 $tmpdir"
+	"mount ${LOOPBACK_DEVICE} $tmpdir"
 
 check "Prune syslinux dir" \
   "mkdir -p $tmpdir/boot/syslinux/"
@@ -112,7 +117,7 @@ check "Make syslinux.cfg" \
   "[ $? -eq 0 ]"
 
 check "Umount file system" \
-	"umount $DEVICE*1"
+	"umount ${LOOPBACK_DEVICE}"
 
 check "Remove temporary mount dir" \
   "rmdir $tmpdir"
@@ -121,6 +126,12 @@ check "Install syslinux mbr" \
   "printf '\1' | cat syslinux_altmbr.bin - | dd bs=440 count=1 conv=notrunc of=$DEVICE"
 
 check "Check file system" \
-  "fsck.ext4 -fa $DEVICE*1"
+  "fsck.ext4 -fa ${LOOPBACK_DEVICE}"
+
+check "Sync" \
+  "sync"
+
+check "Detaching disk image file" \
+  "losetup -d $LOOPBACK_DEVICE"
 
 exit 0
