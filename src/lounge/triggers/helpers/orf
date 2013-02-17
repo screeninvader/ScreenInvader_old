@@ -18,8 +18,8 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 
-
-MMS_URL="`wget -O - -q "$1" |  grep "src=.*mms" | cut -d'"' -f2`"
-echo $MMS_URL
-echo orf
-
+ASX_URL="http://tvthek.orf.at`wget -O - -q "$1" | grep -oh "\/.*download.asx" `"
+MMS="`wget -O - -q "$ASX_URL" |  grep -oh 'mms:[^\"]*' `" 
+MMS_URL=`echo $MMS | sed -e 's/\s\+/\r\n/g'`
+echo "$MMS_URL"
+echo "orf"
