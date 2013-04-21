@@ -26,8 +26,6 @@ cd `dirname $0`
 chvt 2
 
 rm /dev/shm/Janosh*
-rm /lounge/janosh.db*
-rm /root/janosh.db*
 chown root:root /etc/sudoers
 chmod 0440 /etc/sudoers
 
@@ -36,19 +34,20 @@ janosh="/lounge/bin/janosh"
 update-rc.d janosh-root defaults
 update-rc.d janosh-lounge defaults
 
-/etc/init.d/janosh-root restart
-/etc/init.d/janosh-lounge restart
-
-sleep 1
-
 export HOME=/lounge
 export USER=lounge
 
+rm /lounge/janosh.db
+/etc/init.d/janosh-lounge restart
+$janosh truncate
 $janosh load /lounge/lounge.json
 
 export HOME=/root
 export USER=root
 
+rm /root/janosh.db
+/etc/init.d/janosh-root restart
+$janosh truncate
 $janosh load /root/root.json
 
 if [ -f ./answer.sh ]; then
