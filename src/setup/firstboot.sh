@@ -25,20 +25,15 @@ set -x
 cd `dirname $0`
 chvt 2
 
-rm /dev/shm/Janosh*
 chown root:root /etc/sudoers
 chmod 0440 /etc/sudoers
 
 janosh="/lounge/bin/janosh"
 
-update-rc.d janosh-root defaults
-update-rc.d janosh-lounge defaults
-
 export HOME=/lounge
 export USER=lounge
 
 rm /lounge/janosh.db
-/etc/init.d/janosh-lounge restart
 $janosh truncate
 $janosh load /lounge/lounge.json
 
@@ -46,7 +41,6 @@ export HOME=/root
 export USER=root
 
 rm /root/janosh.db
-/etc/init.d/janosh-root restart
 $janosh truncate
 $janosh load /root/root.json
 
