@@ -21,7 +21,7 @@ function SoundControl () {
 
   this.setVolume = function(level) {
     volume = parseInt(level);
-    $('#sound-control #volume #value').text(level);
+    $('#sound-control #volume #value').text(level + "%");
   };
 
   this.setMute = function(on) {
