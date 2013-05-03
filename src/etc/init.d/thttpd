@@ -2,8 +2,8 @@
 
 ### BEGIN INIT INFO
 # Provides:          thttpd
-# Required-Start:    $network $remote_fs janosh-root janosh-lounge
-# Required-Stop:     $network $remote_fs janosh-root janosh-lounge
+# Required-Start:    $network $remote_fs
+# Required-Stop:     $network $remote_fs
 # Should-Start:
 # Should-Stop:
 # Default-Start:     2 3 4 5
