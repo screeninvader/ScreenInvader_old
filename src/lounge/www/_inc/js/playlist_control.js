@@ -5,11 +5,11 @@ function PlaylistControl () {
   this.setQueuemode = function(on) {
     queuemode=on;
     if(on) {
-      $('#playlist-control #queue-toggle').text("Queue Mode");
+      $('#playlist-control #queue-toggle').text("Queue mode active");
       $('#playlist-control #queue-toggle').addClass("up");
       $('#playlist-control #queue-toggle').removeClass("down");
     } else {
-      $('#playlist-control #queue-toggle').text("Post Mode"); 
+      $('#playlist-control #queue-toggle').text("Post mode active"); 
       $('#playlist-control #queue-toggle').addClass("down");
       $('#playlist-control #queue-toggle').removeClass("up");
     }
