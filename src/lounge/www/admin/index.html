@@ -141,10 +141,17 @@
 	</table>
 -->
 	<hr/>
-	<input type="button" name="save" value="Save & Apply" id="save" />
+	<span class="button up" id="save">Save & Apply</span>
+    </form>
+    <form id="reboot">
+      <table id="reboot_table" style="display:none">
+        <span class="button up" id="reboot_button" style="display:true!important" onclick="document.getElementById('reboot_table').style.display=''; document.getElementById('reboot_button').style.display='none'">Reboot</span>
+        <tr><td colspan="2" class="header">Are you sure?</td></tr>
+        <tr>
+          <td><span class="button up" id="reboot_yes" style="display:block" onclick="document.getElementById('reboot_yes').innerHTML='Rebooting...'; document.getElementById('reboot_no').style.opacity=0.5; document.getElementById('reboot_no').onclick=''; $.get('/admin/cgi-bin/reboot')">Yes</span></td>
+          <td><span class="button up" id="reboot_no" style="display:block" onclick="document.getElementById('reboot_button').style.display=''; document.getElementById('reboot_table').style.display='none'">&nbsp;No&nbsp;</span></td>
+        </tr>
+      </table>
     </form>
   </body>
 </html>
-
-
-
