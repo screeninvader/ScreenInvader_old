@@ -1,0 +1,60 @@
+#!/bin/bash
+#
+# ScreenInvader - A shared media experience. Instant and seamless.
+#  Copyright (C) 2012 Amir Hassan <amir@viel-zu.org>
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+#
+
+. ./initcgi "text/html"
+
+# Get root privileges
+sudo -s <<EOF
+EOF
+
+baseURL="https://raw.github.com/Metalab/ScreenInvader/master/src/lounge/triggers/helpers/"
+
+helpers=($(cat /lounge/www/cgi-bin/show | grep /]=\' | cut -d "'" -f2 | sort -u))
+
+echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd"><meta http-equiv="Content-type" content="text/html;charset=UTF-8"></meta><title>ScreenInvader Update</title><html><head><link rel="stylesheet" type="text/css" href="../../_inc/css/lounge.css"><link rel="stylesheet" type="text/css" href="../_inc/css/admin.css"></link></head><body><form id="admin"><table><tbody><tr><td colspan="2" class="header">Update Results</td></tr>'
+
+for i in "${helpers[@]}"
+do
+	md5=($(md5sum /lounge/triggers/helpers/$i | cut -d " " -f1))
+	echo '<tr><td class="left">'$i'</td><td class="right">'
+	if wget -P "/lounge/triggers/helpers/tmp" $baseURL$i
+	then
+		if [ "$md5" == "$(md5sum /lounge/triggers/helpers/tmp/$i | cut -d ' ' -f1)" ]
+		then
+			echo 'Already up to date</td></tr>'
+		else
+			cp -f /lounge/triggers/helpers/tmp/$i /lounge/triggers/helpers/$i
+			echo 'Sucessfully updated</td></tr>'
+		fi
+	else
+		error="1"
+		echo 'ERROR</td></tr>'
+	fi
+done
+
+rm -r /lounge/triggers/helpers/tmp
+
+if [ "$error" == "1" ]
+then
+	echo '</tbody></table><br><span>Errors occured, try again later!</span></form></body>'
+else
+	echo '</tbody></table><br><span>Update complete!</span></form></body>'
+fi
+
