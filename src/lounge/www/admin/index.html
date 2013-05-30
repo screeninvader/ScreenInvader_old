@@ -143,6 +143,17 @@
 	<hr/>
 	<input type="button" name="save" value="Save & Apply" id="save" />
     </form>
+    <form id="admin">
+    <table id="shutdown_table" style="display:none">
+    <span class="button up" id="shutdown_button" style="display:true!important" onclick="document.getElementById('shutdown_table').style.display=''; document.getElementById('shutdown_button').style.display='none'">Shutdown...</span>
+    <tr><td colspan="3" class="header">Shutdown</td></tr>
+	<tr>
+	<td><span class="button up" id="shutdown_reboot" style="display:block" onclick="document.getElementById('shutdown_reboot').innerHTML='Rebooting...'; document.getElementById('shutdown_shutdown').style.opacity=0.5; document.getElementById('shutdown_shutdown').onclick=''; document.getElementById('shutdown_back').style.opacity=0.5; document.getElementById('shutdown_back').onclick=''; $.get('/admin/cgi-bin/reboot')">Reboot</span></td>
+	<td><span class="button up" id="shutdown_shutdown" style="display:block" onclick="document.getElementById('shutdown_shutdown').innerHTML='Shutting down...'; document.getElementById('shutdown_reboot').style.opacity=0.5; document.getElementById('shutdown_reboot').onclick=''; document.getElementById('shutdown_back').style.opacity=0.5; document.getElementById('shutdown_back').onclick=''; $.get('/admin/cgi-bin/shutdown')">Shutdown</span></td>
+    <td><span class="button up" id="shutdown_back" style="display:block" onclick="document.getElementById('shutdown_button').style.display=''; document.getElementById('shutdown_table').style.display='none'">&nbsp;Back&nbsp;</span></td>
+	</tr>
+    </table>
+    </form>
   </body>
 </html>
 

@@ -1,0 +1,3 @@
+#!/bin/bash
+
+sudo /lounge/bin/gainroot "/sbin/shutdown -h now"
