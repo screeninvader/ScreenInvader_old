@@ -39,8 +39,13 @@ function open() {
 
   ( midori "$url" &&  midori -e TabCloseOther ) &
 
+  sleep 10  
   janosh -t set "/image/active" false "/browser/active" false "/animation/active" false
   janosh -t set "/$active/active" true
+  idlist="`xdotool search --class "midori"`"
+  id="`echo $idlist | cut -d " " -f3`"
+  xdotool windowmove $id 0 0
+  xdotool windowsize $id 800 600
 }
 
 function close() {
