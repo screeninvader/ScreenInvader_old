@@ -50,7 +50,7 @@ function l_notify() {
   [ -z "$timeout" ] && timeout=2
 
   title="$1"
-  /lounge/bin/notify "$title" "$timeout"
-
+  /lounge/bin/notify "$title" 
+  #"$timeout"
 }
 export -f l_unblank l_notify l_urldecode
