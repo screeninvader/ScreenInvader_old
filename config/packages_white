@@ -2,7 +2,6 @@ keyboard-configuration
 sudo
 dialog
 thttpd
-xdotool
 alsa-utils
 psmisc
 evilwm
@@ -17,7 +16,6 @@ xserver-xorg-input-kbd
 xserver-xorg-input-mouse
 x11-xserver-utils
 locate
-plymouth
 kbd
 v86d
 wireless-tools
