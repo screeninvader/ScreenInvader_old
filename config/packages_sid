@@ -2,9 +2,5 @@ libc6
 libstdc++6
 multiarch-support
 autofs
-midori
 libkyotocabinet16
-xdotool
-plymouth
-plymouth-drm
 
