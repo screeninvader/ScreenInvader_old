@@ -26,7 +26,6 @@ declare -A OBJ="$(janosh get /browser/.)"
 l_unblank
 
 function open() {
-
   url="${OBJ[/browser/url]}"
   category="${OBJ[/browser/category]}"
   active="browser"
@@ -38,23 +37,14 @@ function open() {
 
   l_notify "Loading $category: $url" 1
 
-  midori "$url" && midori -e TabCloseOther
+  ( midori "$url" &&  midori -e TabCloseOther ) &
 
   janosh -t set "/image/active" false "/browser/active" false "/animation/active" false
   janosh -t set "/$active/active" true
-  idlist="`xdotool search --class "midori"`"
-  id="`echo $idlist | cut -d " " -f3`"
-  res="`l_getResolution`"
-  width="`echo $res | cut -d"x" -f1`"
-  height="`echo $res | cut -d"x" -f2`"
-  xdotool windowmove $id 0 0
-  xdotool windowsize $id $width $height
 }
 
 function close() {
-  idlist="`xdotool search --class "midori"`"
-  id="`echo $idlist | cut -d " " -f3`"
-  xdotool windowmove $id -2000 -2000
+  killall midori
   janosh -t set "/image/active" false "/browser/active" false "/animation/active" false
 }
 
