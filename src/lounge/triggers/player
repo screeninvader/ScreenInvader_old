@@ -19,6 +19,7 @@
 #
 
 . /lounge/triggers/functions.sh
+l_log $@
 
 RUN_DIR="/var/run/player"
 CMD_FIFO="$RUN_DIR/cmdfifo"

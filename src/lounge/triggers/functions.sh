@@ -24,6 +24,10 @@ export USER=lounge
 export PATH="$HOME/bin:$PATH"
 export LOGDIR="/var/log/lounge"
 
+l_log () {
+ echo "`date +"%D %T"`: $0 $@" >> /tmp/screeninvader.log
+} 
+
 function l_urlencode() {
  echo "$1" | sed 's/ /%20/g;s/!/%21/g;s/"/%22/g;s/#/%23/g;s/\$/%24/g;s/\&/%26/g;s/'\''/%27/g;s/(/%28/g;s/)/%29/g;s/:/%3A/g'
 }
@@ -53,4 +57,4 @@ function l_notify() {
   /lounge/bin/notify "$title" 
   #"$timeout"
 }
-export -f l_unblank l_notify l_urldecode
+export -f l_log l_unblank l_notify l_urldecode

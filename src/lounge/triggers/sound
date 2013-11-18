@@ -20,6 +20,7 @@
 
 
 . /lounge/triggers/functions.sh
+l_log $@
 
 FUNCTION="$1"
 declare -A DATA="`janosh get /sound/.`"

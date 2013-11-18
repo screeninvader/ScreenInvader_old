@@ -24,6 +24,8 @@
 FUNCTION="$1"
 declare -A OBJ="$(janosh get /browser/.)"
 l_unblank
+l_log $@
+
 
 function open() {
   url="${OBJ[/browser/url]}"

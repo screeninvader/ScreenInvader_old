@@ -23,6 +23,7 @@ FUNCTION="$1"
 . /lounge/triggers/functions.sh
 
 declare -A DATA="$(janosh get /display/.)"
+l_log $@
 
 function setBlank() {
   if [ "${DATA["/display/blank"]}" == "true" ]; then
