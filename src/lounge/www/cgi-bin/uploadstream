@@ -29,12 +29,9 @@
   read 
   if echo $contentType | grep -E "(video|matroska|audio|octet-stream)"; then
     dd if=/dev/stdin | player loadStdin "$filename"
-  else
+  elif echo $contentType | fgrep "image"; then
     mkdir -p /lounge/www/tmp
-    tmp="/lounge/www$(mktemp)"
-    if echo $contentType | fgrep "image"; then
-      tmp="$tmp.jpg"  
-    fi
+    tmp="/lounge/www$(mktemp).jpg"    
 
     dd if=/dev/stdin > "$tmp"
     export QUERY_STRING="http://localhost/tmp/$(basename $tmp)"
@@ -42,3 +39,4 @@
     cd /lounge/www/cgi-bin/
     ./show
   fi
+
