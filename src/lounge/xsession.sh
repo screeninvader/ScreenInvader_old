@@ -11,8 +11,10 @@ sudo -u lounge /lounge/bin/player refresh
 
 # give midori a fixed geometry because sometimes it fails to adapt to resolution changes
 killall evilwm
-xrandr --output VGA1 --mode 1024x768
-xrandr --output HDMI1 --mode 1024x768
-exec evilwm -bw 0 -fn "-misc-topaz a500a1000a2000-medium-r-normal--0-240-0-0-c-0-iso8859-1"  -app Midori -g "$(/lounge/bin/janosh -r get /display/resolution/value)"+0+0
+resolution="$(/lounge/bin/janosh -r get /display/resolution/value)"
+xrandr --output VGA1 --mode $resolution
+xrandr --output HDMI1 --mode $resolution
+xrandr --output LVDS1 --mode $resolution
 
+exec evilwm -bw 0 -fn "-misc-topaz a500a1000a2000-medium-r-normal--0-240-0-0-c-0-iso8859-1"  -app Midori -g "$resolution"+0+0
 
