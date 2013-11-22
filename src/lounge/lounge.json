@@ -28,18 +28,10 @@
 "url":"" } 
 ,
 "playlist": { 
-"index":"0",
-"items": [ 
- ] 
-,
-"queue":"true",
-"sources": [ 
- ] 
-,
-"titles": [ 
- ] 
- } 
-,
+  "index":"0",
+  "items": [ ],
+   "queue":"true"
+},
 "radio": { 
 "active":"false",
 "category":"",
