@@ -28,9 +28,7 @@ idx="$($janosh -r get /playlist/index)"
 size="$($janosh -r size /playlist/items/.)"
 
 if [ $size -gt 0 -a $idx -lt $size ]; then
-  $janosh remove "/playlist/items/#$ITEM"
-  $janosh remove "/playlist/sources/#$ITEM" 
-  $janosh remove "/playlist/titles/#$ITEM" 
+  $janosh remove "/playlist/items/#$ITEM/."
 
   if [ $size -eq 1 ]; then
     /lounge/bin/player stop

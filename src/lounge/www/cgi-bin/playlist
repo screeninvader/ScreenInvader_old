@@ -27,18 +27,19 @@
   LAST="`cat /var/run/player/playlist_last`"
   [ -z "$LAST" ] && LAST=0
   mod_c="`stat -c %Y $CACHE`"
-
+  SIZE=$(timeout -k 2 1 janosh size /playlist/items/.)
   if [ $mod_c -gt $LAST ]; then
-    if [ $(timeout -k 2 1 janosh size /playlist/items/.)  -eq 0 ]; then
+    if [ $SIZE  -eq 0 ]; then
       echo "<span style=\"color: lightgrey; font-weight: bold;\">(playlist empty)</span>" > "$CACHE"
     else
       (
       echo "<ul id='playlist' style=\"margin:0; padding: 5; border: 5px; border-radius: 9px; background-color: inherit; \">"
       i=0
-      timeout -k 2 1 janosh -r get /playlist/titles/. | while read line; do
-        title="`echo $line | sed -e 's/\([A-Z]\)/\1/g' -e 's/^ \([a-z]\)/\1/g'`"
+      
+      seq 0 $[ $SIZE - 1 ] | while read index; do
+        title="$(janosh -r get /playlist/items/#${index}/title)"
+        title="`echo $title | sed -e 's/\([A-Z]\)/\1/g' -e 's/^ \([a-z]\)/\1/g'`"
         title=${title:0:70}
-        item="$(timeout -k 2 1 janosh -r get /playlist/items/#$i)"
         class=
         idx="$(timeout -k 2 1 janosh -r get /playlist/index)"
         current="`cat /var/run/player/currentpath`"
