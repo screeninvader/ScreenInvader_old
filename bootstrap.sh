@@ -194,9 +194,8 @@ function doCopy() {
   check "Sync setup changes" \
     "cd $BOOTSTRAP_DIR/src; rsync -axh --delete setup $CHROOT_DIR/"
 
- # disabled due to dependency problems
- # check "Copy plymouth theme" \
- #   "cp -a $BOOTSTRAP_DIR/themes/screeninvader $CHROOT_DIR/usr/share/plymouth/themes/"
+  check "Copy plymouth theme" \
+    "cp -a $BOOTSTRAP_DIR/themes/screeninvader $CHROOT_DIR/usr/share/plymouth/themes/"
 
   check "Copy xosd lib" \
     "cp -a $BOOTSTRAP_DIR/build/xosd-2.2.14/src/libxosd/.libs/libxosd.so.2.2.14 $CHROOT_DIR/usr/lib/"
@@ -210,9 +209,8 @@ function doCopy() {
   check "Copy janosh binary"  \
     "cp -a $BOOTSTRAP_DIR/build/janosh $CHROOT_DIR/lounge/bin/"
 
-  # disabled due to dependancy problems
-  #check "Update plymouth theme" \
-  #  "$CHRT plymouth-set-default-theme -R screeninvader"
+  check "Update plymouth theme" \
+    "$CHRT plymouth-set-default-theme -R screeninvader"
 
   if [ -n "$CONFIG_FILE" ]; then
     check "Copy firstboot config file" \
