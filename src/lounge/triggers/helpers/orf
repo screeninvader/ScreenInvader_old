@@ -18,6 +18,6 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 
-ORF_URL="`wget -O - -q "$1" | grep -Poh '(?<=\"hoch\",\"src\":\")http[^\"]*\.mp4(?=\")' | head -1`"
-echo $ORF_URL | sed 's/\\//g'
-echo "orf"
+ORF_URL="`wget -O - -q "$1" | grep -Poh '(?<=\"hoch\",\"src\":\")http[^\"]*\.mp4(?=\")' | uniq`"
+echo $ORF_URL | sed 's/\\//g' | tr " " \\n
+echo "ORF"
