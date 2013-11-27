@@ -5,3 +5,6 @@ multiarch-support
 autofs
 libkyotocabinet16
 midori
+plymouth=0.8.8-6+deb8u3
+plymouth-drm
+

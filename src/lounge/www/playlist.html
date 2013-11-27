@@ -18,9 +18,6 @@
          var from='/playlist/items/%23' + $(ui.item).attr('id');
          var to='/playlist/items/%23' + $(ui.item).index();
          $.get('/cgi-bin/shift?' + from + "&" + to);
-         from='/playlist/titles/%23' + $(ui.item).attr('id');
-         to='/playlist/titles/%23' + $(ui.item).index();
-         $.get('/cgi-bin/shift?' + from + "&" + to);
        });
 
        $( "#playlist" ).bind( "sortstop", function(event, ui) {

@@ -1,4 +1,8 @@
+#!/bin/bash
+(
+set -x
 export DISPLAY=:0
+export HOME=/root
 mkdir -p /var/run/player/
 chown lounge:lounge /var/run/player/
 sudo -u lounge /lounge/triggers/sound reload
@@ -14,7 +18,7 @@ killall evilwm
 resolution="$(/lounge/bin/janosh -r get /display/resolution/value)"
 xrandr --output VGA1 --mode $resolution
 xrandr --output HDMI1 --mode $resolution
-xrandr --output LVDS1 --mode $resolution
-
+#xrandr --output LVDS1 --off 
+xbindkeys & 
 exec evilwm -bw 0 -fn "-misc-topaz a500a1000a2000-medium-r-normal--0-240-0-0-c-0-iso8859-1"  -app Midori -g "$resolution"+0+0
-
+) &> /tmp/xsession
