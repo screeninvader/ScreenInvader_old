@@ -19,8 +19,7 @@
 #
 
 . ./initcgi "text/plain"
-(
-set -x
+
 ITEM="`echo $QUERY_STRING | sed 's/=/ /g;s/&/ /g'`"
 janosh=/lounge/bin/janosh
 
@@ -40,6 +39,5 @@ if [ $size -gt 0 -a $idx -lt $size ]; then
     fi
   fi
 fi
-) &>/tmp/playlist_remove
 
 touch /var/run/player/playlist_cache 
