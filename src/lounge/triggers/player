@@ -18,6 +18,9 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 
+( 
+set -x
+
 . /lounge/triggers/functions.sh
 l_log $@
 
@@ -49,7 +52,8 @@ function open() {
       loadVideo "$line" "$i - $title" "$url"
       i=$[ $i + 1 ]
     done
-  else
+  else 
+    [ -z "$video_urls" ] && video_urls="$url"
     loadVideo "$video_urls" "$title" "$url"
   fi
   janosh -t set "/player/active" true
@@ -292,4 +296,6 @@ function callback() {
 }
 
 "$1" "$2" "$3" "$4" "$5"
+
+) &>/tmp/player
 
