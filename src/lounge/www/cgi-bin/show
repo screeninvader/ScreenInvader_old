@@ -51,7 +51,6 @@ declare -A CATEGORY_MAP="( \
 declare -A CATEGORY_FIX="( \
 [application/x-matroska]='video' \
 [audio/x-mpegurl]='radio' \
-[audio/mpeg]='radio' \
 [application/pls]='radio' \
 [application/pdf]='pdf' \
 [audio/x-scpls]='radio' \
