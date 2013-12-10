@@ -33,6 +33,7 @@ declare -A VIDEO_HOSTS="( \
 
 declare -A CATEGORY_MAP="( \
 [video]='player' \
+[multipart]='browser' \
 [audio]='player' \
 [image]='browser' \
 [animation]='browser' \
@@ -49,6 +50,7 @@ declare -A CATEGORY_MAP="( \
 )"
 
 declare -A CATEGORY_FIX="( \
+[application/octet-stream]='video' \
 [application/x-matroska]='video' \
 [audio/x-mpegurl]='radio' \
 [application/pls]='radio' \
