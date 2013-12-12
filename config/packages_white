@@ -11,10 +11,6 @@ dropbear
 xinit
 cifs-utils
 mingetty
-xserver-xorg
-xserver-xorg-input-kbd
-xserver-xorg-input-mouse
-x11-xserver-utils
 locate
 kbd
 v86d
@@ -23,11 +19,21 @@ xpdf
 wpasupplicant
 mplayer-nogui
 debconf-english
-firmware-linux-nonfree
 apache2-utils
 feh
 xdotool
 xbindkeys
 bash
-
+firmware-linux-free
+firmware-linux-nonfree
+firmware-realtek
+firmware-ralink
+firmware-qlogic
+firmware-iwlwifi
+firmware-intelwimax
+firmware-brcm80211
+firmware-bnx2x
+firmware-bnx2
+firmware-atheros
+atmel-firmware
 
