@@ -19,16 +19,15 @@
 #
 
 . ./initcgi "text/plain"
-
+set -x
 ITEM="`echo $QUERY_STRING | sed 's/=/ /g;s/&/ /g'`"
 janosh=/lounge/bin/janosh
-
-idx="$($janosh -r get /playlist/index)"
 size="$($janosh -r size /playlist/items/.)"
 
-if [ $size -gt 0 -a $idx -lt $size ]; then
+if [ $size -gt 0 ]; then
   $janosh remove "/playlist/items/#$ITEM/."
-
+  idx="$($janosh -r get /playlist/index)"
+  
   if [ $size -eq 1 ]; then
     /lounge/bin/player stop
   else 
