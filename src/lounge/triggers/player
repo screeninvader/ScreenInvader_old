@@ -32,26 +32,26 @@ function open() {
   url="${OBJ[/player/url]}"
   video_url=
   category="${OBJ[/player/category]}"
-  title=
+  t=
   l_unblank
 
   if [ "$category" != "video" ]; then
     info="$("/lounge/triggers/helpers/$category" "$url")"
     video_urls="$(echo "$info" | sed '$d')"
-    title="$(echo "$info" | tail -n1)"
+    t="$(echo "$info" | tail -n1)"
   else
-    title="$(basename "$url")"
+    t="$(basename "$url")"
     video_urls="$url"
   fi
   i=1
   if [ "`echo "$video_urls" | wc -l`" -gt 1 ]; then
     echo "$video_urls" | while read line; do
-      loadVideo "$line" "$i - $title" "$url"
+      loadVideo "$line" "$i - $t" "$url"
       i=$[ $i + 1 ]
     done
   else 
     [ -z "$video_urls" ] && video_urls="$url"
-    loadVideo "$video_urls" "$title" "$url"
+    loadVideo "$video_urls" "$t" "$url"
   fi
   janosh -t set "/player/active" true
 }
