@@ -25,7 +25,7 @@ set -x
 SIZE="$(janosh -r size /playlist/items/.)"
 
 seq 0 $[ $SIZE - 1 ] | while read i; do
-  echo "`janosh -r get /playlist/items/#$i/url`"
+  echo "`janosh -r get /playlist/items/#$i/source`"
 done
 
 
