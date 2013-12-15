@@ -106,6 +106,7 @@ function jump() {
   [ $idx -gt $PLLEN ] && idx=$PLLEN
   file="$(janosh -r get /playlist/items/#${idx}/url)"
   mplayer_cmd "pause"
+  refresh
   janosh -t set /player/active true
   mplayer_cmd "loadfile $file"
   janosh set /playlist/index $idx
@@ -281,6 +282,7 @@ function eotrack() {
 
 function sotrack() {
   janosh -t set /player/active true  
+  refresh
   mplayer_cmd "get_property path"
   killall showip
 }
