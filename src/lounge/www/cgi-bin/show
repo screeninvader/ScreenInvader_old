@@ -115,6 +115,6 @@ if [ "$handler" == "browser" ]; then
 fi
 
 [ -n "$handler" ] && /lounge/bin/janosh -t set "/$handler/url" "$url" "/$handler/category" "$category"
-) />/dev/null &
+) &>/dev/null &
 cat /lounge/www/close.html
 
