@@ -1,0 +1,31 @@
+cat <<EOSETTINGS
+[settings]
+default-encoding=ISO-8859-1
+monospace-font-family=Topaz a500a1000a2000
+default-font-size=16
+default-monospace-font-size=14
+minimum-font-size=12
+enable-site-specific-quirks=true
+enable-java-applet=false
+last-window-width=$1
+last-window-height=$2
+last-window-state=MIDORI_WINDOW_MAXIMIZED
+last-panel-position=399
+last-panel-page=5
+show-navigationbar=false
+show-statusbar=false
+toolbar-style=MIDORI_TOOLBAR_ICONS
+toolbar-items=Location,CompactMenu,
+load-on-startup=MIDORI_STARTUP_BLANK_PAGE
+homepage=
+show-crash-dialog=false
+location-entry-search=http://www.google.com/search?q=%s
+enable-plugins=false
+enable-html5-database=true
+user-agent=Mozilla/5.0 (Macintosh; U; Intel Mac OS X; c) AppleWebKit/535+ (KHTML, like Gecko) Version/5.0 Safari/535.22+ Midori/0.4
+
+[extensions]
+libadblock.so=true
+libtoolbar-editor.so=true
+EOSETTINGS
+
