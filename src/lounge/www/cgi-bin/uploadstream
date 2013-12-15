@@ -31,7 +31,6 @@
     dd if=/dev/stdin | player loadStdin "$filename"
   elif echo $contentType | fgrep "image"; then
     mkdir -p /lounge/www/tmp
-    rm "/lounge/www/tmp/*jpg"
     tmp="/lounge/www$(mktemp).jpg"    
 
     dd if=/dev/stdin > "$tmp"
