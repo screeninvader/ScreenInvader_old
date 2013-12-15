@@ -25,6 +25,18 @@ FUNCTION="$1"
 declare -A DATA="$(janosh get /display/.)"
 l_log $@
 
+function setResolution () {
+  export DISPLAY=:0
+  res="`janosh -r get /display/resolution`"
+  xrandr --output VGA1 --mode $res
+  xrandr --output HDMI1 --mode $res
+  xrandr --output LVDS1 --mode $res
+  xrandr --output default --mode $res
+  width="`echo $res | cut -d"x" -f1`"
+  height="`echo $res | cut -d"x" -f2`"
+  /lounge/triggers/templates/midori_config $width $height > /lounge/.config/midori/config
+}
+
 function setBlank() {
   if [ "${DATA["/display/blank"]}" == "true" ]; then
     xset dpms force standby

@@ -1,4 +1,8 @@
 {
+  "setResolution": [ "display setResolution",  [
+      "/display/resolution"
+    ] ],
+
   "setVolume": [ "sound setVolume",  [
       "/sound/volume"
     ] ],
