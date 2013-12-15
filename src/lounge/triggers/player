@@ -75,7 +75,7 @@ function mplayer_start {
 
   while [ 0 ]; do 
     sleep 1; 
-    bash -c "/usr/bin/mplayer -idle -input file="$CMD_FIFO" 2>&1 | tee /tmp/mplayer | /lounge/bin/player callback"
+    bash -c "/usr/bin/mplayer -idle -input file="$CMD_FIFO" 2>&1 | /lounge/bin/player callback"
  done
 }
 
