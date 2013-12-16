@@ -34,6 +34,7 @@ function setResolution () {
   xrandr --output default --mode $res
   width="`echo $res | cut -d"x" -f1`"
   height="`echo $res | cut -d"x" -f2`"
+  mkdir -p /lounge/.config/midori/
   /lounge/triggers/templates/midori_config $width $height > /lounge/.config/midori/config
 }
 
