@@ -24,6 +24,7 @@ feh
 xdotool
 xbindkeys
 bash
+libxosd2
 firmware-linux-free
 firmware-linux-nonfree
 firmware-realtek
