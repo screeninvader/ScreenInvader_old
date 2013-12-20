@@ -33,6 +33,7 @@
   "playerRewind": [ "player rewind", [ ] ],
   "playerForwardMore": [ "player forwardMore", [ ] ],
   "playerRewindMore": [ "player rewindMore", [ ] ],
+  "playerToggleOSD" : [ "player osd", [ ] ],
   "browserPageUp" : [ "browser pageUp", [ ] ],
   "browserPageDown" : [ "browser pageDown", [ ] ],
   "browserScrollUp" : [ "browser scrollUp", [ ] ],
