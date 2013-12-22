@@ -1,0 +1,14 @@
+Origin: screeninvader
+Label: screeninader
+Suite: stable
+Codename: latest
+Version: 3.0
+Architectures: i386 source
+Components: main non-free contrib bad protected server
+UDebComponents: main
+Description: ScreenInvader packages
+SignWith: yes
+DebOverride: override.latest
+UDebOverride: override.latest
+DscOverride: srcoverride
+
