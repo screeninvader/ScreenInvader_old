@@ -1,60 +1,60 @@
 Package: screeninvader-binaries
-Version: 0.9.1
+Version: 0.9.4
 Architecture: i386
 Maintainer: Amir Hassan <amir@viel-zu.org>
 Installed-Size: 1099
 Homepage: http://screeninvader.com
 Priority: optional
 Section: misc
-Filename: pool/main/s/screeninvader-binaries/screeninvader-binaries_0.9.1_i386.deb
-Size: 448986
-SHA256: 3255b3400604142d7d10bc4e972848233d853b8e736311c204044afbd27f75eb
-SHA1: 00646309cdfa9ff7fae4110d605ae3d0fe647ff8
-MD5sum: ef306342bd0e80d21194937304e3af5d
+Filename: pool/main/s/screeninvader-binaries/screeninvader-binaries_0.9.4_i386.deb
+Size: 448918
+SHA256: 949cd457d6ede15ca6f991606e6ba05b16b0e7d977963ccda01317a48cfb8302
+SHA1: 45d099947cf93dbf00e7f39a29b78102a5d8f302
+MD5sum: 78acba585da846fdc472a11b72847dda
 Description: ScreenInvader binaries files
 
 Package: screeninvader-config
-Version: 0.9.1
+Version: 0.9.4
 Architecture: i386
 Maintainer: Amir Hassan <amir@viel-zu.org>
 Installed-Size: 1099
 Homepage: http://screeninvader.com
 Priority: optional
 Section: misc
-Filename: pool/main/s/screeninvader-config/screeninvader-config_0.9.1_i386.deb
-Size: 18674
-SHA256: dfa83b442f772fbd3751382eb29291b3c56ce33b838d5fc20119bcd164012a09
-SHA1: 26fda7175ebc793e24eb8adc10bb083a32d2b85b
-MD5sum: d16c0dfe2ea2f40b3b74b00208c7298a
+Filename: pool/main/s/screeninvader-config/screeninvader-config_0.9.4_i386.deb
+Size: 18680
+SHA256: 45dd5f132a72d357632aefc53f301eb48f83426dd14d30a2776156365621fe29
+SHA1: d0bf111459ddfa27ed5c5116b15c58e9a69f8bf2
+MD5sum: bb2ab5bde737c8acf63bf4e38928dc70
 Description: ScreenInvader config files
 
 Package: screeninvader-core
-Version: 0.9.1
+Version: 0.9.4
 Architecture: i386
 Maintainer: Amir Hassan <amir@viel-zu.org>
 Installed-Size: 1099
 Homepage: http://screeninvader.com
 Priority: optional
 Section: misc
-Filename: pool/main/s/screeninvader-core/screeninvader-core_0.9.1_i386.deb
-Size: 125770
-SHA256: d21ec95443ab7562609699895577e51001f118956bcbd42457a62f942b8c81ed
-SHA1: dcfc7d2a8ec1d0e5941f370e7094604ab62d545a
-MD5sum: b1c31dfe716abb6777e6393a5630d2ee
+Filename: pool/main/s/screeninvader-core/screeninvader-core_0.9.4_i386.deb
+Size: 126028
+SHA256: 56655eec2819faae7b3e507566a4857aae99577ae6d09a11d568883943ed3819
+SHA1: 6504db8304ed9864ce7afe9f34f40808db6386fc
+MD5sum: df752b8e5b71116497a8510b10d2a836
 Description: ScreenInvader core files
 
 Package: screeninvader-misc
-Version: 0.9.1
+Version: 0.9.4
 Architecture: i386
 Maintainer: Amir Hassan <amir@viel-zu.org>
 Installed-Size: 1099
 Homepage: http://screeninvader.com
 Priority: optional
 Section: misc
-Filename: pool/main/s/screeninvader-misc/screeninvader-misc_0.9.1_i386.deb
-Size: 1107942
-SHA256: bac796040ef6a9d5f7ada313cdd8c3ed8811889cb7afd439cd14cbdd3aef96b6
-SHA1: 8d726cebc88100b3d74a427148a455d839ded837
-MD5sum: 5439a1ecd76ba1178c21f20ebc602229
+Filename: pool/main/s/screeninvader-misc/screeninvader-misc_0.9.4_i386.deb
+Size: 1107726
+SHA256: 32da00615642c97602bc57e0001c31770473ccabca7c6c0c7e11bf05f84b051a
+SHA1: 90bc99bf72de4ec35cf9db69b7824067c3f7dcd1
+MD5sum: 28ac6f53fa29bcb6906a4d8d24b3b21d
 Description: ScreenInvader misc files
 
