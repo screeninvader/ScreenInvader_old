@@ -157,7 +157,7 @@ function doPackageConf() {
     "$CHRT $APTNI update"
 
 	check "Copy ScreenInvader repo key" \
-    "cp $BOOTSTRAP_DIR/src/lounge/ScreenInvaderRepoKey.gpg $CHROOT_DIR/tmp/"
+    "cp $BOOTSTRAP_DIR/repo/ScreenInvaderRepoKey.gpg $CHROOT_DIR/tmp/"
 
   check "Add ScreenInvader repo key" \
     "$CHRT apt-key add /tmp/ScreenInvaderRepoKey.gpg"
