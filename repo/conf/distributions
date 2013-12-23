@@ -1,14 +1,11 @@
-Origin: screeninvader
+Origin: viel-zu.org
 Label: screeninader
 Suite: stable
 Codename: latest
 Version: 3.0
 Architectures: i386 source
-Components: main non-free contrib bad protected server
+Components: main
 UDebComponents: main
 Description: ScreenInvader packages
 SignWith: yes
-DebOverride: override.latest
-UDebOverride: override.latest
-DscOverride: srcoverride
 
