@@ -1,5 +1,5 @@
 extra/
 tmp/
-
+packaging/screeninvader-*
 *.log
 *.dd
