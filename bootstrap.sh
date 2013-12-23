@@ -156,6 +156,12 @@ function doPackageConf() {
   check "Update Repositories" \
     "$CHRT $APTNI update"
 
+	check "Copy ScreenInvader repo key" \
+    "cp $BOOTSTRAP_DIR/src/lounge/ScreenInvaderRepoKey.gpg $CHROOT_DIR/tmp/"
+
+  check "Add ScreenInvader repo key" \
+    "$CHRT apt-key add /tmp/ScreenInvaderRepoKey.gpg"
+
   check "Install keyrings" \
     "$CHRT $APTNI install $KEYRINGS"
 
