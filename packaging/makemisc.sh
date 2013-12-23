@@ -8,4 +8,4 @@ fi
 rm -r screeninvader-misc/usr
 cp -a ../src/usr screeninvader-misc/
 dpkg-deb -b screeninvader-misc/ screeninvader-misc-all.deb
-
+dpkg-sig --sign builder screeninvader-misc-all.deb

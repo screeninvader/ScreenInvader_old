@@ -8,4 +8,4 @@ fi
 rm -r screeninvader-config/etc
 cp -a ../src/etc screeninvader-config/
 dpkg-deb -b screeninvader-config/ screeninvader-config-all.deb
-
+dpkg-sig --sign builder screeninvader-config-all.deb
