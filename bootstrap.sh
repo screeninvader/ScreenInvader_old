@@ -22,7 +22,6 @@ function getConf() {
   cat "$1" | tr "\n" " "
 }
 
-KERNEL="`getConf config/kernel`"
 VIDEO_DRIVERS="`getConf config/video_drivers`"
 KEYRINGS="`getConf config/keyrings`"
 PKG_WHITE="`getConf config/packages_white`"
@@ -36,13 +35,13 @@ export LC_ALL="C"
 APTNI="apt-get -q -y --no-install-recommends --force-yes -o Dpkg::Options::=\"--force-confdef\" -o Dpkg::Options::=\"--force-confold\" ";
 
 DEBIAN_MIRROR="http://ftp.at.debian.org/debian/"
-EMDEBIAN_MIRROR="http://www.emdebian.org/grip/"
+EMDEBIAN_MIRROR="http://ftp.at.debian.org/debian/"
 DEBIAN_MULTIMEDIA_MIRROR="http://www.deb-multimedia.org/"
 
 dir="`dirname $0`"
 BOOTSTRAP_DIR="`cd $dir; pwd`"
 BOOTSTRAP_LOG="$BOOTSTRAP_DIR/bootstrap.log"
-ARCH=armv7l
+ARCH=armhf
 APTCACHER_PORT=
 NOINSTALL=
 NODEBOOT=
@@ -138,7 +137,7 @@ function doDebootstrap() {
     echo "http://127.0.0.1:$APTCACHER_PORT/$HOST/debian"
   )
  check "Bootstrap debian" \
-    "debootstrap --exclude="`echo $PKG_BLACK | sed 's/ /,/g'`" --arch $ARCH squeeze "$CHROOT_DIR" $BOOTSTRAP_MIRROR"
+    "debootstrap --exclude="`echo $PKG_BLACK | sed 's/ /,/g'`" --arch $ARCH wheezy "$CHROOT_DIR" $BOOTSTRAP_MIRROR"
 }
 
 function doPackageConf() {
@@ -175,10 +174,7 @@ function doPackageConf() {
     "$CHRT $APTNI install $PKG_WHITE"
 
   check "Install sid packages" \
-     "$CHRT $APTNI -t sid-grip install $PKG_SID"
-
-  check "Install kernel" \
-    "$CHRT $APTNI -t squeeze install $KERNEL"
+     "$CHRT $APTNI -t sid install $PKG_SID"
 
   check "Upgrade packages" \
     "$CHRT $APTNI upgrade"
@@ -193,6 +189,12 @@ function doCopy() {
 
   check "Copy debian packages" \
     "cp $BOOTSTRAP_DIR/packaging/*.deb $CHROOT_DIR/install/"
+ 
+  check "Build thttpd" \
+    "cd $BOOTSTRAP_DIR/third/thttpd-2.25b/; make"
+
+  check "Install thttpd" \
+    "cd $BOOTSTRAP_DIR/third/thttpd-2.25b/; make install" 
   
   check "install core packages" \
     "$CHRT dpkg -i /install/screeninvader-core-all.deb"
