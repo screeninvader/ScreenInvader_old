@@ -1,7 +1,6 @@
 keyboard-configuration
 sudo
 dialog
-thttpd
 alsa-utils
 psmisc
 evilwm
@@ -13,12 +12,14 @@ cifs-utils
 mingetty
 locate
 kbd
-v86d
 wireless-tools
 xpdf
 wpasupplicant
-mplayer-nogui
-debconf-english
+mplayer
+libavformat53
+libavcodec53
+libmp3lame0=1:3.99.5-dmo2
+debconf
 apache2-utils
 feh
 xdotool

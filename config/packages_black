@@ -16,7 +16,6 @@ traceroute
 netcat-traditional
 iputils-ping
 dmidecode
-libboost-iostreams1.42.0
 libcwidget3
 libept1
 libnewt0.52
@@ -25,7 +24,5 @@ libsigc++-2.0-0c2a
 xserver-xorg-input-all
 xserver-xorg-input-synaptics
 xserver-xorg-input-wacom
-libboost-filesystem1.42.0
-libboost-system1.42.0
 libnewt0.52
 
