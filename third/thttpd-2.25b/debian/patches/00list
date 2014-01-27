@@ -1,0 +1,12 @@
+01-conglomeration.dpatch
+02-path-info.dpatch
+03-sigbus.dpatch
+04-manpage-entities.dpatch
+05-301-redirect.dpatch
+06-manpage-tilde.dpatch
+07-manpage-symlink.dpatch
+08-local-getline.dpatch
+09-ogg-mime-types.dpatch
+10-x-forwarded-for-header.dpatch
+11-tweak-config.h.dpatch
+12-cgi-ignores-stderr.dpatch

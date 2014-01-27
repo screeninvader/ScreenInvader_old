@@ -1,0 +1,28 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 11-tweak-config.h.dpatch by  <skx@gold.my.flat>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: No description.
+
+@DPATCH@
+diff -urNad '--exclude=CVS' '--exclude=.svn' '--exclude=.git' '--exclude=.arch' '--exclude=.hg' '--exclude=_darcs' '--exclude=.bzr' thttpd-2.25b~/config.h thttpd-2.25b/config.h
+--- thttpd-2.25b~/config.h	2005-06-29 18:53:18.000000000 +0100
++++ thttpd-2.25b/config.h	2010-03-01 17:27:15.000000000 +0000
+@@ -267,7 +267,7 @@
+ ** $SERVER_SOFTWARE and $SERVER_ADDRESS to be appended to the custom error
+ ** pages.  (It is always appended to the built-in error pages.)
+ */
+-#define ERR_APPEND_SERVER_INFO
++#undef ERR_APPEND_SERVER_INFO
+ 
+ /* CONFIGURE: nice(2) value to use for CGI programs.  If this is undefined,
+ ** CGI programs run at normal priority.
+@@ -291,7 +291,7 @@
+ /* CONFIGURE: Seconds between stats syslogs.  If this is undefined then
+ ** no stats are accumulated and no stats syslogs are done.
+ */
+-#define STATS_TIME 3600
++#undef STATS_TIME
+ 
+ /* CONFIGURE: The mmap cache tries to keep the total number of mapped
+ ** files below this number, so you don't run out of kernel file descriptors.

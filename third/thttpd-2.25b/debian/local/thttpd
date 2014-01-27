@@ -1,0 +1,10 @@
+#
+#  This file is read by the thttpd init script.
+#
+
+
+
+#
+#  If you wish thttpd to start, globally, the change ENABLED to "yes"
+#
+ENABLED=no

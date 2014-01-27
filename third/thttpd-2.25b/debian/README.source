@@ -1,0 +1,4 @@
+Changes to upstream source are organised as a dpatch series.
+
+Run debian/rules patch to apply all patches and debian/rules unpatch
+to remove them.  See the dpatch documentation for more information.
