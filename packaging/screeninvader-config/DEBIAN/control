@@ -1,6 +1,6 @@
 Package: screeninvader-config
-Version: 0.9.4
-Architecture: i386
+Version: 0.9
+Architecture: armhf
 Maintainer: Amir Hassan <amir@viel-zu.org>
 Installed-Size: 1099
 Section: misc
