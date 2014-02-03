@@ -2,7 +2,6 @@ dpkg
 libc6
 libstdc++6
 multiarch-support
-autofs
 libkyotocabinet16
 xserver-xorg
 xserver-xorg-input-kbd

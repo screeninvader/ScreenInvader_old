@@ -32,8 +32,7 @@ set -- $STREAMS
 SELECTED=
 for s in $@; do 
 	f=$(l_urldecode "`parse_query $s "type"`"|cut -d ';' -f1)
-
-	if [ "$f" != "video/x-flv" ]; then
+	if [ "$f" == "video/mp4" ]; then
 		SELECTED="$SELECTED,$s"
 	fi
 done
@@ -44,13 +43,16 @@ fi
 
 set -- $SELECTED
 
+hd720=
 large=
 medium=
 small=
 
 for s in $@; do
 	q=`parse_query $s "quality"`
-	if [ -z "$large" -a "$q" == "large" ]; then
+        if [ -z "$hd720" -a "$q" == "hd720" ]; then
+                hd720="$s"
+	elif [ -z "$large" -a "$q" == "large" ]; then
 		large="$s"
 	elif [ -z "$medium" -a "$q" == "medium" ]; then
 		medium="$s"
@@ -59,7 +61,12 @@ for s in $@; do
 	fi
 done  
 
-SELECTED="$large"
+SELECTED="$hd720"
+
+if [ -z "$SELECTED" ]; then
+  SELECTED="$large"
+fi
+
 
 if [ -z "$SELECTED" ]; then
   SELECTED="$medium"

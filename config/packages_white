@@ -15,10 +15,6 @@ kbd
 wireless-tools
 xpdf
 wpasupplicant
-mplayer
-libavformat53
-libavcodec53
-libmp3lame0=1:3.99.5-dmo2
 debconf
 apache2-utils
 feh
@@ -28,14 +24,5 @@ bash
 libxosd2
 firmware-linux-free
 firmware-linux-nonfree
-firmware-realtek
-firmware-ralink
-firmware-qlogic
-firmware-iwlwifi
-firmware-intelwimax
-firmware-brcm80211
-firmware-bnx2x
-firmware-bnx2
-firmware-atheros
-atmel-firmware
+
 

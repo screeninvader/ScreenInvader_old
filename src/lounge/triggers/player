@@ -18,6 +18,7 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 
+export VDPAU_DRIVER=sunxi
 . /lounge/triggers/functions.sh
 l_log $@
 
@@ -75,7 +76,7 @@ function mplayer_start {
 
   while [ 0 ]; do 
     sleep 1; 
-    bash -c "/usr/bin/mplayer -idle -input file="$CMD_FIFO" 2>&1 | tee /tmp/mplayer | /lounge/bin/player callback"
+    bash -c "nice -n 19 -- /usr/bin/mplayer -fs -vc ffh264vdpau,ffmpeg12vdpau, -idle -input file="$CMD_FIFO" 2>&1 | tee /tmp/mplayer | /lounge/bin/player callback"
  done
 }
 
@@ -228,6 +229,7 @@ function pause() {
 
 function stop() {
   (
+    set -x
     flock -x 200
     mplayer_cmd "pause"
     mplayer_cmd "stop"
@@ -253,6 +255,7 @@ function subtitle() {
 
 SOTRACK="DEMUXER: ==> Found"
 EOTRACK="GLOBAL: EOF code: 1"
+CACHEEMPTY="Cache empty"
 PATH_CHANGED="GLOBAL: ANS_path="
 
 function contains() {
@@ -287,10 +290,15 @@ function sotrack() {
   killall showip
 }
 
+function cache_empty() {
+  notify "Network Problem!"
+}
+
 function callback() {
   cat | while read line; do
     contains "$line" "$EOTRACK" && eotrack
     contains "$line" "$SOTRACK" && sotrack
+    contains "$line" "$CACHEEMPTY" && cache_empty
   done
 }
 

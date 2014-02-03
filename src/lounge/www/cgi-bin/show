@@ -20,7 +20,7 @@
 . ./initcgi "text/html"
 
 ( 
-#set -x
+set -x
 declare -A VIDEO_HOSTS="( \
 [youtube.com/]='youtube' \
 [youtu.be/]='youtube' \
@@ -62,7 +62,6 @@ declare -A CATEGORY_FIX="( \
 )"
 
 function getCategory() {
- set -x
   url="$1"
   for host in "${!VIDEO_HOSTS[@]}"
   do
@@ -115,6 +114,6 @@ if [ "$handler" == "browser" ]; then
 fi
 
 [ -n "$handler" ] && /lounge/bin/janosh -t set "/$handler/url" "$url" "/$handler/category" "$category"
-) &>/dev/null &
+) &>/tmp/show &
 cat /lounge/www/close.html
 
