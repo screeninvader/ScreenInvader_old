@@ -1,0 +1,16 @@
+K 10
+svn:ignore
+V 141
+# debian/changelog is generated
+changelog
+files
+mencoder
+mplayer
+mplayer-dbg
+mplayer-doc
+mplayer-gui
+*.debhelper.log
+*.debhelper
+*.substvars
+
+END
