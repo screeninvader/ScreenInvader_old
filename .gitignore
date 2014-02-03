@@ -6,3 +6,11 @@ repo/dists/
 repo/pool/
 *.log
 *.dd
+third/*/*.o
+third/*/*/*.o
+third/thttpd-2.25b/cgi-src/phf
+third/thttpd-2.25b/cgi-src/redirect
+third/thttpd-2.25b/cgi-src/ssi
+third/thttpd-2.25b/extras/htpasswd
+third/thttpd-2.25b/extras/makeweb
+third/thttpd-2.25b/thttpd
