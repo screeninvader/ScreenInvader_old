@@ -204,6 +204,9 @@ function doBuild() {
 
   check "build xf86-video-fbturbo" \
     "build_xf86-video-fbturbo.sh"
+
+  check "build libvdpau-sunxi" \
+    "build_libvdpau-sunxi.sh"
 }
 
 function doCopy() {
@@ -230,7 +233,10 @@ function doCopy() {
 
   check "Install xf86-video-fbturbo" \
     "cd $BOOTSTRAP_DIR/third/xf86-video-fbturbo/; make DESTDIR=$CHROOT_DIR/ install"
-
+  
+  chack "Install libvdpau-sunxi"
+    "cd $BOOTSTRAP_DIR/third/libvdpau-sunxi/; make DESTDIR=$CHROOT_DIR/ install"
+  
   check "install core packages" \
     "$CHRT dpkg -i /install/screeninvader-core-all.deb"
 

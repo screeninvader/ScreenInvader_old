@@ -1,0 +1,2 @@
+cd libvdpau-sunxi
+make
