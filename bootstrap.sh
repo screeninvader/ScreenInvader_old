@@ -183,19 +183,54 @@ function doPackageConf() {
     "$CHRT $APTNI purge $PKG_BLACK"
 }
 
+function doBuild() {
+  check "build thttpd" \
+    "build_thttpd.sh"
+
+  check "build mplayer" \
+    "build_mplayer.sh"
+
+  check "build dri2" \
+    "build_dri2.sh"
+
+  check "build sunxi-mali" \
+    "build_sunxi-mali.sh"
+
+  check "build sunxi-tools" \
+    "build_sunxi-tools.sh"
+
+  check "build u-boot-sunxi" \
+    "build_u-boot-sunxi.sh"
+
+  check "build xf86-video-fbturbo" \
+    "build_xf86-video-fbturbo.sh"
+}
+
 function doCopy() {
   check "Make install directory" \
     "mkdir -p $CHROOT_DIR/install/"
 
   check "Copy debian packages" \
     "cp $BOOTSTRAP_DIR/packaging/*.deb $CHROOT_DIR/install/"
- 
-  check "Build thttpd" \
-    "cd $BOOTSTRAP_DIR/third/thttpd-2.25b/; make"
-
-  check "Install thttpd" \
-    "cd $BOOTSTRAP_DIR/third/thttpd-2.25b/; make install" 
   
+  check "Install thttpd" \
+    "cd $BOOTSTRAP_DIR/third/thttpd-2.25b/; make DESTDIR=$CHROOT_DIR/ install"
+
+  check "Install mplayer" \
+    "cd $BOOTSTRAP_DIR/third/mplayer-checkout-2014-01-28/; make DESTDIR=$CHROOT_DIR/ install"
+
+  check "Install sunxi-mali" \
+    "cd $BOOTSTRAP_DIR/third/sunxi-mali/; make DESTDIR=$CHROOT_DIR/ install"
+
+  #check "Install sunxi-tools" \
+  #  "cd $BOOTSTRAP_DIR/third/sunxi-tools/; make DESTDIR=$CHROOT_DIR/ install"
+
+  check "Install libdri2" \
+    "cd $BOOTSTRAP_DIR/third/libdri2/; make DESTDIR=$CHROOT_DIR/ install"
+
+  check "Install xf86-video-fbturbo" \
+    "cd $BOOTSTRAP_DIR/third/xf86-video-fbturbo/; make DESTDIR=$CHROOT_DIR/ install"
+
   check "install core packages" \
     "$CHRT dpkg -i /install/screeninvader-core-all.deb"
 
@@ -326,7 +361,7 @@ EOHTML
 
 ###### main
 
-while getopts 'a:l:p:g:c:idux' c
+while getopts 'a:l:p:g:c:iduxb' c
 do
   case $c in
     a) ARCH="$OPTARG";;
@@ -338,6 +373,7 @@ do
     d) NODEBOOT="YES";;
     u) NOINSTALL="YES"; NODEBOOT="YES";;
     x) INSTALL_EXTRA="YES";;
+    b) DONT_REBUILD="YES";;
     \?) printUsage;;
   esac
 done
@@ -384,6 +420,7 @@ else
 
   doCleanupPackages
   doCleanupFiles
+  [ -z "$DONT_REBUILD" ] && doBuild
   doCopy
   doCreateBuildHtml
 fi
