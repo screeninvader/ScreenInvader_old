@@ -41,3 +41,5 @@ libuuid:x:101:
 crontab:x:102:
 lounge:x:1000:
 messagebus:x:103:
+ntp:x:106:
+
