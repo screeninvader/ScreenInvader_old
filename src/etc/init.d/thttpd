@@ -13,7 +13,7 @@
 ### END INIT INFO
 
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
-DAEMON=/usr/sbin/thttpd
+DAEMON=/usr/local/sbin/thttpd
 DESC="web server"
 NAME=thttpd
 
