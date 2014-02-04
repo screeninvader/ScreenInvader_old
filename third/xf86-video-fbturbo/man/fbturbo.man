@@ -1,0 +1,136 @@
+.\" shorthand for double quote that works everywhere.
+.ds q \N'34'
+.TH FBTURBO __drivermansuffix__ __vendorversion__
+.SH NAME
+fbturbo \- video driver for Allwinner and other ARM-based devices
+.SH SYNOPSIS
+.nf
+.B "Section \*qDevice\*q"
+.BI "  Identifier \*q"  devname \*q
+.B  "  Driver \*qfbturbo\*q"
+\ \ ...
+.B EndSection
+.fi
+.SH DESCRIPTION
+.B fbturbo
+is an __xservername__ driver for Allwinner and other ARM-based devices,
+derived from
+.B fbdev
+driver.
+With regard to 2D graphics, it provides a number of software optimizations
+on all platforms, while letting the SIMD (ARM NEON) accelerated code from the
+.B pixman
+library run at full speed without any unnecessary overhead. 2D hardware
+acceleration using G2D is supported on sunxi platforms. The recommended
+framebuffer color depths are 16 (RGB565) and 24 (XRGB8888), the other color
+depths may be supported too. Multi-head configurations are supported.
+.SH SUPPORTED HARDWARE
+The 
+.B fbturbo
+driver supports all hardware where a framebuffer driver is available and
+uses the os-specific submodule fbdevhw(__drivermansuffix__) to talk
+to the kernel
+device driver.  Currently a fbdevhw module is available for linux.
+Additionally it is intended to use some of the display controller features
+from Allwinner A10/A13 SoC and provide the necessary DRI2 integration with
+the proprietary OpenGL ES binary blobs for Mali400 GPU (if they are installed
+in the system). The part related to Mali400 GPU support is derived from
+the vendor provided open source
+.B xf86-video-mali
+driver.
+.SH CONFIGURATION DETAILS
+Please refer to __xconfigfile__(__filemansuffix__) for general configuration
+details.  This section only covers configuration details specific to
+this driver.
+.PP
+For this driver it is not required to specify modes in the screen 
+section of the config file.  The
+.B fbturbo
+driver can pick up the currently used video mode from the framebuffer 
+driver and will use it if there are no video modes configured.
+.PP
+The following driver 
+.B Options
+are supported:
+.TP
+.BI "Option \*qfbdev\*q \*q" string \*q
+The framebuffer device to use. Default: /dev/fb0.
+.TP
+.BI "Option \*qShadowFB\*q \*q" boolean \*q
+Enable or disable use of the shadow framebuffer layer.  Default: off on
+most platforms (any hardware that supports NEON, VFP, or 2D hardware
+acceleration).
+.TP
+.BI "Option \*qRotate\*q \*q" string \*q
+Enable rotation of the display. The supported values are "CW" (clockwise,
+90 degrees), "UD" (upside down, 180 degrees) and "CCW" (counter clockwise,
+270 degrees). Implies use of the shadow framebuffer layer.   Default: off.
+.TP
+.BI "Option \*qUseBackingStore\*q \*q" boolean \*q
+Enable the use of backing store for certain windows at the bottom of the
+stacking order. This allows to avoid expensive redraws caused by expose
+events when dragging one window on top of another. The default heuristics
+tries to be "smart" and avoid backing store allocation for the active
+window which has keyboard focus. The purpose is to get the best balance
+between performance and memory footprint without introducing full
+compositing overhead. Default: inverse of ShadowFB
+.TP
+.BI "Option \*qForceBackingStore\*q \*q" boolean \*q
+Same as "UseBackingStore" option, but don't apply any heuristics and just
+allocate backing store for all windows.
+.TP
+.BI "Option \*qHWCursor\*q \*q" boolean \*q
+Enable or disable the HW cursor.  Supported on sunxi platforms. Default: on
+if supported, off otherwise.
+.TP
+.BI "Option \*qDRI2\*q \*q" boolean \*q
+Enable or disable DRI2 integration for Mali GPU. Provides hardware
+accelerated OpenGL ES in the case if proprietary blob libMali.so
+is installed in the system and linux kernel provides modules mali.ko,
+mali_drm.ko and ump.ko with compatible version (for example, both kernel
+modules and libMali.so can have revision r3p0).  Default: on.
+.TP
+.BI "Option \*qDRI2HWOverlay\*q \*q" boolean \*q
+Enable the use of display controller hardware overlays (aka "layers",
+"windows", ...) for fully visible DRI2 backed OpenGL ES windows in order
+to avoid expensive memory copy operations. That's a zero-copy solution
+which eliminates unnecessary CPU overhead.  Default: on.
+
+.B Note:
+the hardware overlays are automatically disabled in the case if a
+compositing window manager (xfwm4, kwin, ...) is used for various
+fancy desktop effects such as windows translucency or shadows. Maybe
+some improvements are possible in this area. But if you really care
+about the desktop performance, then you likely don't want to enable
+any compositing effects in your window manager anyway.
+.TP
+.BI "Option \*qSwapbuffersWait\*q \*q" boolean \*q
+This option controls the behavior of eglSwapBuffers calls by OpenGL ES
+applications. If enabled, the calls will try to avoid tearing by making
+sure the display scanline is outside of the area to be copied before the
+copy occurs. If disabled, no scanline synchronization is performed,
+meaning tearing will likely occur. Note that when enabled, this option
+can adversely affect the framerate of applications that render frames
+at less than refresh rate.  Default: enabled.
+.TP
+.BI "Option \*qAccelMethod\*q \*q" "string" \*q
+Chooses between available acceleration architectures. Valid values are
+.B G2D
+and
+.B CPU.
+G2D is only available on sunxi hardware with G2D support (such as A10).
+The default is
+.B G2D
+on supported platforms, CPU on others.
+
+.TP
+.BI "Option \*qXVHWOverlay\*q \*q" boolean \*q
+Enable or disable the use of display controller hardware overlays for
+XVideo acceleration. Only available on sunxi hardware.
+Default: on if supported, off otherwise.
+
+.SH "SEE ALSO"
+__xservername__(__appmansuffix__), __xconfigfile__(__filemansuffix__), Xserver(__appmansuffix__),
+X(__miscmansuffix__), fbdevhw(__drivermansuffix__)
+.SH AUTHORS
+Authors include: Gerd Knorr, Michel D\(:anzer, Geert Uytterhoeven, Siarhei Siamashka
