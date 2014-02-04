@@ -1,3 +1,3 @@
 cd sunxi-mali
 ./configure
-./make
+make
