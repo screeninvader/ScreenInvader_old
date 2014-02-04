@@ -1,8 +1,6 @@
 #!/bin/bash
 
 cat <<EOSOURCES
-deb $1 wheezy main
-deb $1 sid main
 deb $2 wheezy main non-free
 deb $2 sid main non-free
 deb $3 wheezy main non-free 
