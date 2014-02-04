@@ -25,4 +25,9 @@ libxosd2
 firmware-linux-free
 firmware-linux-nonfree
 ntp
+libfribidi0
+libxv1
+libvdpau1
+vdpauinfo
+bxxf86dga1
 
