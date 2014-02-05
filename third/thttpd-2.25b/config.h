@@ -84,7 +84,7 @@
 ** set in the runtime config file.
 */
 //#ifdef notdef
-#define CGI_LIMIT 10
+#define CGI_LIMIT 3
 //#endif
 
 /* CONFIGURE: How many seconds to allow for reading the initial request
