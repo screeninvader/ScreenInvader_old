@@ -76,7 +76,7 @@ function mplayer_start {
 
   while [ 0 ]; do 
     sleep 1; 
-    bash -c "nice -n 19 -- /usr/bin/mplayer -fs -vc ffh264vdpau,ffmpeg12vdpau, -idle -input file="$CMD_FIFO" 2>&1 | tee /tmp/mplayer | /lounge/bin/player callback"
+    bash -c "/usr/bin/mplayer -fs -vc ffh264vdpau,ffmpeg12vdpau, -idle -input file="$CMD_FIFO" 2>&1 | tee /tmp/mplayer | /lounge/bin/player callback"
  done
 }
 
