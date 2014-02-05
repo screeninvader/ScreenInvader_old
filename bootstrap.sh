@@ -237,16 +237,19 @@ function doCopy() {
   chack "Install libvdpau-sunxi"
     "cd $BOOTSTRAP_DIR/third/libvdpau-sunxi/; make DESTDIR=$CHROOT_DIR/ install"
   
-  check "install core packages" \
+  check "install kernel package" \
     "$CHRT dpkg -i /install/screeninvader-core-all.deb"
 
-  check "install config packages" \
+  check "install core package" \
+    "$CHRT dpkg -i /install/screeninvader-core-all.deb"
+
+  check "install config package" \
     "$CHRT dpkg -i --force-all /install/screeninvader-config-all.deb"
 
-  check "install misc packages" \
+  check "install misc package" \
     "$CHRT dpkg -i /install/screeninvader-misc-all.deb"
 
-  check "install binary package" \
+  check "install binaries package" \
     "$CHRT dpkg -i /install/screeninvader-binaries-all.deb"
 
   check "Remove install directory" \
