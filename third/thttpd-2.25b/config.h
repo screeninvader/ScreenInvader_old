@@ -272,7 +272,7 @@
 /* CONFIGURE: nice(2) value to use for CGI programs.  If this is undefined,
 ** CGI programs run at normal priority.
 */
-#define CGI_NICE 10
+//#define CGI_NICE 10
 
 /* CONFIGURE: $PATH to use for CGI programs.
 */
