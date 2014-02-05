@@ -83,9 +83,9 @@
 ** no limit (and you'd better have a lot of memory).  This can also be
 ** set in the runtime config file.
 */
-#ifdef notdef
-#define CGI_LIMIT 50
-#endif
+//#ifdef notdef
+#define CGI_LIMIT 10
+//#endif
 
 /* CONFIGURE: How many seconds to allow for reading the initial request
 ** on a new connection.
