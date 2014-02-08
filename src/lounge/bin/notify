@@ -29,7 +29,7 @@ title="$1"
 TITLE=${ARG:0:48}
 killall osd
 
-width="$( sudo /lounge/bin/gainroot '/lounge/bin/janosh -r get /display/resolution | cut -d"x" -f1' )"
+width="$( sudo /lounge/bin/gainroot '/lounge/bin/janosh -r get /display/resolution/value | cut -d"x" -f1' )"
 
 if [ $width -gt 1280 ]; then
   fontsize=400;
