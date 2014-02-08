@@ -238,7 +238,7 @@ function doCopy() {
     "cd $BOOTSTRAP_DIR/third/libvdpau-sunxi/; make DESTDIR=$CHROOT_DIR/ install"
   
   check "install kernel package" \
-    "$CHRT dpkg -i /install/screeninvader-core-all.deb"
+    "$CHRT dpkg -i /install/screeninvader-kernel-all.deb"
 
   check "install core package" \
     "$CHRT dpkg -i /install/screeninvader-core-all.deb"
