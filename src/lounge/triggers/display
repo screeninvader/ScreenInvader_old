@@ -27,10 +27,7 @@ l_log $@
 
 function setResolution () {
   export DISPLAY=:0
-  res="`janosh -r get /display/resolution`"
-  xrandr --output VGA1 --mode $res
-  xrandr --output HDMI1 --mode $res
-  xrandr --output LVDS1 --mode $res
+  res="`janosh -r get /display/resolution/value`"
   xrandr --output default --mode $res
   width="`echo $res | cut -d"x" -f1`"
   height="`echo $res | cut -d"x" -f2`"

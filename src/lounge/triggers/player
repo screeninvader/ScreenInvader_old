@@ -76,7 +76,7 @@ function mplayer_start {
 
   while [ 0 ]; do 
     sleep 1; 
-    bash -c "/usr/bin/mplayer -fs -vc ffh264vdpau,ffmpeg12vdpau, -idle -input file="$CMD_FIFO" 2>&1 | tee /tmp/mplayer | /lounge/bin/player callback"
+    bash -c "/usr/local/bin/mplayer -fs -vc ffh264vdpau,ffmpeg12vdpau, -idle -input file="$CMD_FIFO" 2>&1 | tee /tmp/mplayer | /lounge/bin/player callback"
  done
 }
 
@@ -112,6 +112,32 @@ function jump() {
   mplayer_cmd "loadfile $file"
   janosh set /playlist/index $idx
   touch "$PLAYLIST_CACHE"
+}
+
+function mute() {
+  m="`janosh -r get /sound/mute`"
+  if [ "$m" == "true" ]; then
+    m=false
+    mplayer_cmd "mute 0"
+  else
+    m=true
+    mplayer_cmd "mute 1"
+  fi
+
+  janosh set /sound/mute $m
+}
+
+function volume() {
+  v=$1
+
+  if [ $v -gt 100 ]; then
+    v=100;
+  elif [ $v -lt 0 ]; then
+    v=0;
+  fi
+
+  mplayer_cmd "volume $v 1"
+  janosh set /sound/volume $v
 }
 
 function isQueueMode() {

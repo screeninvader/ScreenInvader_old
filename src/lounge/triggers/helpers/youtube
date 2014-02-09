@@ -61,7 +61,7 @@ for s in $@; do
 	fi
 done  
 
-SELECTED="$hd720"
+SELECTED="$medium"
 
 if [ -z "$SELECTED" ]; then
   SELECTED="$large"

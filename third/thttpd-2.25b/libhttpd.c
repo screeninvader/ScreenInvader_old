@@ -3554,7 +3554,7 @@ cgi( httpd_conn* hc )
 	    }
 
 	/* Parent process. */
-	syslog( LOG_INFO, "spawned CGI process %d for file '%.200s'", r, hc->expnfilename );
+//	syslog( LOG_INFO, "spawned CGI process %d for file '%.200s'", r, hc->expnfilename );
 #ifdef CGI_TIMELIMIT
 	/* Schedule a kill for the child process, in case it runs too long */
 	client_data.i = r;

@@ -1,12 +1,22 @@
 sudo -u lounge /lounge/triggers/sound reload
 echo performance > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
-
+ 
 echo 1056000 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
 echo 408000 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
-
+ 
 #echo 25 > /sys/devices/system/cpu/cpufreq/ondemand/up_threshold
 #echo 10 > /sys/devices/system/cpu/cpufreq/ondemand/sampling_down_factor
 #echo 1 > /sys/devices/system/cpu/cpufreq/ondemand/io_is_busy
 
-exit 0
+echo on > /sys/devices/platform/mali_dev.0/power/control
+echo on > /sys/devices/platform/mali_drm.0/power/control
+echo on > /sys/devices/platform/mali_drm.1/power/control
+echo on > /sys/class/graphics/fb0/power/control
+echo on > /sys/class/graphics/fb1/power/control
+echo on > /sys/class/graphics/fbcon/power/control
+echo on > /sys/class/sound/card0/power/control
+echo on > /sys/class/sound/card1/power/control
 
+# disable fb0 screenblanking
+echo -e '\033[9;0]' > /dev/tty1
+exit 0

@@ -185,28 +185,28 @@ function doPackageConf() {
 
 function doBuild() {
   check "build thttpd" \
-    "build_thttpd.sh"
+    "cd $BOOTSTRAP_DIR/third/; ./build_thttpd.sh"
 
   check "build mplayer" \
-    "build_mplayer.sh"
+    "cd $BOOTSTRAP_DIR/third/; ./build_mplayer.sh"
 
   check "build dri2" \
-    "build_dri2.sh"
+    "cd $BOOTSTRAP_DIR/third/; ./build_dri2.sh"
 
   check "build sunxi-mali" \
-    "build_sunxi-mali.sh"
+    "cd $BOOTSTRAP_DIR/third/; ./build_sunxi-mali.sh"
 
   check "build sunxi-tools" \
-    "build_sunxi-tools.sh"
+    "cd $BOOTSTRAP_DIR/third/; ./build_sunxi-tools.sh"
 
   check "build u-boot-sunxi" \
-    "build_u-boot-sunxi.sh"
+    "cd $BOOTSTRAP_DIR/third/; ./build_u-boot-sunxi.sh"
 
   check "build xf86-video-fbturbo" \
-    "build_xf86-video-fbturbo.sh"
+    "cd $BOOTSTRAP_DIR/third/; ./build_xf86-video-fbturbo.sh"
 
   check "build libvdpau-sunxi" \
-    "build_libvdpau-sunxi.sh"
+    "cd $BOOTSTRAP_DIR/third/; ./build_libvdpau-sunxi.sh"
 }
 
 function doCopy() {
@@ -234,11 +234,11 @@ function doCopy() {
   check "Install xf86-video-fbturbo" \
     "cd $BOOTSTRAP_DIR/third/xf86-video-fbturbo/; make DESTDIR=$CHROOT_DIR/ install"
   
-  chack "Install libvdpau-sunxi"
+  check "Install libvdpau-sunxi" \
     "cd $BOOTSTRAP_DIR/third/libvdpau-sunxi/; make DESTDIR=$CHROOT_DIR/ install"
   
   check "install kernel package" \
-    "$CHRT dpkg -i /install/screeninvader-core-all.deb"
+    "$CHRT dpkg -i /install/screeninvader-kernel-all.deb"
 
   check "install core package" \
     "$CHRT dpkg -i /install/screeninvader-core-all.deb"
