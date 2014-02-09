@@ -66,7 +66,6 @@ static struct clk *hdmiaudio_moduleclk;
 
 void sunxi_snd_txctrl_hdmiaudio(struct snd_pcm_substream *substream, int on)
 {
-	printk("IN: txctrl %d", on);
 	u32 reg_val;
 
 	reg_val = readl(sunxi_hdmiaudio.regs + SUNXI_TXCHSEL);
@@ -145,12 +144,10 @@ void sunxi_snd_txctrl_hdmiaudio(struct snd_pcm_substream *substream, int on)
 		reg_val &= ~SUNXI_HDMIAUDIOCTL_GEN;
 		writel(reg_val, sunxi_hdmiaudio.regs + SUNXI_HDMIAUDIOCTL);
 	}
-        printk("OUT: txctrl");
 }
 
 void sunxi_snd_rxctrl_hdmiaudio(struct snd_pcm_substream *substream, int on)
 {
-        printk("IN: rxctrl %d", on);
 	u32 reg_val;
 
 	//flush RX FIFO
@@ -192,12 +189,10 @@ void sunxi_snd_rxctrl_hdmiaudio(struct snd_pcm_substream *substream, int on)
 		reg_val &= ~SUNXI_HDMIAUDIOCTL_GEN;
 		writel(reg_val, sunxi_hdmiaudio.regs + SUNXI_HDMIAUDIOCTL);
 	}
-        printk("OUT: rxctrl");
 }
 
 static int sunxi_hdmiaudio_set_fmt(struct snd_soc_dai *cpu_dai, unsigned int fmt)
 {
-	printk("IN: set_fmt %d", fmt);
 	u32 reg_val;
 	u32 reg_val1;
 
@@ -318,7 +313,6 @@ static int sunxi_hdmiaudio_set_fmt(struct snd_soc_dai *cpu_dai, unsigned int fmt
 	reg_val |= SUNXI_HDMIAUDIOFCTL_RXTL(0xf);				//RX FIFO trigger level
 	reg_val |= SUNXI_HDMIAUDIOFCTL_TXTL(0x40);				//TX FIFO empty trigger level
 	writel(reg_val, sunxi_hdmiaudio.regs + SUNXI_HDMIAUDIOFCTL);
-	printk("OUT: set_fmt out");
 	return 0;
 }
 
@@ -326,7 +320,6 @@ static int sunxi_hdmiaudio_hw_params(struct snd_pcm_substream *substream,
 																struct snd_pcm_hw_params *params,
 																struct snd_soc_dai *dai)
 {
-	printk("IN: hw_params");
 	struct snd_soc_pcm_runtime *rtd = substream->private_data;
 	struct sunxi_dma_params *dma_data;
 
@@ -337,14 +330,13 @@ static int sunxi_hdmiaudio_hw_params(struct snd_pcm_substream *substream,
 		dma_data = &sunxi_hdmiaudio_pcm_stereo_in;
 
 	snd_soc_dai_set_dma_data(rtd->cpu_dai, substream, dma_data);
-        printk("OUT: hw_params");
+
 	return 0;
 }
 
 static int sunxi_hdmiaudio_trigger(struct snd_pcm_substream *substream,
                               int cmd, struct snd_soc_dai *dai)
 {
-	printk("IN: trigger %d", cmd);
 	int ret = 0;
 	struct snd_soc_pcm_runtime *rtd = substream->private_data;
 	struct sunxi_dma_params *dma_data =
@@ -377,7 +369,6 @@ static int sunxi_hdmiaudio_trigger(struct snd_pcm_substream *substream,
 			ret = -EINVAL;
 			break;
 	}
-	printk("OUT: trigger");
 	return ret;
 }
 
@@ -385,7 +376,6 @@ static int sunxi_hdmiaudio_trigger(struct snd_pcm_substream *substream,
 static int sunxi_hdmiaudio_set_sysclk(struct snd_soc_dai *cpu_dai, int clk_id,
                                  unsigned int freq, int dir)
 {
-	printk("IN: set_sysclk %d %d", freq, dir);
 	if (sunxi_is_sun7i())
 		return 0; /* No rx / tx control, etc. on sun7i() */
 
@@ -395,14 +385,11 @@ static int sunxi_hdmiaudio_set_sysclk(struct snd_soc_dai *cpu_dai, int clk_id,
 		clk_set_rate(hdmiaudio_pll2clk, 22579200);
 	}
 
-	printk("OUT: set_sysclk");
-
 	return 0;
 }
 
 static int sunxi_hdmiaudio_set_clkdiv(struct snd_soc_dai *cpu_dai, int div_id, int div)
 {
-	printk("IN: set_clkdiv %d %d", div_id, div);
 	u32 reg;
 
 	if (sunxi_is_sun7i())
@@ -456,7 +443,6 @@ static int sunxi_hdmiaudio_set_clkdiv(struct snd_soc_dai *cpu_dai, int div_id, i
 	}
 
 	return 0;
-	printk("OUT: set_clkdiv");
 }
 
 u32 sunxi_hdmiaudio_get_clockrate(void)
@@ -476,7 +462,6 @@ static int sunxi_hdmiaudio_dai_remove(struct snd_soc_dai *dai)
 
 static void hdmiaudioregsave(void)
 {
-	printk("IN: hdmiaudioregsave");
 	regsave[0] = readl(sunxi_hdmiaudio.regs + SUNXI_HDMIAUDIOCTL);
 	regsave[1] = readl(sunxi_hdmiaudio.regs + SUNXI_HDMIAUDIOFAT0);
 	regsave[2] = readl(sunxi_hdmiaudio.regs + SUNXI_HDMIAUDIOFAT1);
@@ -485,12 +470,10 @@ static void hdmiaudioregsave(void)
 	regsave[5] = readl(sunxi_hdmiaudio.regs + SUNXI_HDMIAUDIOCLKD);
 	regsave[6] = readl(sunxi_hdmiaudio.regs + SUNXI_TXCHSEL);
 	regsave[7] = readl(sunxi_hdmiaudio.regs + SUNXI_TXCHMAP);
-        printk("OUT: hdmiaudioregsave");
 }
 
 static void hdmiaudioregrestore(void)
 {
-        printk("IN: hdmiaudioregrestore");
 	writel(regsave[0], sunxi_hdmiaudio.regs + SUNXI_HDMIAUDIOCTL);
 	writel(regsave[1], sunxi_hdmiaudio.regs + SUNXI_HDMIAUDIOFAT0);
 	writel(regsave[2], sunxi_hdmiaudio.regs + SUNXI_HDMIAUDIOFAT1);
@@ -499,12 +482,10 @@ static void hdmiaudioregrestore(void)
 	writel(regsave[5], sunxi_hdmiaudio.regs + SUNXI_HDMIAUDIOCLKD);
 	writel(regsave[6], sunxi_hdmiaudio.regs + SUNXI_TXCHSEL);
 	writel(regsave[7], sunxi_hdmiaudio.regs + SUNXI_TXCHMAP);
-        printk("OUT: hdmiaudioregsave");
 }
 
 static int sunxi_hdmiaudio_suspend(struct snd_soc_dai *cpu_dai)
 {
-	printk("IN: suspend");
 	u32 reg_val;
 
 	if (sunxi_is_sun7i())
@@ -526,13 +507,12 @@ static int sunxi_hdmiaudio_suspend(struct snd_soc_dai *cpu_dai)
 	//printk("[HDMIAUDIO]PLL2 0x01c20008 = %#x, line = %d\n", *(volatile int*)0xF1C20008, __LINE__);
 	printk("[HDMIAUDIO]SPECIAL CLK 0x01c20068 = %#x, line= %d\n", *(volatile int*)0xF1C20068, __LINE__);
 	printk("[HDMIAUDIO]SPECIAL CLK 0x01c200B8 = %#x, line = %d\n", *(volatile int*)0xF1C200B8, __LINE__);
-	printk("OUT: suspend") 
+
 	return 0;
 }
 
 static int sunxi_hdmiaudio_resume(struct snd_soc_dai *cpu_dai)
 {
-	printk("IN: resume");
 	u32 reg_val;
 
 	if (sunxi_is_sun7i())
@@ -556,7 +536,7 @@ static int sunxi_hdmiaudio_resume(struct snd_soc_dai *cpu_dai)
 	//printk("[HDMIAUDIO]PLL2 0x01c20008 = %#x, line = %d\n", *(volatile int*)0xF1C20008, __LINE__);
 	printk("[HDMIAUDIO]SPECIAL CLK 0x01c20068 = %#x, line= %d\n", *(volatile int*)0xF1C20068, __LINE__);
 	printk("[HDMIAUDIO]SPECIAL CLK 0x01c200B8 = %#x, line = %d\n", *(volatile int*)0xF1C200B8, __LINE__);
-	printk("OUT: resume");
+
 	return 0;
 }
 
@@ -589,7 +569,6 @@ static struct snd_soc_dai_driver sunxi_hdmiaudio_dai = {
 
 static int __devinit sunxi_hdmiaudio_dev_probe(struct platform_device *pdev)
 {
-	printk("IN: dev_probe");
 	int reg_val = 0;
 	int ret = 0;
 
@@ -645,13 +624,12 @@ static int __devinit sunxi_hdmiaudio_dev_probe(struct platform_device *pdev)
 	ret = snd_soc_register_dai(&pdev->dev, &sunxi_hdmiaudio_dai);
 
 	iounmap(sunxi_hdmiaudio.ioregs);
-	printk("OUT: dev_probe");
+
 	return 0;
 }
 
 static int __devexit sunxi_hdmiaudio_dev_remove(struct platform_device *pdev)
 {
-	printk("IN: dev_remove");
 	if (sunxi_is_sun7i()) {
 		/* No rx / tx control, etc. on sun7i() */
 		snd_soc_unregister_dai(&pdev->dev);
@@ -672,7 +650,6 @@ static int __devexit sunxi_hdmiaudio_dev_remove(struct platform_device *pdev)
 
 	snd_soc_unregister_dai(&pdev->dev);
 	platform_set_drvdata(pdev, NULL);
-	printk("OUT: dev_remove");
 	return 0;
 }
 
@@ -687,22 +664,18 @@ static struct platform_driver sunxi_hdmiaudio_driver = {
 
 static int __init sunxi_hdmiaudio_init(void)
 {
-	printk("IN: init");
 	int err = 0;
 
 	if ((err = platform_driver_register(&sunxi_hdmiaudio_driver)) < 0)
 		return err;
 
-	printk("OUT: init");
 	return 0;
 }
 module_init(sunxi_hdmiaudio_init);
 
 static void __exit sunxi_hdmiaudio_exit(void)
 {
-	printk("IN: exit");
 	platform_driver_unregister(&sunxi_hdmiaudio_driver);
-	printk("OUT: exit");
 }
 module_exit(sunxi_hdmiaudio_exit);
 
@@ -712,4 +685,3 @@ MODULE_AUTHOR("ALLWINNER");
 MODULE_DESCRIPTION("sunxi hdmiaudio SoC Interface");
 MODULE_LICENSE("GPL");
 MODULE_ALIAS("platform: sunxi-hdmiaudio");
-
