@@ -207,6 +207,9 @@ function doBuild() {
 
   check "build libvdpau-sunxi" \
     "cd $BOOTSTRAP_DIR/third/; ./build_libvdpau-sunxi.sh"
+
+  check "build janosh" \
+    "cd $BOOTSTRAP_DIR/third/; ./build_janosh.sh"
 }
 
 function doCopy() {
@@ -236,7 +239,10 @@ function doCopy() {
   
   check "Install libvdpau-sunxi" \
     "cd $BOOTSTRAP_DIR/third/libvdpau-sunxi/; make DESTDIR=$CHROOT_DIR/ install"
-  
+ 
+  check "Install janosh" \
+    "cd $BOOTSTRAP_DIR/third/Janosh/; make PREFIX=/lounge/bin DESTDIR=$CHROOT_DIR/ install"
+ 
   check "install kernel package" \
     "$CHRT dpkg -i /install/screeninvader-kernel-all.deb"
 

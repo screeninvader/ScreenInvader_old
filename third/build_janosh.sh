@@ -1,0 +1,3 @@
+cd Janosh/ 
+make screeninvader
+
