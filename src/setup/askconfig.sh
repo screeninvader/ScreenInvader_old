@@ -40,7 +40,7 @@ function askWifiEncryption() {
   $ask  --radiolist "Wireless Encryption" 10 38 3 \
     WPA-PSK "WPA Passphrase" on \
     WEP "WEP Passphrase" off \
-    NONE "No encryptiion"  off
+    NONE "No encryption"  off
 }
 
 function askWifiPassphrase() {
