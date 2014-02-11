@@ -3,7 +3,7 @@ libc6
 libstdc++6
 multiarch-support
 libkyotocabinet16
-xserver-xorg
+xserver-xorg=1:7.7+5
 xserver-xorg-input-kbd
 xserver-xorg-input-mouse
 x11-xserver-utils
