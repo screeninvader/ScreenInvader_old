@@ -29,6 +29,7 @@ PLAYLIST_CACHE="$RUN_DIR/playlist_cache"
 MPLAYERSTDIN="$RUN_DIR/mplayerstdin"
 
 function open() {
+  set -x
   declare -A OBJ="$(janosh get /player/.)"
   url="${OBJ[/player/url]}"
   video_url=
@@ -75,8 +76,11 @@ function mplayer_start {
   touch "$PLAYLIST_CACHE"
 
   while [ 0 ]; do 
-    sleep 1; 
-    bash -c "/usr/local/bin/mplayer -fs -vc ffh264vdpau,ffmpeg12vdpau, -idle -input file="$CMD_FIFO" 2>&1 | tee /tmp/mplayer | /lounge/bin/player callback"
+    sleep 1;
+    set -m
+    bash -c "/usr/local/bin/mplayer -include /etc/mplayer/mplayer.conf -fs -vc ffh264vdpau,ffmpeg12vdpau, -idle -input file="$CMD_FIFO" 2>&1 | tee /tmp/mplayer | /lounge/bin/player callback"& 
+    janosh -e setVolume
+    fg
  done
 }
 
