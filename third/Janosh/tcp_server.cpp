@@ -59,44 +59,26 @@ void TcpServer::close() {
   acceptor.close();
 }
 
-void splitAndPushBack(string& s, vector<string>& vec) {
-  std::size_t i;
-  std::size_t lasti = 0;
-  string arg;
-  while((i = s.find(",", lasti)) != string::npos) {
-    arg = s.substr(lasti, i - lasti);
-    if(!arg.empty()) {
-      vec.push_back(arg);
-    }
-    lasti = i + 1;
-  }
-
-  arg = s.substr(lasti, s.size());
-  if(!arg.empty()) {
-    vec.push_back(arg);
-  }
-}
-
-string reconstructCommandLine(Format& format, string& command, vector<string>& vecArgs, vector<string>& vecTargets, bool& runTriggers, bool& verbose) {
+string reconstructCommandLine(Request& req) {
   string cmdline = "janosh ";
 
-  if(verbose)
+  if(req.verbose_)
     cmdline += "-v ";
 
-  if(format == janosh::Bash)
+  if(req.format_ == janosh::Bash)
     cmdline += "-b ";
-  else if(format == janosh::Json)
+  else if(req.format_ == janosh::Json)
     cmdline += "-j ";
-  else if(format == janosh::Raw)
+  else if(req.format_ == janosh::Raw)
     cmdline += "-r ";
 
-  if(runTriggers)
+  if(req.runTriggers_)
      cmdline += "-t ";
 
-   if(!vecTargets.empty()) {
+   if(!req.vecTargets_.empty()) {
      cmdline += "-e ";
      bool first = true;
-     for(const string& target : vecTargets) {
+     for(const string& target : req.vecTargets_) {
        if(!first)
          cmdline+=",";
        cmdline+=target;
@@ -106,14 +88,14 @@ string reconstructCommandLine(Format& format, string& command, vector<string>& v
      cmdline += " ";
    }
 
-   cmdline += (command + " ");
+   cmdline += (req.command_ + " ");
 
-   if(!vecArgs.empty()) {
+   if(!req.vecArgs_.empty()) {
      bool first = true;
-     for(const string& arg : vecArgs) {
+     for(const string& arg : req.vecArgs_) {
        if(!first)
          cmdline+=" ";
-       cmdline+=arg;
+       cmdline+= ("\"" + arg + "\"");
 
        first = false;
      }
@@ -128,78 +110,27 @@ void TcpServer::run() {
 	acceptor.accept(*socket);
 
 	try {
-    Format format;
-    string command;
-    vector<string> vecArgs;
-    vector<string> vecTargets;
-    bool runTriggers;
-    bool verbose;
-
-
     std::string peerAddr = socket->remote_endpoint().address().to_string();
 
     LOG_DEBUG_MSG("accepted", peerAddr);
-    string line;
     boost::asio::streambuf response;
     boost::asio::read_until(*socket, response, "\n");
     std::istream response_stream(&response);
 
-    std::getline(response_stream, line);
+    Request req;
+    readRequest(req, response_stream);
 
-    LOG_DEBUG_MSG("format", line);
-    if (line == "BASH") {
-      format = janosh::Bash;
-    } else if (line == "JSON") {
-      format = janosh::Json;
-    } else if (line == "RAW") {
-      format = janosh::Raw;
-    } else
-      throw janosh_exception() << string_info( { "Illegal formats line", line });
-
-    std::getline(response_stream, command);
-    LOG_DEBUG_MSG("command", command);
-
-    std::getline(response_stream, line);
-    LOG_DEBUG_MSG("args", line);
-
-    splitAndPushBack(line, vecArgs);
-
-    std::getline(response_stream, line);
-    LOG_DEBUG_MSG("triggers", line);
-
-    if (line == "TRUE")
-      runTriggers = true;
-    else if (line == "FALSE")
-      runTriggers = false;
-    else
-      throw janosh_exception() << string_info( { "Illegal triggers line", line });
-
-    std::getline(response_stream, line);
-    LOG_DEBUG_MSG("targets", line);
-
-    splitAndPushBack(line, vecTargets);
-
-    std::getline(response_stream, line);
-    LOG_DEBUG_MSG("verbose", line);
-
-    if (line == "TRUE")
-      verbose = true;
-    else if (line == "FALSE")
-      verbose = false;
-    else
-      throw janosh_exception() << string_info( { "Illegal verbose line", line });
-
-    LOG_INFO_STR(reconstructCommandLine(format, command, vecArgs, vecTargets, runTriggers, verbose));
+    LOG_INFO_STR(reconstructCommandLine(req));
 
     // only "-j get /." is cached
-    bool cacheable = command == "get"
-        && format == janosh::Json
-        && !runTriggers
-        && vecTargets.empty()
-        && vecArgs.size() == 1
-        && vecArgs[0] == "/.";
+    bool cacheable = req.command_ == "get"
+        && req.format_ == janosh::Json
+        && !req.runTriggers_
+        && req.vecTargets_.empty()
+        && req.vecArgs_.size() == 1
+        && req.vecArgs_[0] == "/.";
 
-    if(!cacheable && (!command.empty() && command != "get" && command != "dump" && command != "hash")) {
+    if(!cacheable && (!req.command_.empty() && (req.command_ != "get" && req.command_ != "dump" && req.command_ != "hash"))) {
       LOG_DEBUG_STR("Invalidating cache");
       cache_.invalidate();
     }
@@ -213,7 +144,7 @@ void TcpServer::run() {
       boost::asio::streambuf* out_buf = new boost::asio::streambuf();
       ostream* out_stream = new ostream(out_buf);
 
-      JanoshThread* jt = new JanoshThread(format, command, vecArgs, vecTargets, runTriggers, verbose, *out_stream);
+      JanoshThread* jt = new JanoshThread(req, *out_stream);
 
       int rc = jt->run();
       boost::asio::streambuf rc_buf;

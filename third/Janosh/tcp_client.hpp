@@ -6,6 +6,7 @@
 #include <vector>
 #include <boost/asio.hpp>
 #include "format.hpp"
+#include "request.hpp"
 
 namespace janosh {
 using std::string;
@@ -18,7 +19,7 @@ public:
 	TcpClient();
 	virtual ~TcpClient();
 	void connect(std::string host, int port);
-	int run(Format f, string command, vector<string> args, vector<string> vecTargets, bool triggers, bool verbose);
+	int run(Request& req);
 	void close();
 };
 

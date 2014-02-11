@@ -27,52 +27,13 @@ void TcpClient::connect(string host, int port) {
 	    boost::asio::connect(socket, iterator);
 }
 
-int TcpClient::run(Format f, string command, vector<string> vecArgs, vector<string> vecTargets, bool triggers, bool verbose) {
+int TcpClient::run(Request& req) {
   boost::asio::streambuf request;
   std::ostream request_stream(&request);
-  if(f == janosh::Bash) {
-    request_stream << "BASH" << '\n';
-  } else if(f == janosh::Json) {
-    request_stream << "JSON" << '\n';
-  } else if(f == janosh::Raw) {
-    request_stream << "RAW" << '\n';
-  }
 
-  request_stream << command << '\n';
-
-  bool first = true;
-  for(const string& arg : vecArgs) {
-    if(!first)
-      request_stream << ",";
-    request_stream << arg;
-
-    first = false;
-  }
-  request_stream << '\n';
-
-  if(triggers)
-      request_stream << "TRUE\n";
-    else
-      request_stream << "FALSE\n";
-
-  first = true;
-  for(const string& target : vecTargets) {
-    if(!first)
-      request_stream << ",";
-    request_stream << target;
-
-    first = false;
-  }
-  request_stream << '\n';
-
-
-  if(verbose)
-    request_stream << "TRUE" << '\n';
-  else
-    request_stream << "FALSE" << '\n';
+  writeRequest(req, request_stream);
 
   boost::asio::write(socket, request);
-
 	boost::asio::streambuf response;
 	std::istream response_stream(&response);
   boost::asio::read_until(socket, response,"\n");
