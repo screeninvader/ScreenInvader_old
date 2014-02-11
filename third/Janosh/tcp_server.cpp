@@ -251,8 +251,12 @@ void TcpServer::run() {
     }
   } catch (janosh_exception& ex) {
     printException(ex);
+    socket->close();
+    delete socket;
   } catch (std::exception& ex) {
     printException(ex);
+    socket->close();
+    delete socket;
   }
 }
 } /* namespace janosh */
