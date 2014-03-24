@@ -30,7 +30,7 @@ IFS=","
 set -- $STREAMS
 
 SELECTED=
-for s in $@; do 
+for s in $@; do
 	f=$(l_urldecode "`parse_query $s "type"`"|cut -d ';' -f1)
 
 	if [ "$f" != "video/x-flv" ]; then
@@ -57,7 +57,7 @@ for s in $@; do
 	elif [ -z "$small" -a "$q" == "small" ]; then
 		small="$s"
 	fi
-done  
+done
 
 SELECTED="$large"
 
@@ -69,9 +69,9 @@ if [ -z "$SELECTED" ]; then
   SELECTED="$small"
 fi
 
-SURL=$(l_urldecode "`parse_query $SELECTED "url"`")
-SIG="`parse_query $SELECTED "sig"`"
-URL="$SURL&signature=$SIG"
+URL=$(l_urldecode "`parse_query $SELECTED "url"`")
+# SIG="`parse_query $SELECTED "sig"`"
+# URL="$SURL&signature=$SIG"
 
 echo $URL
 echo $TITLE
