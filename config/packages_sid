@@ -1,6 +1,13 @@
+dpkg
 libc6
 libstdc++6
 multiarch-support
 autofs
-midori
 libkyotocabinet16
+xserver-xorg
+xserver-xorg-input-kbd
+xserver-xorg-input-mouse
+x11-xserver-utils
+midori
+youtube-dl
+

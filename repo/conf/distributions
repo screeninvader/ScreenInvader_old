@@ -1,0 +1,11 @@
+Origin: viel-zu.org
+Label: screeninader
+Suite: stable
+Codename: latest
+Version: 3.0
+Architectures: i386 source
+Components: main
+UDebComponents: main
+Description: ScreenInvader packages
+SignWith: yes
+

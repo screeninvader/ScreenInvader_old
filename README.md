@@ -1,14 +1,14 @@
 ![The mighty ScreenInvader](http://metalab.github.com/ScreenInvader/images/logo.png)
 
 # ScreenInvader
-## Feed the Screen
+## A Social TV
 
 Ever wished you could play media content from your laptop or smart phone on a TV set, screen or projector in just an instant? 
 This is what ScreenInvader helps you do: browse the web, watch videos or flip through images together with your friends on a big screen with just a few simple clicks.     	
 
 #### Get it! #####
 
-Please checkout the documentation in the [wiki](ttps://github.com/Metalab/ScreenInvader/wiki/)    and especially the [getting started](https://github.com/Metalab/ScreenInvader/wiki/Getting-Started) guide.
+Please checkout the documentation in the [wiki](https://github.com/Metalab/ScreenInvader/wiki/)    and especially the [getting started](https://github.com/Metalab/ScreenInvader/wiki/Getting-Started) guide.
 
 #### Contribute! #####
 

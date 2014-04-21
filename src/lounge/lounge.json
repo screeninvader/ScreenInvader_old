@@ -10,7 +10,8 @@
 "url":"" } 
 ,
 "display": { 
-"blank":"false" } 
+"blank":"false",
+"resolution":"1024x768" } 
 ,
 "image": { 
 "active":"false",
@@ -28,18 +29,10 @@
 "url":"" } 
 ,
 "playlist": { 
-"index":"0",
-"items": [ 
- ] 
-,
-"queue":"true",
-"sources": [ 
- ] 
-,
-"titles": [ 
- ] 
- } 
-,
+  "index":"0",
+  "items": [ ],
+   "queue":"true"
+},
 "radio": { 
 "active":"false",
 "category":"",

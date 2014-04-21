@@ -1,5 +1,8 @@
 extra/
 tmp/
-
+packaging/screeninvader-*
+repo/db/
+repo/dists/
+repo/pool/
 *.log
 *.dd

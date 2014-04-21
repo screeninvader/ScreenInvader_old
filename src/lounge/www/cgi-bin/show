@@ -19,7 +19,8 @@
 #
 . ./initcgi "text/html"
 
-( #set -x
+( 
+#set -x
 declare -A VIDEO_HOSTS="( \
 [youtube.com/]='youtube' \
 [youtu.be/]='youtube' \
@@ -33,6 +34,7 @@ declare -A VIDEO_HOSTS="( \
 
 declare -A CATEGORY_MAP="( \
 [video]='player' \
+[multipart]='browser' \
 [audio]='player' \
 [image]='browser' \
 [animation]='browser' \
@@ -49,9 +51,9 @@ declare -A CATEGORY_MAP="( \
 )"
 
 declare -A CATEGORY_FIX="( \
+[application/octet-stream]='video' \
 [application/x-matroska]='video' \
 [audio/x-mpegurl]='radio' \
-[audio/mpeg]='radio' \
 [application/pls]='radio' \
 [application/pdf]='pdf' \
 [audio/x-scpls]='radio' \
@@ -103,8 +105,16 @@ url="$QUERY_STRING"
 category="$(getCategory "$url")"
 handler="${CATEGORY_MAP[$category]}"
 
+if [ "$handler" == "browser" ]; then
+  video="`youtube-dl -g "$url"`"
+  if [ $? -eq 0 ]; then
+    url="$video"
+    category="video"
+    handler="player"
+  fi
+fi
+
 [ -n "$handler" ] && /lounge/bin/janosh -t set "/$handler/url" "$url" "/$handler/category" "$category"
 ) &>/dev/null &
-
 cat /lounge/www/close.html
 

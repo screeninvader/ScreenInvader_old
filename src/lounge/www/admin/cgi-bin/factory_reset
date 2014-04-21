@@ -1,0 +1,9 @@
+#!/bin/bash
+
+. ./initcgi "text/html"
+
+echo "`date`: factory reset requested" >> /tmp/factory_reset.log
+cp /lounge/janosh.db.initial /lounge/janosh.db >> /tmp/factory_reset.log 2>&1
+echo "" >> /tmp/factory_reset.log
+
+sudo /lounge/bin/gainroot "shutdown -r now"

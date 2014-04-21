@@ -19,6 +19,7 @@
 #
 
 . /lounge/triggers/functions.sh
+l_log $@
 
 RUN_DIR="/var/run/player"
 CMD_FIFO="$RUN_DIR/cmdfifo"
@@ -31,25 +32,26 @@ function open() {
   url="${OBJ[/player/url]}"
   video_url=
   category="${OBJ[/player/category]}"
-  title=
+  t=
   l_unblank
 
   if [ "$category" != "video" ]; then
     info="$("/lounge/triggers/helpers/$category" "$url")"
     video_urls="$(echo "$info" | sed '$d')"
-    title="$(echo "$info" | tail -n1)"
+    t="$(echo "$info" | tail -n1)"
   else
-    title="$(basename "$url")"
+    t="$(basename "$url")"
     video_urls="$url"
   fi
   i=1
   if [ "`echo "$video_urls" | wc -l`" -gt 1 ]; then
     echo "$video_urls" | while read line; do
-      loadVideo "$line" "$i - $title" "$url"
+      loadVideo "$line" "$i - $t" "$url"
       i=$[ $i + 1 ]
     done
-  else
-    loadVideo "$video_urls" "$title" "$url"
+  else 
+    [ -z "$video_urls" ] && video_urls="$url"
+    loadVideo "$video_urls" "$t" "$url"
   fi
   janosh -t set "/player/active" true
 }
@@ -102,8 +104,9 @@ function jump() {
   idx=$1
   PLLEN="$(janosh size /playlist/items/.)"
   [ $idx -gt $PLLEN ] && idx=$PLLEN
-  file="$(janosh -r get /playlist/items/#$idx)"
+  file="$(janosh -r get /playlist/items/#${idx}/url)"
   mplayer_cmd "pause"
+  refresh
   janosh -t set /player/active true
   mplayer_cmd "loadfile $file"
   janosh set /playlist/index $idx
@@ -115,6 +118,8 @@ function isQueueMode() {
 }
 
 function playlistAdd() {
+# (
+#  set -x
   playlistEnqueue "$1" "$2" "$3"
   mode=post
   action=Playing
@@ -127,6 +132,7 @@ function playlistAdd() {
     items="`janosh size /playlist/items/.`"
     jump "$[ $items - 1]"
   fi
+# ) &> /tmp/playlistAdd
 }
 
 function playlistEnqueue() {
@@ -135,10 +141,11 @@ function playlistEnqueue() {
   src="$3"
 
   [ -z "$title" ] && title="(no title)"
-
-  $(janosh append /playlist/items/. "$path")
-  $(janosh append /playlist/titles/. "$title")
-  $(janosh append /playlist/sources/. "$src")
+  size=$(janosh size /playlist/items/.)
+  janosh mkobj /playlist/items/#${size}/.
+  janosh set /playlist/items/#${size}/url "$path"
+  janosh set /playlist/items/#${size}/title "$title"
+  janosh set /playlist/items/#${size}/source "$src"
 
   touch "$PLAYLIST_CACHE"
 }
@@ -231,7 +238,7 @@ function stop() {
 function osd() {
   (
     flock -x 200
-    mplayer_cmd "osd_show_progression"
+    mplayer_cmd "osd"
   ) 200>$CMD_LOCK
 }
 
@@ -275,6 +282,7 @@ function eotrack() {
 
 function sotrack() {
   janosh -t set /player/active true  
+  refresh
   mplayer_cmd "get_property path"
   killall showip
 }

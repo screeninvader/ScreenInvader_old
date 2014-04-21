@@ -1,0 +1,10 @@
+screeninvader-binary Priority        optional
+screeninvader-binary Section         net
+screeninvader-config Priority        optional
+screeninvader-config Section         net
+screeninvader-core   Priority        optional
+screeninvader-core   Section         net
+screeninvader-misc   Priority        optional
+screeninvader-misc   Section         net
+
+

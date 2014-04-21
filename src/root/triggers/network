@@ -36,7 +36,11 @@ EONETCONF
 }
 
 function makeNetwork() {
-  [ "${DATA[/network/mode/value]}" == "DHCP" ] && makeNetworkDhcp || makeNetworkMan
+  if [ "${DATA[/network/mode/value]}" == "DHCP" ]; then 
+    makeNetworkDhcp
+  else
+		makeNetworkMan
+  fi
 }
 
 function makeDns() {

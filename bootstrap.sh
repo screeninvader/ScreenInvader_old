@@ -156,6 +156,12 @@ function doPackageConf() {
   check "Update Repositories" \
     "$CHRT $APTNI update"
 
+	check "Copy ScreenInvader repo key" \
+    "cp $BOOTSTRAP_DIR/repo/ScreenInvaderRepoKey.gpg $CHROOT_DIR/tmp/"
+
+  check "Add ScreenInvader repo key" \
+    "$CHRT apt-key add /tmp/ScreenInvaderRepoKey.gpg"
+
   check "Install keyrings" \
     "$CHRT $APTNI install $KEYRINGS"
 
@@ -182,35 +188,35 @@ function doPackageConf() {
 }
 
 function doCopy() {
-  check "Copy system changes" \
-    "cd $BOOTSTRAP_DIR/src; rsync -axh etc usr $CHROOT_DIR/"
+  check "Make install directory" \
+    "mkdir -p $CHROOT_DIR/install/"
+
+  check "Copy debian packages" \
+    "cp $BOOTSTRAP_DIR/packaging/*.deb $CHROOT_DIR/install/"
   
-  check "Sync lounge changes" \
-    "cd $BOOTSTRAP_DIR/src; rsync -axh --delete lounge $CHROOT_DIR/"
+  check "install core packages" \
+    "$CHRT dpkg -i /install/screeninvader-core-all.deb"
 
-  check "Sync root changes" \
-    "cd $BOOTSTRAP_DIR/src; rsync -axh --delete root $CHROOT_DIR/"
+  check "install config packages" \
+    "$CHRT dpkg -i --force-all /install/screeninvader-config-all.deb"
 
-  check "Sync setup changes" \
-    "cd $BOOTSTRAP_DIR/src; rsync -axh --delete setup $CHROOT_DIR/"
+  check "install misc packages" \
+    "$CHRT dpkg -i /install/screeninvader-misc-all.deb"
 
-  check "Copy plymouth theme" \
-    "cp -a $BOOTSTRAP_DIR/themes/screeninvader $CHROOT_DIR/usr/share/plymouth/themes/"
+  check "install binary package" \
+    "$CHRT dpkg -i /install/screeninvader-binaries-all.deb"
 
-  check "Copy xosd lib" \
-    "cp -a $BOOTSTRAP_DIR/build/xosd-2.2.14/src/libxosd/.libs/libxosd.so.2.2.14 $CHROOT_DIR/usr/lib/"
+  check "Remove install directory" \
+    "rm -r $CHROOT_DIR/install/"
+
+#  check "Copy plymouth theme" \
+#    "cp -a $BOOTSTRAP_DIR/themes/screeninvader $CHROOT_DIR/usr/share/plymouth/themes/"
 
   check "ldconfig" \
     "$CHRT ldconfig"
 
-  check "Copy osd binary"  \
-    "cp -a $BOOTSTRAP_DIR/build/xosd-2.2.14/src/screeninvader_plugin/osd $CHROOT_DIR/lounge/bin/"
-
-  check "Copy janosh binary"  \
-    "cp -a $BOOTSTRAP_DIR/build/janosh $CHROOT_DIR/lounge/bin/"
-
-  check "Update plymouth theme" \
-    "$CHRT plymouth-set-default-theme -R screeninvader"
+#  check "Update plymouth theme" \
+#    "$CHRT plymouth-set-default-theme -R screeninvader"
 
   if [ -n "$CONFIG_FILE" ]; then
     check "Copy firstboot config file" \

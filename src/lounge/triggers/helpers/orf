@@ -1,7 +1,6 @@
 #!/bin/bash
 #
-# ScreenInvader - A shared media experience. Instant and seamless.
-#  Copyright (C) 2012 Amir Hassan <amir@viel-zu.org>
+# OrfGet - an orf videothek download helper script
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -18,8 +17,6 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 
-ASX_URL="http://tvthek.orf.at`wget -O - -q "$1" | grep -oh "\/.*download.asx" `"
-MMS="`wget -O - -q "$ASX_URL" |  grep -oh 'mms:[^\"]*' `" 
-MMS_URL=`echo $MMS | sed -e 's/\s\+/\r\n/g'`
-echo "$MMS_URL"
-echo "orf"
+wget -q -O /dev/stdout $1 | grep -o 'rtmp:\\/\\/[0-9a-zA-Z.\-]*/[0-9a-zA-Z.\-]*/[-0-9a-zA-Z_:]*.mp4\|rtmp:\\/\\/[0-9a-zA-Z.\-]*/[0-9a-zA-Z.\-]*/[-0-9a-zA-Z_:]*.3gp | sort | uniq'
+echo "ORF"
+

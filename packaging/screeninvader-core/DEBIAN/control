@@ -1,0 +1,9 @@
+Package: screeninvader-core
+Version: 0.9.4
+Architecture: i386
+Maintainer: Amir Hassan <amir@viel-zu.org>
+Installed-Size: 1099
+Section: misc
+Priority: optional
+Homepage: http://screeninvader.com
+Description: ScreenInvader core files
