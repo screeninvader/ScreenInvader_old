@@ -34,7 +34,7 @@ for i in "${helpers[@]}"
 do
 	md5=($(md5sum /lounge/triggers/helpers/$i | cut -d " " -f1))
 	echo '<tr><td class="left">'$i'</td><td class="right">'
-	if wget -P "/lounge/triggers/helpers/tmp" $baseURL$i
+	if wget --no-check-certificate -P "/lounge/triggers/helpers/tmp" $baseURL$i
 	then
 		if [ "$md5" == "$(md5sum /lounge/triggers/helpers/tmp/$i | cut -d ' ' -f1)" ]
 		then
