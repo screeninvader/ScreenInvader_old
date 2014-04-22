@@ -30,6 +30,7 @@ declare -A VIDEO_HOSTS="( \
 [soundcloud.com/]='soundcloud' \
 [ted.com/]='ted' \
 [jamendo.com/]='jamendo' \
+[tindeck.com/]='tindeck' \
 )"
 
 declare -A CATEGORY_MAP="( \
