@@ -19,6 +19,12 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 
-wget -qO- $(sed 's|/listen/|/dl/|g' <<< $1) | sed -n 's|.*c = "\(.*\)/\[t.*|http://tindeck.com\1|p'
-wget -qO- $(sed 's|/dl/|/listen/|g' <<< $1) | sed -n 's|.*e>\(.*\) - Tindeck.*|\1|p'
+url=$1
 
+if [[ $url == *listen* ]]; then
+	wget -qO- $(sed 's|/listen/|/dl/|g' <<< $url) | sed -n 's|.*c = "\(.*\)/\[t.*|http://tindeck.com\1|p'
+	wget -qO- $url | sed -n 's|.*e>\(.*\) - Tindeck.*|\1|p'
+else
+	echo
+	echo 'Invalid URL! Should look like http://tindeck.com/listen/foo'
+fi
