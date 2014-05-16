@@ -19,15 +19,34 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 
-url=$1
+url="$1"
+html=$(wget -qO- "$url")
 
-if [[ $url == *track* ]]; then
-	html=$(wget -qO- $url)
-	artist=$(echo "$html" | sed -n '/name=/s/.*, by \(.*\)">.*/\1/p')
-	title=$(echo "$html" | sed -n '/name=/s/.*t="\(.*\),.*/\1/p')
-	echo "$html" | sed -n 's/.*28":"\(.*\)"}.*/\1/p'
-	echo $artist - $title
-else
-	echo
-	echo 'Invalid URL! Should look like http://foo.bandcamp.com/track/bar'
-fi
+post() {
+	for url in "$@"; do
+		html=$(wget -qO- "$url")
+		echo "$html" | sed -n 's|.*28":"\(.*\)"}.*|\1|p' | cut -d '"' -f1
+	done
+}
+
+artist=$(echo "$html" | sed -n '/name=/s|.*, by \(.*\)">.*|\1|p')
+title=$(echo "$html" | sed -n '/name=/s|.*t="\(.*\),.*|\1|p')
+
+type=$(echo "$html" | sed -n '/g:ty/s|.*"\(.*\)">|\1|p')
+case $type in
+	*song* )
+		post $url
+		;;
+	*album* )
+		baseurl=$(echo $url | cut -d '/' -f-3)
+		post $(echo "$html" | sed -n "/rl\">/s|.*f=\"|&"$baseurl"|;
+		                              /rl\">/s|.*f=\"\(.*\)\" .*|\1|p")
+		;;
+	* )
+		echo
+		echo 'Invalid URL! Should look like http://artist.bandcamp.com/*'
+		exit
+		;;
+esac
+
+echo "$artist - $title"
