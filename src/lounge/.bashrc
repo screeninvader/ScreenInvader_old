@@ -1,5 +1,8 @@
 # ~/.bashrc: executed by bash(1) for non-login shells.
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
 # for examples
-HOME="/lounge"
-PATH="$HOME/bin:$PATH"
+export HOME="/lounge"
+export PATH="$HOME/bin:$PATH"
+export VDPAU_DRIVER=sunxi
+export DISPLAY=:0
+

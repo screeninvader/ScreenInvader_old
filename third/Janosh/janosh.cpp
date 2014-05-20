@@ -1,11 +1,11 @@
 #include <thread>
+#include <boost/program_options.hpp>
 #include "janosh.hpp"
 #include "commands.hpp"
 #include "tcp_server.hpp"
 #include "tcp_client.hpp"
 #include "janosh_thread.hpp"
 #include "exception.hpp"
-
 
 using std::string;
 using std::map;
@@ -875,7 +875,7 @@ void printUsage() {
 using namespace std;
 using namespace boost;
 using namespace janosh;
-
+namespace po = boost::program_options;
 
 void handleSigInt(int s) {
   if(TcpServer::getInstance()->isOpen()) {
@@ -900,73 +900,67 @@ int main(int argc, char** argv) {
   _START_EASYLOGGINGPP(0, (const char**)NULL);
   registerSigIntHandler();
   try {
-    std::vector<string> args;
-    for (int i = 0; i < argc; i++) {
-      args.push_back(string(argv[i]));
-    }
-    std::vector<char*> vc;
-
-    int c;
-    janosh::Format f = janosh::Bash;
-
-    bool execTriggers = false;
-    bool execTargets = false;
-    bool verbose = false;
-    bool daemon = false;
-    bool single = false;
-
-    string key;
-    string value;
     string targetList;
-    char* const * c_args = argv;
-    optind = 1;
-    while ((c = getopt(argc, c_args, "sdvfjbrthe:")) != -1) {
-      switch (c) {
-      case 's':
-        single = true;
-        break;
-      case 'd':
-        daemon = true;
-        break;
-      case 'f':
-        if (string(optarg) == "bash")
-          f = janosh::Bash;
-        else if (string(optarg) == "json")
-          f = janosh::Json;
-        else if (string(optarg) == "raw")
-          f = janosh::Raw;
-        else
-          throw janosh_exception() << string_info( { "Illegal format", string(optarg) });
-        break;
-      case 'j':
-        f = janosh::Json;
-        break;
-      case 'b':
-        f = janosh::Bash;
-        break;
-      case 'r':
-        f = janosh::Raw;
-        break;
-      case 'v':
-        verbose = true;
-        break;
-      case 't':
-        execTriggers = true;
-        break;
-      case 'e':
-        execTargets = true;
-        targetList = optarg;
-        break;
-      case 'h':
-        printUsage();
-        break;
-      case ':':
-        printUsage();
-        break;
-      case '?':
-        printUsage();
-        break;
-      }
+    string command;
+    vector<string> arguments;
+
+    po::options_description genericDesc("Options");
+    genericDesc.add_options()
+      ("help,h", "Produce help message")
+      ("verbose,v", "Enable verbose output")
+      ("daemon,d", "Run in daemon mode")
+      ("stand-alone,s", "Run in stand alone mode")
+      ("json,j", "Produce json output")
+      ("raw,r", "Produce raw output")
+      ("bash,b", "Produce bash output")
+      ("triggers,t", "Execute triggers")
+      ("targets,e", po::value<string>(&targetList), "Execute a comma separated list of targets");
+
+    po::options_description hidden("Hidden options");
+    hidden.add_options()
+      ("command", po::value< string >(&command), "The command to execute")
+      ("arguments", po::value<vector<string> >(&arguments), "Arguments passed to the command");
+
+    po::positional_options_description p;
+    p.add("command", 1);
+    p.add("arguments", -1);
+
+    po::options_description cmdline_options;
+    cmdline_options.add(genericDesc).add(hidden);
+
+    po::options_description visible;
+    visible.add(genericDesc);
+
+    po::variables_map vm;
+    po::store(po::command_line_parser(argc, argv).options(cmdline_options).positional(p).run(), vm);
+    po::notify(vm);
+
+    janosh::Format f = janosh::Bash;
+    bool execTriggers = vm.count("triggers");
+    bool execTargets = vm.count("targets");
+    bool verbose = vm.count("verbose");
+    bool daemon = vm.count("daemon");
+    bool single = vm.count("single");
+
+    if((vm.count("json") && (vm.count("bash") || vm.count("raw"))) || (vm.count("bash") && vm.count("raw"))) {
+      LOG_FATAL_STR("Only one format at a time may be specified");
+    }
+
+    if(vm.count("json"))
+      f = janosh::Json;
+    else if(vm.count("bash"))
+      f = janosh::Bash;
+    else if(vm.count("raw"))
+      f = janosh::Raw;
+
+    if(vm.count("daemon") && (vm.count("bash") || vm.count("raw") || vm.count("json") || execTriggers || execTargets || single)) {
+      LOG_FATAL_STR("Incompatible option(s) conflicting with daemon mode detected");
+    }
+
+    if (vm.count("help")) {
+        std::cerr << "Usage: janosh [options] command ...\n";
+        std::cerr << visible;
+        return 0;
     }
 
     if (daemon) {
@@ -980,19 +974,8 @@ int main(int argc, char** argv) {
       }
     } else {
       Logger::init(LogLevel::L_DEBUG);
-      vector<std::string> vecArgs;
-      string command = "NONE";
 
-      if (argc >= optind + 1) {
-        command = string(argv[optind]);
-
-        vecArgs.clear();
-        std::transform(args.begin() + optind + 1, args.end(), std::back_inserter(vecArgs), boost::bind(&std::string::c_str, _1));
-        for(const string& arg : vecArgs) {
-          if(arg.empty() || arg[0] == '-')
-            throw janosh_exception() << string_info( { "Options have to be defined before the command", arg });
-        }
-      } else if (!execTargets) {
+      if (command.empty() && !execTargets) {
         throw janosh_exception() << msg_info("missing command");
       }
 
@@ -1004,15 +987,16 @@ int main(int argc, char** argv) {
         }
       }
 
+      Request req(f, command, arguments, vecTargets, execTriggers, verbose);
       if(!single) {
         Settings s;
         TcpClient client;
         client.connect("localhost", s.port);
-        return client.run(f, command, vecArgs, vecTargets, execTriggers, verbose);
+        return client.run(req);
       } else {
         Janosh* instance = Janosh::getInstance();
         instance->open(false);
-        JanoshThread jt(f, command, vecArgs, vecTargets, execTriggers, verbose, std::cout);
+        JanoshThread jt(req, std::cout);
         int rc = jt.run();
         jt.join();
         return rc;

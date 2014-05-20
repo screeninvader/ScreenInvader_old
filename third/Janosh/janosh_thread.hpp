@@ -6,6 +6,7 @@
 #include <iostream>
 #include <thread>
 #include "format.hpp"
+#include "request.hpp"
 
 namespace janosh {
 
@@ -15,16 +16,11 @@ using std::ostream;
 using std::thread;
 
 class JanoshThread {
-  Format format_;
-  string command_;
-  vector<string> vecArgs_;
-  bool runTriggers_;
-  vector<string> vecTargets_;
-  bool verbose_;
+  Request req_;
   ostream& out_;
   std::thread* thread_;
 public:
-  JanoshThread(Format format, string command, vector<string> vecArgs, vector<string> vecTargets, bool runTriggers, bool verbose, ostream& out);
+  JanoshThread(Request& req, ostream& out);
   ~JanoshThread();
   void join();
   int run();

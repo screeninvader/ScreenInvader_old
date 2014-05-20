@@ -15,7 +15,7 @@
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 DAEMON="/usr/bin/xinit"
 XINITRC="/lounge/xsession.sh"
-XOPTS="-fp /usr/share/fonts/X11/misc -config /etc/X11/xorg.conf -nocursor"
+XOPTS="-fp /usr/share/fonts/X11/misc -config /etc/X11/xorg.conf -modulepath /usr/lib/xorg/modules/,/usr/local/lib/xorg/modules -nocursor"
 DESC="xserver"
 NAME=xserver
 
