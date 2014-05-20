@@ -5,7 +5,7 @@ if [ $# -ne 1 ]; then
 fi
 
 ./makecontrol.sh core $1 > screeninvader-core/DEBIAN/control
-rm -r screeninvader-core/root screeninvader-core/lounge screeninvader-core/setup
+rm -fr screeninvader-core/root screeninvader-core/lounge screeninvader-core/setup
 cp -a ../src/setup ../src/lounge ../src/root screeninvader-core/
 chown -R root:root screeninvader-core/root
 chown -R 1000:1000 screeninvader-core/lounge

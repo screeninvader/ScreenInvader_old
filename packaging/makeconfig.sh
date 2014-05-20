@@ -5,7 +5,7 @@ if [ $# -ne 1 ]; then
 fi
 
 ./makecontrol.sh config $1 > screeninvader-config/DEBIAN/control
-rm -r screeninvader-config/etc
+rm -rf screeninvader-config/etc
 cp -a ../src/etc screeninvader-config/
 chown root:root screeninvader-config/etc/sudoers 
 chown root:root screeninvader-config/etc/passwd
