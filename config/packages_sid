@@ -9,4 +9,6 @@ xserver-xorg-input-mouse
 x11-xserver-utils
 midori
 youtube-dl
+fcgiwrap
+nginx
 
