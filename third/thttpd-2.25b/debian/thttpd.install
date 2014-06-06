@@ -1,3 +1,0 @@
-thttpd		/usr/sbin/
-debian/local/*.conf	/etc/thttpd
-debian/local/thttpd	/etc/default
