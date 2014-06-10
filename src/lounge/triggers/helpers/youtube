@@ -1,8 +1,9 @@
 #!/bin/bash
 
+input=$1
+
 . /lounge/triggers/functions.sh
 function parse_query() {
-
   IFS="&"
   KEY=$2
   array=($@)
@@ -24,14 +25,14 @@ ID="`echo "$1" | sed 's/.*v=//g' | sed 's/&.*$//g'`"
 INFO=$(wget -qO- "http://www.youtube.com/get_video_info?&video_id=$ID&el=detailpage")
 STREAMS="$(l_urldecode "`parse_query $INFO "url_encoded_fmt_stream_map"`")"
 TITLE=$(l_urldecode "`parse_query $INFO "title"`")
-
 IFS=","
 
 set -- $STREAMS
 
 SELECTED=
-for s in $@; do 
+for s in $@; do
 	f=$(l_urldecode "`parse_query $s "type"`"|cut -d ';' -f1)
+
 	if [ "$f" == "video/mp4" ]; then
 		SELECTED="$SELECTED,$s"
 	fi
@@ -43,42 +44,45 @@ fi
 
 set -- $SELECTED
 
-hd720=
 large=
 medium=
 small=
 
 for s in $@; do
 	q=`parse_query $s "quality"`
-        if [ -z "$hd720" -a "$q" == "hd720" ]; then
+	if [ -z "$hd720" -a "$q" == "hd720" ]; then
                 hd720="$s"
-	elif [ -z "$large" -a "$q" == "large" ]; then
+        elif [ -z "$large" -a "$q" == "large" ]; then
 		large="$s"
 	elif [ -z "$medium" -a "$q" == "medium" ]; then
 		medium="$s"
 	elif [ -z "$small" -a "$q" == "small" ]; then
 		small="$s"
 	fi
-done  
+done
 
-SELECTED="$medium"
+SELECTED="$hd720"
 
-if [ -z "$SELECTED" ]; then
+if [ -z $SELECTED ]; then
   SELECTED="$large"
 fi
 
-
-if [ -z "$SELECTED" ]; then
+if [ -z $SELECTED ]; then
   SELECTED="$medium"
 fi
 
-if [ -z "$SELECTED" ]; then
+if [ -z $SELECTED ]; then
   SELECTED="$small"
 fi
 
-SURL=$(l_urldecode "`parse_query $SELECTED "url"`")
-SIG="`parse_query $SELECTED "sig"`"
-URL="$SURL&signature=$SIG"
-
+URL=$(l_urldecode "`parse_query $SELECTED "url"`")
+SIG="`parse_query $SELECTED "s"`"
+#URL="$URL&signature=$SIG"
+if [ -n "$SIG" ]; then
+  DATA="`youtube-dl --prefer-insecure -g -e "$input"`"
+  URL="`echo "$DATA" | tail -n1`"
+  TITLE="`echo "$DATA" | head -n1`"
+fi
 echo $URL
 echo $TITLE
+

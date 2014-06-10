@@ -104,14 +104,14 @@ url="$QUERY_STRING"
 category="$(getCategory "$url")"
 handler="${CATEGORY_MAP[$category]}"
 
-if [ "$handler" == "browser" ]; then
-  video="`youtube-dl -g "$url"`"
-  if [ $? -eq 0 ]; then
-    url="$video"
-    category="video"
-    handler="player"
-  fi
-fi
+#if [ "$handler" == "browser" ]; then
+#  video="`youtube-dl -g "$url"`"
+#  if [ $? -eq 0 ]; then
+#    url="$video"
+#    category="video"
+#   handler="player"
+#  fi
+#fi
 
 [ -n "$handler" ] && /lounge/bin/janosh -t set "/$handler/url" "$url" "/$handler/category" "$category"
 ) &>/tmp/show &
