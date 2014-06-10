@@ -14,9 +14,15 @@ buffer_size 8096
 }
 }
 
-pcm.!default {
-type plug
-slave.pcm "dmixer"
+pcm.softvol {
+    type            softvol
+    slave {
+        pcm         "dmixer"      #redirect the output to dmix (instead of "hw:0,0")
+    }
+    control {
+        name        "PCM"       #override the PCM slider to set the softvol volume level globally
+        card        1
+    }
 }
 
 pcm.!hdmi-remap {
@@ -40,5 +46,15 @@ ttable {
 6.6= 1
 7.7= 1
 }
+}
+
+ctl.softvol {
+	type hw
+	card 1
+}
+
+pcm.!default {
+type plug
+slave.pcm "softvol"
 }
 

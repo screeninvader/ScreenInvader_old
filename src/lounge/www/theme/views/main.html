@@ -1,0 +1,16 @@
+<div class="box">
+  <div class="row" ng-repeat="item in model.playlist.items">
+      <div class="col-xs-10 col-md-10">
+        <a ui-sref="app.action({ type: 'play',id:$index })" ng-class="{activeItem: $index==model.playlist.index}" class="title" title="play" >
+           <i class="glyphicon glyphicon-play playIcon" ></i> {{$index + 1}} - {{item.title}}
+        </a>
+      </div>
+      <div class="itemControll">
+          <a ui-sref="app.action({ type: 'del',id:$index })"><span class="glyphicon glyphicon-trash"></span> </a>
+          <a href="#" ng-click="getUrl($index +'_url')">url</a>
+      </div>
+      <div class="col-xs-10 col-md-10">
+        <input id="{{$index + '_url'}}" class="hide form-control" type="text" value="{{item.source}}"></input>
+      </div>
+  </div>
+</div>

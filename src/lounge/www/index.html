@@ -1,58 +1,68 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
-<head>
-  <meta http-equiv="Content-type" content="text/html;charset=UTF-8"></meta>
-  <title>ScreenInvader!</title>
-  
-  <script type="text/javascript" src="_inc/js/jquery.min.js"></script>
-  <script type="text/javascript" src="_inc/js/jquery-ui-1.8.23.custom.min.js"></script>
-  <script type="text/javascript" src="_inc/js/sound_control.js"></script>
-  <script type="text/javascript" src="_inc/js/show_control.js"></script>
-  <script type="text/javascript" src="_inc/js/upload_control.js"></script>
-  <script type="text/javascript" src="_inc/js/find_control.js"></script>
-  <script type="text/javascript" src="_inc/js/player_control.js"></script>
-  <script type="text/javascript" src="_inc/js/navigate_control.js"></script>
-  <script type="text/javascript" src="_inc/js/playlist_control.js"></script>
-  <script type="text/javascript" src="_inc/js/close_control.js"></script>
-  <script type="text/javascript" src="_inc/js/lounge.js"></script>  
-  
-  <link rel="icon" href="_inc/img/favicon.ico" type="image/x-icon"> 
-  <link rel="shortcut icon" href="_inc/img/favicon.ico" type="image/x-icon"> 
-  
-  <link rel="stylesheet" type="text/css" href="_inc/css/lounge.css"></link>
-</head>
-<body>
-<table style="background-color:#000; height: 100%;">
-<tr>
-  <td style="width:0%;background-color:#000; height: 100%;">
-    <div style="display: table; width:100px; height: 100%;">
-      <div class="panel-columm">
-        <div id="show_panel"></div>
-        <div id="upload_panel"></div>
-        <div id="sound_panel" style="padding-top: 10px;"></div>
-        <div id="close_panel"></div>
-        <div id="active" style="padding-top: 10px;">
-          <table style="background-color: #222; height:75px;padding-top: 5px; z-index: -1;">
-            <tr><td>
-              <div style="z-index: 0; position:absolute; text-align:center; width: 325px; padding-top: 20px; font-weight:bold;">(no activity)</div>
-              <div style="z-index: 1; position:relative;" id="player_panel"></div>
-              <div style="z-index: 1; position:relative;" id="navigate_panel"></div>
-              <div style="z-index: 1; position:relative;" id="sound_panel"></div>
-            </td></tr>
-          </table>
-        </div>
-      </div>
-    </div>
-  </td>
-  <td style="width:100%;height:100%;">
-    <div id="playlist_panel">
-    </div>
-  </td>
-</tr>
-</table>
-<div style="width: 100% ;text-align:left;">
-Bookmarklet: <a style="width:100%;" id="bookmarklet" title="Post current web content to the ScreenInvader" href="" style="color:orange;">Lounge it!</a>
-<span style="float:right;" class="button up" onclick="window.location.href='/admin'">Admin</span>
-</div>
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width , user-scalable=no">
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+    <!-- build:css styles/vendor.css -->
+    <!-- bower:css -->
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="bower_components/fontawesome/css/font-awesome.css" />
+    <!-- endbower -->
+    <!-- endbuild -->
+    <!-- build:css({.tmp,app}) styles/main.css -->
+    <link rel="stylesheet" href="styles/main.css">
+    <!-- endbuild -->
+  </head>
+  <body ng-app="09ScreeninvaderApp" class="content">
+    <!--[if lt IE 7]>
+      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+
+    <!-- Add your site or application content here -->
+   <header ui-view="topBar"></header>
+   <div id="notify" ui-view="notify"></div>
+   <div id="playerController" ui-view="playerController"></div>
+   <div id="controller" ui-view="viewController"></div>
+   <div id="main" ui-view="content" ></div>
+   <footer ui-view="footer" ></footer>
+
+
+    <!--[if lt IE 9]>
+    <script src="bower_components/es5-shim/es5-shim.js"></script>
+    <script src="bower_components/json3/lib/json3.min.js"></script>
+    <![endif]-->
+
+    <!-- build:js scripts/vendor.js -->
+    <!-- bower:js -->
+    <script src="bower_components/jquery/dist/jquery.js"></script>
+    <script src="bower_components/angular/angular.js"></script>
+    <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="bower_components/angular-resource/angular-resource.js"></script>
+    <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
+    <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+    <script src="bower_components/angular-md5/angular-md5.js"></script>
+    <script src="bower_components/underscore/underscore.js"></script>
+    <script src="bower_components/angular-upload/angular-upload.js"></script>
+    <!-- endbower -->
+    <!-- endbuild -->
+
+        <!-- build:js({.tmp,app}) scripts/scripts.js -->
+        <script src="scripts/app.js"></script>
+        <script src="scripts/controllers/main.js"></script>
+        <script src="scripts/services/janoshdriver.js"></script>
+        <script src="scripts/controllers/youtubesearch.js"></script>
+        <script src="scripts/controllers/notify.js"></script>
+        <script src="scripts/controllers/videocontroller.js"></script>
+        <script src="scripts/directives/youtubethumbnail.js"></script>
+        <script src="scripts/controllers/playercontroller.js"></script>
+        <script src="scripts/directives/back-button.js"></script>
+        <script src="scripts/controllers/footer.js"></script>
+        <!-- endbuild -->
 </body>
 </html>

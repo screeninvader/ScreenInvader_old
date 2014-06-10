@@ -63,7 +63,8 @@ function close() {
 }
 
 function refresh() {
-  feh --bg-center /lounge/www/_inc/img/logo.png
+#  feh --bg-center /lounge/www/_inc/img/logo.png
+  true
 }
 
 function mplayer_start {
@@ -285,8 +286,8 @@ function subtitle() {
 
 SOTRACK="DEMUXER: ==> Found"
 EOTRACK="GLOBAL: EOF code: 1"
-CACHEEMPTY="Cache empty"
 PATH_CHANGED="GLOBAL: ANS_path="
+CACHEEMPTY="Cache empty"
 
 function contains() {
   if [[ "$1" == *"$2"* ]]; then
@@ -297,7 +298,8 @@ function contains() {
 }
 
 function eotrack() {
-  (  
+  (
+    sleep 1:
     idx="$(janosh -r get /playlist/index)"
     [ -z "$idx" ] && idx=0
     len="$(janosh size /playlist/items/.)"
@@ -310,7 +312,7 @@ function eotrack() {
     fi
 
     mplayer_cmd "get_property path"
-  ) 
+  )
 }
 
 function sotrack() {
@@ -319,6 +321,7 @@ function sotrack() {
   mplayer_cmd "get_property path"
   killall showip
 }
+
 
 function cache_empty() {
   notify "Network Problem!"
