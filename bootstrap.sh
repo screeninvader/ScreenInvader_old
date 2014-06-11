@@ -223,10 +223,10 @@ function doCopy() {
     "cd $BOOTSTRAP_DIR/third/thttpd-2.25b/; make DESTDIR=$CHROOT_DIR/ install"
 
   check "Install mplayer" \
-    "cd $BOOTSTRAP_DIR/third/mplayer-checkout-2014-01-28/; make DESTDIR=$CHROOT_DIR/ install"
+    "cd $BOOTSTRAP_DIR/third/MPlayer-1.1.1/; make DESTDIR=$CHROOT_DIR/ install"
 
-  check "Install sunxi-mali" \
-    "cd $BOOTSTRAP_DIR/third/sunxi-mali/; make DESTDIR=$CHROOT_DIR/ install"
+  #check "Install sunxi-mali" \
+    #"cd $BOOTSTRAP_DIR/third/sunxi-mali/; make DESTDIR=$CHROOT_DIR/ install"
 
   #check "Install sunxi-tools" \
   #  "cd $BOOTSTRAP_DIR/third/sunxi-tools/; make DESTDIR=$CHROOT_DIR/ install"
