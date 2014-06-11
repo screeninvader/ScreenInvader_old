@@ -63,7 +63,8 @@ function close() {
 }
 
 function refresh() {
-  feh --bg-center /lounge/www/_inc/img/logo.png
+#  feh --bg-center /lounge/www/_inc/img/logo.png
+  return
 }
 
 function mplayer_start {
@@ -111,7 +112,6 @@ function jump() {
   [ $idx -gt $PLLEN ] && idx=$PLLEN
   file="$(janosh -r get /playlist/items/#${idx}/url)"
   mplayer_cmd "pause"
-  refresh
   janosh -t set /player/active true
   mplayer_cmd "loadfile $file"
   janosh set /playlist/index $idx
@@ -140,8 +140,10 @@ function volume() {
     v=0;
   fi
 
-  mplayer_cmd "volume $v 1"
-  janosh set /sound/volume $v
+  if [ "$v" -eq "$v" ] 2>/dev/null; then
+    mplayer_cmd "volume $v 1"
+    janosh set /sound/volume $v
+  fi
 }
 
 function isQueueMode() {
@@ -264,6 +266,7 @@ function stop() {
     mplayer_cmd "pause"
     mplayer_cmd "stop"
     janosh -t set /player/active false
+    refresh
   ) 200>$CMD_LOCK
 }
 
@@ -285,8 +288,8 @@ function subtitle() {
 
 SOTRACK="DEMUXER: ==> Found"
 EOTRACK="GLOBAL: EOF code: 1"
-CACHEEMPTY="Cache empty"
 PATH_CHANGED="GLOBAL: ANS_path="
+CACHEEMPTY="Cache empty"
 
 function contains() {
   if [[ "$1" == *"$2"* ]]; then
@@ -297,7 +300,8 @@ function contains() {
 }
 
 function eotrack() {
-  (  
+  (
+    sleep 1:
     idx="$(janosh -r get /playlist/index)"
     [ -z "$idx" ] && idx=0
     len="$(janosh size /playlist/items/.)"
@@ -310,15 +314,16 @@ function eotrack() {
     fi
 
     mplayer_cmd "get_property path"
-  ) 
+  )
+  refresh
 }
 
 function sotrack() {
   janosh -t set /player/active true  
-  refresh
   mplayer_cmd "get_property path"
   killall showip
 }
+
 
 function cache_empty() {
   notify "Network Problem!"

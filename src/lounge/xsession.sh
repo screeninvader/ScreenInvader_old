@@ -25,5 +25,6 @@ resolution="`xrandr -q | fgrep "*" | tr -s " " | cut -d" " -f2`"
 sudo -u lounge /lounge/bin/janosh -t set /display/resolution $resolution
 
 xbindkeys & 
-exec evilwm -bw 0 -fn "-misc-topaz a500a1000a2000-medium-r-normal--0-240-0-0-c-0-iso8859-1"  -app Midori -g "$resolution"+0+0
+awesome 
+#exec evilwm -bw 0 -fn "-misc-topaz a500a1000a2000-medium-r-normal--0-240-0-0-c-0-iso8859-1"  -app Midori -g "$resolution"+0+0
 ) &> /tmp/xsession

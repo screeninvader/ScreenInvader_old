@@ -1,5 +1,7 @@
 #include "record.hpp"
 #include "exception.hpp"
+#include "tracker.hpp"
+#include "logger.hpp"
 
 namespace janosh {
   typedef  boost::shared_ptr<kc::DB::Cursor> Base;
@@ -12,7 +14,7 @@ namespace janosh {
         if(!this->readValue())
           throw record_exception() << path_info({"can't initialize", path});
 
-        getCursorPtr()->step();
+    //    getCursorPtr()->step();
       } else {
         this->doesExist = false;
       }
@@ -85,6 +87,8 @@ namespace janosh {
   }
 
   void Record::remove() {
+    LOG_DEBUG_MSG("remove", "\"" + this->pathObj.pretty() + "\"");
+
     if(!isInitialized())
       throw record_exception() << path_info({"uninitialized record", this->pathObj});
 
@@ -257,6 +261,8 @@ namespace janosh {
     if(empty())
       throw record_exception() << path_info({"no value found", this->pathObj});
 
+
+    Tracker::getInstancePerThread()->update(path().pretty(), Tracker::READ);
     string v;
     bool s = getCursorPtr()->get_value(&v);
 

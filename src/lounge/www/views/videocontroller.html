@@ -1,0 +1,17 @@
+<div class="box videoController">
+    <div class="row">
+        <div class="col-xs-12 col-sm-6 col-md-4" >
+            <div class="pull-left">
+                <a ui-sref="app.playerControll({type: 'queue' })" title="stop queue mode" ng-class="{active: model.playlist.queue == 'true' }" class="glyphicon glyphicon-refresh"></a>
+                <a title="close Image" ui-sref="app.playerControll({type: 'browserClose' })" ui-sref="app.playerControll({type: 'queue' })" ng-class="{active: model.image.active == 'true' }" class="glyphicon glyphicon-picture"></a>
+                <a title="close Browser" ui-sref="app.playerControll({type: 'browserClose' })" ng-class="{active: model.browser.active == 'true' }" class="glyphicon glyphicon-cloud"></a>
+                <a title="close player" ui-sref="app.playerControll({type: 'playerClose' })" ng-class="{active: model.player.active == 'true' }" class="glyphicon glyphicon-play remotePanel"></a>
+
+                <a title="show simple list " ui-sref="app.list" ui-sref-active="active"class="glyphicon glyphicon-align-justify"> </a>
+                <a title="show small images " ui-sref="app.small" ui-sref-active="active"class="glyphicon glyphicon-list"> </a>
+                <a title="show big images " ui-sref="app.big" ui-sref-active="active"class="glyphicon glyphicon-th-list"> </a>
+                <a title="only image mode" ui-sref="app.thumb" ui-sref-active="active"class="glyphicon glyphicon-th"> </a>
+            </div>
+        </div>
+    </div>
+</div>

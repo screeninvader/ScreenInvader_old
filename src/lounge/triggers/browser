@@ -38,7 +38,7 @@ function open() {
   fi
 
   l_notify "Loading $category: $url" 1
-
+  killall -SIGCONT midori
   ( midori "$url" &&  midori -e TabCloseOther ) &
 
   janosh -t set "/image/active" false "/browser/active" false "/animation/active" false
@@ -46,7 +46,8 @@ function open() {
 }
 
 function close() {
-  killall midori
+  xdotool key alt+n  
+  killall -SIGSTOP midori
   janosh -t set "/image/active" false "/browser/active" false "/animation/active" false
 }
 

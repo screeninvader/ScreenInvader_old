@@ -31,11 +31,7 @@ killall osd
 
 width="$( sudo /lounge/bin/gainroot '/lounge/bin/janosh -r get /display/resolution/value | cut -d"x" -f1' )"
 
-if [ $width -gt 1280 ]; then
-  fontsize=400;
-else
-  fontsize=240;
-fi
+fontsize=240;
 
 /lounge/bin/osd -f  "-misc-topaz a500a1000a2000-medium-r-normal--0-${fontsize}-0-0-c-0-iso8859-1" -t $timeout "$title" &
 disown

@@ -3,7 +3,7 @@ sudo
 dialog
 alsa-utils
 psmisc
-evilwm
+awesome
 dos2unix
 curl
 dropbear

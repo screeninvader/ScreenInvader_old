@@ -1,3 +1,3 @@
 cd libdri2
-./configure
+#./configure
 make

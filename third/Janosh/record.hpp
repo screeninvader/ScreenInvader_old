@@ -1,16 +1,10 @@
 #ifndef _JANOSH_DBPATH_HPP
 #define _JANOSH_DBPATH_HPP
 
-#include <stack>
-#include <sstream>
-#include <iostream>
-#include <boost/lexical_cast.hpp>
-#include <boost/format.hpp>
-#include <boost/foreach.hpp>
-#include <boost/tokenizer.hpp>
 #include <boost/smart_ptr.hpp>
 #include <kcpolydb.h>
-#include <bitset>
+#include <string>
+#include <iostream>
 
 #include "path.hpp"
 #include "value.hpp"

@@ -9,16 +9,24 @@
 #define CACHE_HPP_
 
 #include <stddef.h>
+#include <mutex>
+
 namespace janosh {
 
 class Cache {
   bool valid_;
   size_t len_;
   char* data_;
-public:
+  std::mutex mutex_;
   Cache();
+  static Cache* instance_;
+public:
+  static Cache* getInstance();
+
   ~Cache();
 
+  void lock();
+  void unlock();
   void invalidate();
   bool isValid();
   void setData(const char * data, const size_t& len);

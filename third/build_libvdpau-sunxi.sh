@@ -1,3 +1,3 @@
 cd libvdpau-sunxi
-make clean
+#make clean
 make

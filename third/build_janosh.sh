@@ -1,4 +1,4 @@
 cd Janosh/ 
-make clean
+#make clean
 make screeninvader
 

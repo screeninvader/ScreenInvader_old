@@ -3698,10 +3698,83 @@ class Storage : base::NoCopy, public base::threading::ThreadSafe {
         setApplicationArguments(argc, const_cast<char**>(argv));
     }
 };
-extern std::unique_ptr<base::Storage> elStorage;
+extern base::Storage* elStorage;
 #define ELPP el::base::elStorage
+using std::string;
+class ThreadNameLookup {
+  std::mutex mutex_;
+  std::map<std::thread::id, string> idLookup_;
+  std::map<string, std::thread::id> nameLookup_;
+  std::map<string, size_t> nameCount_;
+
+  static ThreadNameLookup* instance_;
+
+  ThreadNameLookup() {}
+public:
+  static ThreadNameLookup* getInstance() {
+    if(instance_ == NULL) {
+      instance_ = new ThreadNameLookup();
+    }
+
+    return instance_;
+  }
+
+  static void set(const std::thread::id& threadID, const string& threadName) {
+    getInstance()->mutex_.lock();
+    auto itname = getInstance()->nameCount_.find(threadName);
+    string name = threadName;
+    size_t cnt = 0;
+    if(itname != getInstance()->nameCount_.end()) {
+      cnt = getInstance()->nameCount_[threadName];
+    }
+
+    name += ("-" + std::to_string(cnt));
+    getInstance()->nameCount_[threadName] = cnt + 1;
+    getInstance()->nameLookup_[name] = threadID;
+    getInstance()->idLookup_[threadID] = name;
+    getInstance()->mutex_.unlock();
+  }
+
+  static string get(const std::thread::id& threadID) {
+    getInstance()->mutex_.lock();
+    auto it = getInstance()->idLookup_.find(threadID);
+    string name;
+    if(it != getInstance()->idLookup_.end())
+      name = (*it).second;
+    else
+      name = "Unknown";
+    getInstance()->mutex_.unlock();
+    return name;
+  }
+
+  static void remove(const std::thread::id& threadID) {
+    getInstance()->mutex_.lock();
+    string name = getInstance()->idLookup_[threadID];
+    getInstance()->nameLookup_.erase(name);
+    getInstance()->idLookup_.erase(threadID);
+    getInstance()->mutex_.unlock();
+  }
+
+  static size_t size() {
+    return getInstance()->idLookup_.size();
+  }
+};
+
 class DefaultLogBuilder : public api::LogBuilder {
  public:
+    string pad(const string& s, size_t n) const {
+      if(s.size() > n)
+        return s.substr(0,n);
+      else {
+        string spaces;
+        for(unsigned int i = 0; i < (n - s.size()); i++) {
+          spaces+=' ';
+        }
+
+        return s + spaces;
+      }
+    }
+
     base::type::string_t build(const LogMessage* logMessage, bool appendNewLine) const {
         base::TypedConfigurations* tc = logMessage->logger()->typedConfigurations();
         const base::LogFormat* logFormat = &tc->logFormat(logMessage->level());
@@ -3716,7 +3789,7 @@ class DefaultLogBuilder : public api::LogBuilder {
         if (logFormat->hasFlag(base::FormatFlags::ThreadId)) {
             // Thread ID
             base::utils::Str::replaceFirstWithEscape(logLine, base::consts::kThreadIdFormatSpecifier,
-                    base::threading::getCurrentThreadId());
+                    pad(ThreadNameLookup::get(std::this_thread::get_id()), 18));
         }
         if (logFormat->hasFlag(base::FormatFlags::DateTime)) {
             // DateTime
@@ -5606,7 +5679,7 @@ static T* checkNotNull(T* ptr, const char* name, const char* loggerId = _CURRENT
 #define _INITIALIZE_EASYLOGGINGPP \
     namespace el {                \
         namespace base {          \
-            std::unique_ptr<base::Storage> elStorage(new base::Storage(api::LogBuilderPtr(new base::DefaultLogBuilder())));       \
+            base::Storage* elStorage = new base::Storage(api::LogBuilderPtr(new base::DefaultLogBuilder()));       \
         }                                                                        \
         base::debug::CrashHandler elCrashHandler(_ELPP_USE_DEF_CRASH_HANDLER);   \
     }

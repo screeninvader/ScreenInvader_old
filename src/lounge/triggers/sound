@@ -35,7 +35,7 @@ function setMute() {
 }
 
 function setVolume() {
-  player volume "${DATA[/sound/volume]}"
+  amixer -Dsoftvol sset PCM ${DATA[/sound/volume]}%
 }
 
 function readMixer() {
@@ -52,8 +52,7 @@ function readMixer() {
 }
 
 function reload() {
-  readAllMixers | xargs -Imixer -n1 /usr/bin/amixer sset "mixer" "100%"
-  janosh set /sound/volume "$(readVolume)" /sound/mute "$(readMute)" /sound/mixer "$(readMixer)"
+ true
 }
 
 function restart() {

@@ -1,4 +1,4 @@
 cd sunxi-tools
-./configure
-make clean
+#./configure
+#make clean
 make
