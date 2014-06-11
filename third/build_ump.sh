@@ -1,4 +1,5 @@
 cd libump
-#./configure
+autoreconf -i
+./configure
 #make clean
 make
