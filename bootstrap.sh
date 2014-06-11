@@ -230,6 +230,9 @@ function doCopy() {
 
   check "Install xf86-video-fbturbo" \
     "cd $BOOTSTRAP_DIR/third/xf86-video-fbturbo/; make DESTDIR=$CHROOT_DIR/ install"
+
+  check "Install libump" \
+    "cd $BOOTSTRAP_DIR/third/libump/; make DESTDIR=$CHROOT_DIR/ install"
   
   check "Install libvdpau-sunxi" \
     "cd $BOOTSTRAP_DIR/third/libvdpau-sunxi/; make DESTDIR=$CHROOT_DIR/ install"
