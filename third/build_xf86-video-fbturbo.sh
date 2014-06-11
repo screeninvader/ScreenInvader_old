@@ -1,4 +1,4 @@
 cd xf86-video-fbturbo
-./configure
-make clean
+#./configure
+#make clean
 make

@@ -1,32 +1,36 @@
-#ifndef JANOSH_THREAD_HPP_
-#define JANOSH_THREAD_HPP_
+/*
+ * janosh_thread.h
+ *
+ *  Created on: Feb 22, 2014
+ *      Author: elchaschab
+ */
+
+#ifndef JANOSH_THREAD_H_
+#define JANOSH_THREAD_H_
+
 
 #include <string>
-#include <vector>
-#include <iostream>
-#include <thread>
-#include "format.hpp"
-#include "request.hpp"
+#include <memory>
 
 namespace janosh {
-
 using std::string;
-using std::vector;
-using std::ostream;
-using std::thread;
+using std::shared_ptr;
 
 class JanoshThread {
-  Request req_;
-  ostream& out_;
-  std::thread* thread_;
+  typedef shared_ptr<JanoshThread> JanoshThreadPtr;
+  string name_;
+  bool result_;
 public:
-  JanoshThread(Request& req, ostream& out);
-  ~JanoshThread();
-  void join();
-  int run();
-};
+  JanoshThread(const string& name);
+  virtual ~JanoshThread();
 
+  virtual void run() = 0;
+  void runSynchron();
+  void runAsynchron();
+  bool result();
+  void setResult(bool r);
+};
 
 } /* namespace janosh */
 
-#endif /* JANOSH_THREAD_HPP_ */
+#endif /* JANOSH_THREAD_H_ */

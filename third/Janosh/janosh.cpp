@@ -1,13 +1,27 @@
-#include <thread>
-#include <boost/program_options.hpp>
 #include "janosh.hpp"
 #include "commands.hpp"
 #include "tcp_server.hpp"
 #include "tcp_client.hpp"
 #include "janosh_thread.hpp"
 #include "exception.hpp"
+#include "tracker.hpp"
+#include "logger.hpp"
+#include "json.hpp"
+#include "bash.hpp"
+#include "raw.hpp"
+#include "exithandler.hpp"
+
+#include <stack>
+#include <boost/program_options.hpp>
+#include <boost/functional/hash.hpp>
+#include <boost/tokenizer.hpp>
+#include <boost/token_functions.hpp>
+#include <boost/format.hpp>
+#include <boost/bind.hpp>
+#include "json_spirit/json_spirit.h"
 
 using std::string;
+using std::endl;
 using std::map;
 using std::vector;
 using boost::make_iterator_range;
@@ -34,9 +48,13 @@ namespace janosh {
 		settings_(),
         triggers_(settings_.triggerFile, settings_.triggerDirs),
         cm_(makeCommandMap(this)) {
-  }
+ }
 
   Janosh::~Janosh() {
+  }
+
+  void updateTracker(const string& str, const Tracker::Operation& op) {
+    Tracker::getInstancePerThread()->update(str, op);
   }
 
   void Janosh::setFormat(Format f) {
@@ -49,16 +67,15 @@ namespace janosh {
 
   void Janosh::open(bool readOnly=false) {
     // open the database
-
     uint32_t mode;
     if(readOnly)
       mode = kc::PolyDB::OAUTOTRAN | kc::PolyDB::OREADER;
     else
       mode = kc::PolyDB::OTRYLOCK | kc::PolyDB::OAUTOTRAN | kc::PolyDB::OREADER | kc::PolyDB::OWRITER | kc::PolyDB::OCREATE;
-    while (!Record::db.open(settings_.databaseFile.string(),  mode)) {
-			usleep(20000);
-			LOG_ERR_MSG("open error: " + settings_.databaseFile.string(), Record::db.error().message());
+    if(!Record::db.open(settings_.databaseFile.string(),  mode)) {
+			LOG_FATAL_MSG("open error: " + settings_.databaseFile.string(), Record::db.error().message());
     }
+    ExitHandler::getInstance()->addExitFunc([&](){this->close();});
     open_ = true;
   }
 
@@ -95,46 +112,123 @@ namespace janosh {
    * @param out The output stream to write to.
    * @return number of total records affected.
    */
-  size_t Janosh::get(Record rec, std::ostream& out) {
-    rec.fetch();
+  size_t Janosh::get(vector<Record> recs, std::ostream& out) {
+    PrintVisitor* vis = NULL;
+    switch (this->getFormat()) {
+    case Json:
+      vis = new JsonPrintVisitor(out);
+      break;
+    case Bash:
+      vis = new BashPrintVisitor(out);
+      break;
+    case Raw:
+      vis = new RawPrintVisitor(out);
+      break;
+    }
+    vis->begin();
+
     size_t cnt = 1;
 
-    LOG_DEBUG_MSG("get", rec.path());
+    for (Record& rec : recs) {
+      JANOSH_TRACE( { rec });
+      rec.fetch();
 
-    if(!rec.exists()) {
-      throw janosh_exception() << record_info({"Path not found", rec});
-    }
+      LOG_DEBUG_MSG("get", rec.path().pretty());
 
-    if (rec.isDirectory()) {
-      switch(this->getFormat()) {
-        case Json:
-          cnt = recurse(rec, JsonPrintVisitor(out));
-          break;
-        case Bash:
-          cnt = recurse(rec, BashPrintVisitor(out));
-          break;
-        case Raw:
-          cnt = recurse(rec, RawPrintVisitor(out));
-          break;
+      if (!rec.exists()) {
+        throw janosh_exception() << record_info( { "Path not found", rec });
       }
-    } else {
-      string value;
 
-      switch(this->getFormat()) {
-        case Raw:
-          out << rec.value() << endl;
-          break;
-        case Json:
-          out << rec.value() << endl;
-          break;
-        case Bash:
-          out << "\"( [" << rec.path() << "]='" << rec.value() << "' )\"" << endl;
-          break;
+      if (rec.isDirectory()) {
+        recurse(rec, vis, out);
+      } else {
+        vis->record(rec.path(), rec.value(), false, false);
       }
     }
+
+    vis->close();
+    delete vis;
     return cnt;
   }
 
+  size_t Janosh::recurse(Record& travRoot, PrintVisitor* vis, ostream& out) {
+    JANOSH_TRACE( { travRoot });
+
+    size_t cnt = 0;
+    std::stack<std::pair<const Component, const Value::Type> > hierachy;
+    Record root("/.");
+
+    Record rec(travRoot);
+
+    Path last;
+    do {
+      rec.fetch();
+      const Path& path = rec.path();
+      const Value& value = rec.value();
+      const Value::Type& t = rec.getType();
+      const Path& parent = path.parent();
+
+      const Component& name = path.name();
+      const Component& parentName = parent.name();
+
+      if (!hierachy.empty()) {
+        if (!travRoot.isAncestorOf(path)) {
+          break;
+        }
+
+        if (!last.above(path) && ((!last.isDirectory() && parentName != last.parentName()) || (last.isDirectory() && parentName != last.name()))) {
+          while (!hierachy.empty() && hierachy.top().first != parentName) {
+            if (hierachy.top().second == Value::Array) {
+              vis->endArray(path);
+            } else if (hierachy.top().second == Value::Object) {
+              vis->endObject(path);
+            }
+            hierachy.pop();
+          }
+        }
+      }
+
+      if (t == Value::Array) {
+        Value::Type parentType;
+        if (hierachy.empty())
+          parentType = Value::Array;
+        else
+          parentType = hierachy.top().second;
+
+        hierachy.push( { name, Value::Array });
+        vis->beginArray(path, parentType == Value::Array, last.isEmpty() || last == parent);
+      } else if (t == Value::Object) {
+        Value::Type parentType;
+        if (hierachy.empty())
+          parentType = Value::Array;
+        else
+          parentType = hierachy.top().second;
+
+        hierachy.push( { name, Value::Object });
+        vis->beginObject(path, parentType == Value::Array, last.isEmpty() || last == parent);
+      } else {
+        bool first = last.isEmpty() || last == parent;
+        if (!hierachy.empty()) {
+          vis->record(path, value, hierachy.top().second == Value::Array, first);
+        } else {
+          vis->record(path, value, false, first);
+        }
+      }
+      last = path;
+      ++cnt;
+    } while (rec.step());
+
+    while (!hierachy.empty()) {
+      if (hierachy.top().second == Value::Array) {
+        vis->endArray("");
+      } else if (hierachy.top().second == Value::Object) {
+        vis->endObject("");
+      }
+      hierachy.pop();
+    }
+
+    return cnt;
+  }
   /**
    * Creates a temporary record with the given type.
    * @param t the type of the record to create.
@@ -179,6 +273,7 @@ namespace janosh {
       throw janosh_exception() << record_info({"Out of array bounds",target});
     }
     changeContainerSize(target.parent(), 1);
+    updateTracker(target.path().pretty(), Tracker::WRITE);
     return Record::db.add(target.path(), "A" + lexical_cast<string>(size)) ? 1 : 0;
   }
 
@@ -203,6 +298,8 @@ namespace janosh {
 
     if(!target.path().isRoot())
       changeContainerSize(target.parent(), 1);
+
+    updateTracker(target.path().pretty(), Tracker::WRITE);
     return Record::db.add(target.path(), "O" + lexical_cast<string>(size)) ? 1 : 0;
   }
 
@@ -243,6 +340,7 @@ namespace janosh {
       throw janosh_exception() << record_info({"Out of array bounds",dest});
     }
 
+    updateTracker(dest.path().pretty(), Tracker::WRITE);
     if(Record::db.add(dest.path(), value)) {
 //      if(!dest.path().isRoot())
         changeContainerSize(dest.parent(), 1);
@@ -270,6 +368,7 @@ namespace janosh {
       throw janosh_exception() << record_info({"Out of array bounds", dest});
     }
 
+    updateTracker(dest.path().pretty(), Tracker::WRITE);
     return Record::db.replace(dest.path(), value);
   }
 
@@ -318,6 +417,7 @@ namespace janosh {
         dest = target;
 
       } else {
+        updateTracker(dest.path().pretty(), Tracker::WRITE);
         r = Record::db.replace(dest.path(), src.value());
       }
     }
@@ -375,6 +475,7 @@ namespace janosh {
         r = this->copy(src, target);
         dest = target;
       } else {
+        updateTracker(dest.path().pretty(), Tracker::WRITE);
         r = Record::db.replace(dest.path(), src.value());
       }
     }
@@ -433,6 +534,7 @@ namespace janosh {
 
     for(size_t i = 0; i < n; ++i) {
        if(!rec.isDirectory()) {
+         updateTracker(rec.path().pretty(), Tracker::DELETE);
          rec.remove();
          ++cnt;
        } else {
@@ -441,6 +543,7 @@ namespace janosh {
      }
 
     if(target.isDirectory()) {
+      updateTracker(target.path().pretty(), Tracker::DELETE);
       target.remove();
       changeContainerSize(parent, -1);
     } else {
@@ -468,6 +571,7 @@ namespace janosh {
           } else {
             indexPos = parent.path().withChild(i);
             copy(child, indexPos);
+            updateTracker(child.path().pretty(), Tracker::DELETE);
             child.remove();
           }
         } else {
@@ -563,6 +667,7 @@ namespace janosh {
     size_t cnt = 0;
 
     for(; begin != end; ++begin) {
+      updateTracker(dest.path().withChild(s + cnt).pretty(), Tracker::WRITE);
       if(!Record::db.add(dest.path().withChild(s + cnt), *begin)) {
         throw janosh_exception() << record_info({"Failed to add target", dest});
       }
@@ -592,6 +697,8 @@ namespace janosh {
     for(; cnt < n; ++cnt) {
       if(cnt > 0)
         src.next();
+      else if(src.isRange())
+        src.step();
 
       src.read();
       if(src.isAncestorOf(dest)) {
@@ -623,6 +730,8 @@ namespace janosh {
       } else {
         if(dest.isArray()) {
           Path target = dest.path().withChild(s + cnt);
+          updateTracker(target.pretty(), Tracker::WRITE);
+
           if(!Record::db.add(
               target,
               src.value()
@@ -631,6 +740,7 @@ namespace janosh {
           }
         } else if(dest.isObject()) {
           Path target = dest.path().withChild(src.path().name());
+          updateTracker(target.pretty(), Tracker::WRITE);
           if(!Record::db.add(
               target,
               src.value()
@@ -756,6 +866,7 @@ namespace janosh {
        (boost::format("%c%d") % t % (s)).str();
 
     container.setValue(new_value);
+    updateTracker(container.path().pretty(), Tracker::WRITE);
   }
 
   void Janosh::changeContainerSize(Record container, const size_t by) {
@@ -764,6 +875,7 @@ namespace janosh {
   }
 
   size_t Janosh::load(const Path& path, const string& value) {
+    updateTracker(path.pretty(), Tracker::WRITE);
     return Record::db.set(path, value) ? 1 : 0;
   }
 
@@ -785,7 +897,7 @@ namespace janosh {
     cnt+=this->load(path, (boost::format("O%d") % obj.size()).str());
     path.pop();
 
-    BOOST_FOREACH(js::Pair& p, obj) {
+    for(js::Pair& p : obj) {
       path.pushMember(p.name_);
       cnt+=load(p.value_, path);
       path.pop();
@@ -802,7 +914,7 @@ namespace janosh {
     cnt+=this->load(path, (boost::format("A%d") % array.size()).str());
     path.pop();
 
-    BOOST_FOREACH(js::Value& v, array){
+    for(js::Value& v : array){
       path.pushIndex(index++);
       cnt+=load(v, path);
       path.pop();
@@ -841,16 +953,8 @@ std::vector<size_t> sequence() {
 
 kyotocabinet::TreeDB janosh::Record::db;
 
-void printUsage() {
-    std::cerr << "janosh [options] <command> <paths...>" << endl
-        << endl
-        << "Options:" << endl
-        << "  -v                enable verbose output" << endl
-        << "  -j                output json format" << endl
-        << "  -b                output bash format" << endl
-        << "  -t                execute triggers for corresponding paths" << endl
-        << "  -e <target list>  execute given targets" << endl
-        << endl
+void printCommands() {
+    std::cerr
         << "Commands: " << endl
         <<  "  load" << endl
         <<  "  set"  << endl
@@ -877,44 +981,30 @@ using namespace boost;
 using namespace janosh;
 namespace po = boost::program_options;
 
-void handleSigInt(int s) {
-  if(TcpServer::getInstance()->isOpen()) {
-    LOG_DEBUG_MSG("Shutting down tcp server due to sigint", s);
-    TcpServer::getInstance()->close();
-  }
-}
-
-void registerSigIntHandler() {
-  struct sigaction sigIntHandler;
-
-  sigIntHandler.sa_handler = handleSigInt;
-  sigemptyset(&sigIntHandler.sa_mask);
-  sigIntHandler.sa_flags = 0;
-
-  sigaction(SIGINT, &sigIntHandler, NULL);
-}
-
 _INITIALIZE_EASYLOGGINGPP
 
 int main(int argc, char** argv) {
   _START_EASYLOGGINGPP(0, (const char**)NULL);
-  registerSigIntHandler();
   try {
     string targetList;
     string command;
     vector<string> arguments;
+    int trackingLevel = 0;
 
     po::options_description genericDesc("Options");
     genericDesc.add_options()
       ("help,h", "Produce help message")
-      ("verbose,v", "Enable verbose output")
       ("daemon,d", "Run in daemon mode")
-      ("stand-alone,s", "Run in stand alone mode")
+      ("single,s", "Run in stand alone mode")
       ("json,j", "Produce json output")
       ("raw,r", "Produce raw output")
       ("bash,b", "Produce bash output")
       ("triggers,t", "Execute triggers")
-      ("targets,e", po::value<string>(&targetList), "Execute a comma separated list of targets");
+      ("targets,e", po::value<string>(&targetList), "Execute a comma separated list of targets")
+      ("verbose,v", "Enable verbose output")
+      ("tracing,p", "Enable tracing output")
+      ("dblog,m", "Enable db logging")
+      ("tracking,k", po::value<int>(&trackingLevel)->composing(), "Print tracking statistics. 0 = Don't print. 1 = Print meta data. 2 = Print full.");
 
     po::options_description hidden("Hidden options");
     hidden.add_options()
@@ -941,6 +1031,22 @@ int main(int argc, char** argv) {
     bool verbose = vm.count("verbose");
     bool daemon = vm.count("daemon");
     bool single = vm.count("single");
+    bool tracing = vm.count("tracing");
+    bool dblog = vm.count("dblog");
+    if (verbose)
+      Logger::init(LogLevel::L_DEBUG);
+    else
+      Logger::init(LogLevel::L_INFO);
+
+    Logger::registerThread("Main");
+    Tracker::PrintDirective printDirective = Tracker::DONTPRINT;
+
+    if(trackingLevel == 1)
+      printDirective = Tracker::PRINTMETA;
+    else if(trackingLevel == 2)
+      printDirective = Tracker::PRINTFULL;
+    else
+      printDirective = Tracker::DONTPRINT;
 
     if((vm.count("json") && (vm.count("bash") || vm.count("raw"))) || (vm.count("bash") && vm.count("raw"))) {
       LOG_FATAL_STR("Only one format at a time may be specified");
@@ -960,21 +1066,23 @@ int main(int argc, char** argv) {
     if (vm.count("help")) {
         std::cerr << "Usage: janosh [options] command ...\n";
         std::cerr << visible;
+        printCommands();
         return 0;
     }
 
+
+    Logger::setTracing(tracing);
+    Logger::setDBLogging(dblog);
+    Tracker::setPrintDirective(printDirective);
+
     if (daemon) {
-      Logger::init(LogLevel::L_DEBUG);
       Janosh* instance = Janosh::getInstance();
       instance->open(false);
       TcpServer* server = TcpServer::getInstance();
       server->open(instance->settings_.port);
-      while (true) {
-        server->run();
+      while (server->run()) {
       }
     } else {
-      Logger::init(LogLevel::L_DEBUG);
-
       if (command.empty() && !execTargets) {
         throw janosh_exception() << msg_info("missing command");
       }
@@ -982,24 +1090,29 @@ int main(int argc, char** argv) {
       vector<string> vecTargets;
       if (execTargets) {
         tokenizer<char_separator<char> > tok(targetList, char_separator<char>(","));
-        BOOST_FOREACH (const string& t, tok) {
+        for (const string& t : tok) {
           vecTargets.push_back(t);
         }
       }
 
-      Request req(f, command, arguments, vecTargets, execTriggers, verbose);
+      Request req(f, command, arguments, vecTargets, execTriggers, verbose, get_parent_info());
       if(!single) {
         Settings s;
         TcpClient client;
         client.connect("localhost", s.port);
         return client.run(req);
       } else {
+        assert(false);
+        /*
         Janosh* instance = Janosh::getInstance();
         instance->open(false);
-        JanoshThread jt(req, std::cout);
+        DatabaseThread dt(req, std::cout);
         int rc = jt.run();
         jt.join();
         return rc;
+
+        */
+        return 1;
       }
     }
   } catch (janosh_exception& ex) {

@@ -1,6 +1,9 @@
-CXX     := g++-4.8
-TARGET  := janosh 
-SRCS    := janosh.cpp logger.cpp record.cpp path.cpp value.cpp exception.cpp cache.cpp backtrace/libs/backtrace/src/backtrace.cpp json_spirit/json_spirit_reader.cpp  json_spirit/json_spirit_value.cpp  json_spirit/json_spirit_writer.cpp tcp_server.cpp tcp_client.cpp janosh_thread.cpp commands.cpp trigger_base.cpp settings.cpp request.cpp
+CXX     := g++-4.7
+TARGET  := janosh
+SRCS    := janosh.cpp logger.cpp record.cpp path.cpp value.cpp exception.cpp cache.cpp json_spirit/json_spirit_reader.cpp  json_spirit/json_spirit_value.cpp  json_spirit/json_spirit_writer.cpp tcp_server.cpp tcp_client.cpp janosh_thread.cpp commands.cpp trigger_base.cpp settings.cpp request.cpp tracker.cpp backward.cpp component.cpp json.cpp bash.cpp raw.cpp util.cpp exithandler.cpp cache_thread.cpp database_thread.cpp flusher_thread.cpp trigger_thread.cpp tcp_worker.cpp
+#precompiled headers
+HEADERS := backward.h easylogging++.h json_spirit/json_spirit.h
+GCH    := ${HEADERS:.h=.gch}
 OBJS    := ${SRCS:.cpp=.o} 
 DEPS    := ${SRCS:.cpp=.dep} 
     
@@ -29,23 +32,31 @@ static: LIBS = -Wl,-Bstatic -lboost_serialization -lboost_program_options -lboos
 static: ${TARGET}
 
 screeninvader: LDFLAGS += -s
-screeninvader: CXXFLAGS += -mfloat-abi=hard -mfpu=neon -g0 -O3 
+screeninvader: CXXFLAGS += -D_JANOSH_DEBUG -mfloat-abi=hard -mfpu=neon -g0 -O3 
 screeninvader: LIBS = -Wl,-Bstatic -lboost_serialization -lboost_program_options -lboost_system -lboost_filesystem -lkyotocabinet  -llzma -llzo2 -Wl,-Bdynamic -lz -lpthread -lrt -ldl
 screeninvader: ${TARGET}
 
+screeninvader_debug: LDFLAGS += -Wl,--export-dynamic
+screeninvader_debug: CXXFLAGS += -D_JANOSH_DEBUG -mfloat-abi=hard -mfpu=neon -g3 -O0 -rdynamic -D_JANOSH_DEBUG
+screeninvader_debug: LIBS = -Wl,-Bstatic -lboost_serialization -lboost_program_options -lboost_system -lboost_filesystem -lkyotocabinet  -llzma -llzo2 -Wl,-Bdynamic -lz -lpthread -lrt -ldl -lbfd
+screeninvader_debug: ${TARGET}
 
-debug: CXXFLAGS += -g3 -O0 -rdynamic
+debug: CXXFLAGS += -g3 -O0 -rdynamic -D_JANOSH_DEBUG
 debug: LDFLAGS += -Wl,--export-dynamic
+debug: LIBS+= -lbfd
 debug: ${TARGET}
 
 ${TARGET}: ${OBJS} 
 	${CXX} ${LDFLAGS} -o $@ $^ ${LIBS} 
 
-${OBJS}: %.o: %.cpp %.dep 
+${OBJS}: %.o: %.cpp %.dep ${GCH}
 	${CXX} ${CXXFLAGS} -o $@ -c $< 
 
 ${DEPS}: %.dep: %.cpp Makefile 
 	${CXX} ${CXXFLAGS} -MM $< > $@ 
+
+${GCH}: %.gch: ${HEADERS} 
+	${CXX} ${CXXFLAGS} -o $@ -c ${@:.gch=.h}
 
 install:
 	mkdir -p ${DESTDIR}/${PREFIX}
@@ -55,7 +66,7 @@ uninstall:
 	rm ${DESTDIR}/${PREFIX}/${TARGET}
 
 clean:
-	rm -f *~ *.dep *.o backtrace/libs/backtrace/src/*.dep backtrace/libs/backtrace/src/*.o tri_logger/*.dep tri_logger/*.o json_spirit/*.dep json_spirit/*.o ${TARGET} 
+	rm -f *~ ${DEPS} ${OBJS} ${GCH} ${TARGET} 
 
 distclean: clean
 

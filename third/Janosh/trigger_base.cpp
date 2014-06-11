@@ -43,6 +43,8 @@ int TriggerBase::executeTarget(const string& name, std::ostream& out) {
         size=(int)fread(buffer,1,1024, pipe); //cout<<buffer<<" size="<<size<<endl;
         out.write(buffer, size);
     }
+    LOG_INFO_MSG("Target finished", name);
+
     //TIME_PRINT_
     return pclose(pipe);
 }

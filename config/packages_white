@@ -30,4 +30,5 @@ libxv1
 libvdpau1
 vdpauinfo
 libxxf86dga1
+libboost-program-options1.49.0
 

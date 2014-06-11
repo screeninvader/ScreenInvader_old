@@ -10,6 +10,15 @@
 
 namespace janosh {
 
+Cache* Cache::instance_ = NULL;
+
+Cache* Cache::getInstance() {
+  if(instance_ == NULL)
+    instance_ = new Cache();
+
+  return instance_;
+}
+
 Cache::Cache() : valid_(false), len_(2048), data_((char*)malloc(len_)) {
   if(data_ == NULL)
     LOG_FATAL_STR("Unable to allocate cache");
@@ -17,6 +26,14 @@ Cache::Cache() : valid_(false), len_(2048), data_((char*)malloc(len_)) {
 
 Cache::~Cache() {
   free(data_);
+}
+
+void Cache::lock() {
+  mutex_.lock();
+}
+
+void Cache::unlock() {
+  mutex_.unlock();
 }
 
 void Cache::invalidate() {
@@ -28,6 +45,7 @@ bool Cache::isValid() {
 }
 
 void Cache::setData(const char * data, const size_t& len) {
+  lock();
   if(len > len_) {
     data_ = (char*) realloc(data_, len);
     if(data_ == NULL)
@@ -36,6 +54,7 @@ void Cache::setData(const char * data, const size_t& len) {
   len_ = len;
   memcpy(data_, data, len_);
   valid_ = true;
+  unlock();
 }
 
 char* Cache::getData() {

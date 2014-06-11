@@ -1,25 +1,23 @@
 #ifndef COMMANDS_HPP_
 #define COMMANDS_HPP_
 
-#include "janosh.hpp"
-#include <boost/range.hpp>
-#include <boost/tokenizer.hpp>
 #include <string>
 #include <iostream>
+#include <map>
+#include "janosh.hpp"
 
 namespace janosh {
+using std::pair;
 using std::string;
 using std::vector;
-using boost::tokenizer;
-using boost::char_separator;
 
-typedef map<const std::string, Command*> CommandMap;
+typedef map<const string, Command*> CommandMap;
 
 class Command {
 protected:
   Janosh * janosh;
 public:
-  typedef std::pair<int32_t, string> Result;
+  typedef pair<int32_t, string> Result;
 
   Command(Janosh* janosh) :
       janosh(janosh) {
@@ -28,7 +26,7 @@ public:
   virtual ~Command() {
   }
 
-  virtual Result operator()(const std::vector<string>& params, std::ostream& out) {
+  virtual Result operator()(const vector<string>& params, ostream& out) {
     return {-1, "Not implemented"};
   }
   ;

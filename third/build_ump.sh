@@ -1,4 +1,4 @@
-cd sunxi-tools
+cd libump
 #./configure
 #make clean
 make

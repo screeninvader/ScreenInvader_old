@@ -2,6 +2,7 @@
 #include "exception.hpp"
 
 namespace janosh {
+
 class RemoveCommand: public Command {
 public:
   RemoveCommand(Janosh* janosh) :
@@ -11,7 +12,7 @@ public:
   virtual Result operator()(const std::vector<string>& params, std::ostream& out) {
     if (!params.empty()) {
       int cnt = 0;
-      BOOST_FOREACH(const string& p, params) {
+      for(const string& p : params) {
         LOG_DEBUG_MSG("Removing", p);
 //FIXME use cursors for batch operations
         Record path(p);
@@ -54,7 +55,7 @@ public:
     if (params.empty()) {
       janosh->loadJson(std::cin);
     } else {
-      BOOST_FOREACH(const string& p, params) {
+      for(const string& p : params) {
         janosh->loadJson(p);
       }
     }
@@ -315,8 +316,8 @@ public:
     if (params.empty()) {
       return {-1, "Expected a list of triggers"};
     } else {
-      BOOST_FOREACH(const string& p, params) {
-        LOG_DEBUG_MSG("Exec trigger", p);
+      for(const string& p : params) {
+        LOG_INFO_MSG("Execute trigger", p);
         try {
         janosh->triggers_.executeTrigger(Path(p), out);
         } catch (path_exception&  ex) {
@@ -339,14 +340,13 @@ public:
     if (params.empty()) {
       return {-1, "Expected a list of keys"};
     } else {
-      bool found_all = true;
-      BOOST_FOREACH(const string& p, params) {
-        Record rec(p);
-        found_all = found_all && janosh->get(rec, out);
+      std::vector<Record> recs;
+      for(const string& p : params) {
+        recs.push_back(Record(p));
       }
 
-      if (!found_all)
-        return {-1, "Unknown keys encounted"};
+      if (!janosh->get(recs, out))
+        return {-1, "Fetching failed"};
     }
     return {params.size(), "Successful"};
   }
@@ -363,7 +363,7 @@ public:
     if (params.empty())
       return {-1, "Expected a list of targets"};
 
-    BOOST_FOREACH (const string& t, params) {
+    for(const string& t : params) {
       janosh->triggers_.executeTarget(t,out);
       ++cnt;
     }
