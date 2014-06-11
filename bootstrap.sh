@@ -250,7 +250,7 @@ function doCopy() {
     "$CHRT dpkg -i --force-all /install/screeninvader-config-all.deb"
 
   check "install misc package" \
-    "$CHRT dpkg -i /install/screeninvader-misc-all.deb"
+    "$CHRT dpkg -i --force-all /install/screeninvader-misc-all.deb"
 
   check "install binaries package" \
     "$CHRT dpkg -i /install/screeninvader-binaries-all.deb"
