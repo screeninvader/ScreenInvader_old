@@ -20,6 +20,7 @@
 
 (
 set -x 
+ln -s /usr/lib/arm-linux-gnueabihf/libEGL.so.1 /usr/lib/libEGL.so
 
 [ -z "$LC_ALL" ] && export LC_ALL=C
 cd `dirname $0`
