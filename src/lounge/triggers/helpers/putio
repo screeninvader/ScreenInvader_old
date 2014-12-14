@@ -1,0 +1,9 @@
+#!/bin/bash
+url="$1"
+
+stream=`curl -IsL -w "%{url_effective}" "$url" -o /dev/null`
+stream=${stream:5}
+stream="http"$stream
+
+echo $stream
+echo "put.io Stream"
