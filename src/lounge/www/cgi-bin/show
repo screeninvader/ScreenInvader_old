@@ -19,7 +19,7 @@
 #
 . ./initcgi "text/html"
 
-( 
+(
 #set -x
 declare -A VIDEO_HOSTS="( \
 [youtube.com/]='youtube' \
@@ -30,6 +30,7 @@ declare -A VIDEO_HOSTS="( \
 [soundcloud.com/]='soundcloud' \
 [ted.com/]='ted' \
 [jamendo.com/]='jamendo' \
+[tindeck.com/]='tindeck' \
 )"
 
 declare -A CATEGORY_MAP="( \
@@ -48,6 +49,7 @@ declare -A CATEGORY_MAP="( \
 [soundcloud]='player' \
 [ted]='player' \
 [jamendo]='player' \
+[tindeck]='player' \
 )"
 
 declare -A CATEGORY_FIX="( \
@@ -117,4 +119,3 @@ fi
 [ -n "$handler" ] && /lounge/bin/janosh -t set "/$handler/url" "$url" "/$handler/category" "$category"
 ) &>/dev/null &
 cat /lounge/www/close.html
-
