@@ -31,6 +31,7 @@ declare -A VIDEO_HOSTS="( \
 [ted.com/]='ted' \
 [jamendo.com/]='jamendo' \
 [tindeck.com/]='tindeck' \
+[bandcamp.com/]='bandcamp' \
 )"
 
 declare -A CATEGORY_MAP="( \
@@ -50,6 +51,7 @@ declare -A CATEGORY_MAP="( \
 [ted]='player' \
 [jamendo]='player' \
 [tindeck]='player' \
+[bandcamp]='player' \
 )"
 
 declare -A CATEGORY_FIX="( \

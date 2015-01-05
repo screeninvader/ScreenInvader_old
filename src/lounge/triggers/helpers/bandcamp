@@ -1,0 +1,52 @@
+#!/bin/bash
+#
+# ScreenInvader - A content centered media center
+# Copyright (C) 2012 Amir Hassan <amir@viel-zu.org>
+#                    Benjamin Schwarz <pwnicorndev@gmail.com>
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+#
+
+url="$1"
+html=$(wget -qO- "$url")
+
+post() {
+	for url in "$@"; do
+		html=$(wget -qO- "$url")
+		echo "$html" | sed -n 's|.*28":"\(.*\)"}.*|\1|p' | cut -d '"' -f1
+	done
+}
+
+artist=$(echo "$html" | sed -n '/name=/s|.*, by \(.*\)">.*|\1|p')
+title=$(echo "$html" | sed -n '/name=/s|.*t="\(.*\),.*|\1|p')
+
+type=$(echo "$html" | sed -n '/g:ty/s|.*"\(.*\)">|\1|p')
+case $type in
+	*song* )
+		post $url
+		;;
+	*album* )
+		baseurl=$(echo $url | cut -d '/' -f-3)
+		post $(echo "$html" | sed -n "/rl\">/s|.*f=\"|&"$baseurl"|;
+		                              /rl\">/s|.*f=\"\(.*\)\" .*|\1|p")
+		;;
+	* )
+		echo
+		echo 'Invalid URL! Should look like http://artist.bandcamp.com/*'
+		exit
+		;;
+esac
+
+echo "$artist - $title"
