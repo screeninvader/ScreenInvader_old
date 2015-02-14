@@ -1,9 +1,19 @@
 #!/bin/bash
 url="$1"
 
-stream=`curl -IsL -w "%{url_effective}" "$url" -o /dev/null`
+IFS="&" read -a urlparts <<< "${url}"
+
+stream=`curl -IsL -w "%{url_effective}" "${urlparts[0]}" -o /dev/null`
 stream=${stream:5}
 stream="http"$stream
 
+title=${urlparts[1]}
+title=${title#title=}
+
 echo $stream
-echo "put.io Stream"
+if [ $title ]
+  then
+    echo $title
+  else
+    echo "put.io Stream"
+fi
