@@ -1,19 +1,33 @@
 #!/bin/bash
+# helper script by @burnoutberni
+# Get stream URL and title from put.io and resolve to video file
+
+# input format: https://put.io/v2/files/123456789/mp4/stream?token=abcd1234&title=urlencoded_title
+# &title= can be omitted
+
+urldecode(){
+  echo -e "$(sed 's/+/ /g; s/%/\\x/g')"
+}
+
 url="$1"
 
+# Split title from URL at '&'
 IFS="&" read -a urlparts <<< "${url}"
 
+# Resolve URL
 stream=`curl -IsL -w "%{url_effective}" "${urlparts[0]}" -o /dev/null`
 stream=${stream:5}
 stream="http"$stream
 
+# Format title
 title=${urlparts[1]}
 title=${title#title=}
 
+# Echo video URL and title if existing
 echo $stream
 if [ $title ]
   then
-    echo $title
+    echo $title | urldecode
   else
     echo "put.io Stream"
 fi
