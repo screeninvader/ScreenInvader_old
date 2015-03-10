@@ -8,11 +8,14 @@ This is what ScreenInvader helps you do: browse the web, watch videos or flip th
 
 #### Get it! #####
 
-Please checkout the documentation in the [wiki](https://github.com/Metalab/ScreenInvader/wiki/)    and especially the [getting started](https://github.com/Metalab/ScreenInvader/wiki/Getting-Started) guide.
 
 #### Contribute! #####
 
-You can find a guide on how to build images and hack custom features [Here](https://github.com/Metalab/ScreenInvader/wiki/Hacking)
+You can find guides on how to build images and hack custom features [Here](https://github.com/Metalab/ScreenInvader/wiki/Home)
+
+#### Support! #####
+
+Please subscribe to the [mailing list](https://lists.metalab.at/mailman/listinfo/ctrl-cut) and ask your questions there.
 
 -------
 
