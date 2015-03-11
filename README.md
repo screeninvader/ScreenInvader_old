@@ -15,7 +15,7 @@ You can find guides on how to build images and hack custom features [Here](https
 
 #### Support! #####
 
-Please subscribe to the [mailing list](https://lists.metalab.at/mailman/listinfo/ctrl-cut) and ask your questions there.
+Please subscribe to the [mailing list](https://lists.metalab.at/mailman/listinfo/screeninvader) and ask your questions there.
 
 -------
 
