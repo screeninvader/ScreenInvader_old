@@ -7,7 +7,7 @@ Ever wished you could play media content from your laptop or smart phone on a TV
 This is what ScreenInvader helps you do: browse the web, watch videos or flip through images together with your friends on a big screen with just a few simple clicks.     	
 
 #### Get it! #####
-At the moment there is no official image. Actually this repository is highly outdated, because the target architecture for the screeninvader has changed to arm entirely. Anyway, stay tuned and check out the progress on our mailing list [mailing list](https://lists.metalab.at/mailman/listinfo/ctrl-cut).
+At the moment there is no official image. Actually this repository is highly outdated, because the target architecture for the screeninvader has changed to arm entirely. Anyway, stay tuned and check out the progress on our [mailing list](https://lists.metalab.at/mailman/listinfo/ctrl-cut).
 
 #### Contribute! #####
 
