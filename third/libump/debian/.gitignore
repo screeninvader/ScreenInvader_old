@@ -1,6 +1,0 @@
-files
-autoreconf.*
-*/
-*.log
-*.substvars
-*.debhelper

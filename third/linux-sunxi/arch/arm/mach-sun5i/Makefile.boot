@@ -1,3 +1,0 @@
-
-zreladdr-$(CONFIG_ARCH_SUN5I)	+= 0x40008000
-

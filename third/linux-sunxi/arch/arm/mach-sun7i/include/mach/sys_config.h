@@ -1,1 +1,0 @@
-../plat/sys_config.h

@@ -1,9 +1,0 @@
-WIFIENGINEHOME=../..
-
-TARGETNAME=logger
-TARGETTYPE=LIBRARY
-TARGETPATH=.
-
-!include $(WIFIENGINEHOME)/common.mk
-
-SOURCES=log.c fifo.c
