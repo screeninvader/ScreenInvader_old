@@ -2,8 +2,8 @@
 
 ### BEGIN INIT INFO
 # Provides:          xserver
-# Required-Start:    thttpd dbus
-# Required-Stop:     thttpd dbus
+# Required-Start:    nginx dbus
+# Required-Stop:     nginx dbus
 # Should-Start:
 # Should-Stop:
 # Default-Start:     2 3 4 5
@@ -15,10 +15,11 @@
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 DAEMON="/usr/bin/xinit"
 XINITRC="/lounge/xsession.sh"
-XOPTS="-fp /usr/share/fonts/X11/misc -config /etc/X11/xorg.conf -nocursor"
+XOPTS="-fp /usr/share/fonts/X11/misc -config /etc/X11/xorg.conf -modulepath /usr/lib/xorg/modules/,/usr/local/lib/xorg/modules"
+# -nocursor"
 DESC="xserver"
 NAME=xserver
-
+echo "#### STARTING XSERVER ####"
 PIDFILE=/tmp/Xorg.0.pid
 
 test -x $DAEMON || exit 1
@@ -34,6 +35,7 @@ case "$1" in
 
 	stop)
 		echo -n "Stopping $DESC: "
+#		/lounge/bin/player stop
 		killall -0 Xorg && killall Xorg
 		echo "$NAME."
 		;;

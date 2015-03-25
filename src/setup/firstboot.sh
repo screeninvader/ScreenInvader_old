@@ -28,6 +28,9 @@ chvt 2
 chown root:root /etc/sudoers
 chmod 0440 /etc/sudoers
 
+update-rc.d janosh defaults
+/etc/init.d/janosh start
+
 janosh="/lounge/bin/janosh"
 
 export HOME=/lounge
@@ -148,7 +151,6 @@ function rebootConf(){
 }
 
 function finish() {
- update-rc.d autofs defaults
  update-rc.d thttpd defaults
  update-rc.d mpd defaults
  update-rc.d xserver defaults
