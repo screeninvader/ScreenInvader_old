@@ -1,5 +1,4 @@
 {
   "triggerDirectories": [ "/lounge/triggers/" ],
-  "database": "/lounge/janosh.db",
-  "port": "22221"
+  "database": "/lounge/janosh.db"
 }

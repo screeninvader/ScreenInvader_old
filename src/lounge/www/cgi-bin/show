@@ -19,17 +19,22 @@
 #
 . ./initcgi "text/html"
 
-( 
+(
 set -x
 declare -A VIDEO_HOSTS="( \
+[grooveshark.com/]='youtube' \
 [youtube.com/]='youtube' \
 [youtu.be/]='youtube' \
+[vine.co/]='youtube' \
 [tvthek.orf.at/]='orf' \
 [videos.arte.tv/]='arte7' \
 [vimeo.com/]='vimeo' \
 [soundcloud.com/]='soundcloud' \
 [ted.com/]='ted' \
 [jamendo.com/]='jamendo' \
+[bandcamp.com/]='bandcamp' \
+[tindeck.com/]='tindeck' \
+[put.io/]='putio' \
 )"
 
 declare -A CATEGORY_MAP="( \
@@ -48,6 +53,10 @@ declare -A CATEGORY_MAP="( \
 [soundcloud]='player' \
 [ted]='player' \
 [jamendo]='player' \
+[bandcamp]='player' \
+[tindeck]='player' \
+[joker]='player' \
+[putio]='player' \
 )"
 
 declare -A CATEGORY_FIX="( \
@@ -59,6 +68,7 @@ declare -A CATEGORY_FIX="( \
 [audio/x-scpls]='radio' \
 [image/gif]='animation' \
 [application/ogg]='video' \
+[application/x-bittorrent]='joker' \
 )"
 
 function getCategory() {
@@ -107,7 +117,7 @@ handler="${CATEGORY_MAP[$category]}"
 #if [ "$handler" == "browser" ]; then
 #  video="`youtube-dl -g "$url"`"
 #  if [ $? -eq 0 ]; then
-#    url="$video"
+#   url="$video"
 #    category="video"
 #   handler="player"
 #  fi

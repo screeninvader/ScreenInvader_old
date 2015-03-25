@@ -32,6 +32,7 @@ function open() {
   set -x
   declare -A OBJ="$(janosh get /player/.)"
   url="${OBJ[/player/url]}"
+
   video_url=
   category="${OBJ[/player/category]}"
   t=
@@ -51,7 +52,7 @@ function open() {
       loadVideo "$line" "$i - $t" "$url"
       i=$[ $i + 1 ]
     done
-  else 
+  else
     [ -z "$video_urls" ] && video_urls="$url"
     loadVideo "$video_urls" "$t" "$url"
   fi
@@ -75,11 +76,12 @@ function mplayer_start {
   mkdir -p "$RUN_DIR"
   mkfifo "$CMD_FIFO";
   touch "$PLAYLIST_CACHE"
+  export http_proxy="http://localhost:1234/"
 
-  while [ 0 ]; do 
+  while [ 0 ]; do
     sleep 1;
     set -m
-    bash -c "/usr/local/bin/mplayer -include /etc/mplayer/mplayer.conf -fs -vc ffh264vdpau,ffmpeg12vdpau, -idle -input file="$CMD_FIFO" 2>&1 | tee /tmp/mplayer | /lounge/bin/player callback"& 
+    bash -c "/usr/bin/mplayer -include /lounge/mplayer.conf -fs -vc ffh264vdpau,ffmpeg12vdpau, -idle -input file="$CMD_FIFO" 2>&1 | tee /tmp/mplayer | /lounge/bin/player callback"&
     janosh -e setVolume
     fg
  done
@@ -104,6 +106,20 @@ function hideText() {
     flock -x 200
     mplayer_cmd "osd_show_text \"\" $duration 0 0"
   ) 200>$CMD_LOCK
+}
+
+function index() {
+  {
+set -x
+  idx="`janosh -r get /playlist/index`"
+  PLLEN="$(janosh size /playlist/items/.)"
+  [ $idx -gt $PLLEN ] && idx=$PLLEN
+  file="$(janosh -r get /playlist/items/#${idx}/url)"
+  mplayer_cmd "pause"
+  janosh -t set /player/active true
+  mplayer_cmd "loadfile $file"
+  touch "$PLAYLIST_CACHE"
+} &> /tmp/index
 }
 
 function jump() {
@@ -151,8 +167,8 @@ function isQueueMode() {
 }
 
 function playlistAdd() {
-# (
-#  set -x
+ (
+  set -x
   playlistEnqueue "$1" "$2" "$3"
   mode=post
   action=Playing
@@ -165,7 +181,7 @@ function playlistAdd() {
     items="`janosh size /playlist/items/.`"
     jump "$[ $items - 1]"
   fi
-# ) &> /tmp/playlistAdd
+ ) &> /tmp/playlistAdd
 }
 
 function playlistEnqueue() {
@@ -227,7 +243,7 @@ function next() {
 function forward() {
   (
     flock -x 200
-    mplayer_cmd "seek +10" 
+    mplayer_cmd "seek +10"
   ) 200>$CMD_LOCK
 }
 
@@ -241,7 +257,7 @@ function forwardMore() {
 function rewind() {
   (
     flock -x 200
-    mplayer_cmd "seek -10" 
+    mplayer_cmd "seek -10"
   ) 200>$CMD_LOCK
 }
 
@@ -280,7 +296,7 @@ function osd() {
 function subtitle() {
   (
     flock -x 200
-    mplayer_cmd "sub_visibility" 
+    mplayer_cmd "sub_visibility"
   ) 200>$CMD_LOCK
 }
 
@@ -319,7 +335,7 @@ function eotrack() {
 }
 
 function sotrack() {
-  janosh -t set /player/active true  
+  janosh -t set /player/active true
   mplayer_cmd "get_property path"
   killall showip
 }
@@ -338,4 +354,3 @@ function callback() {
 }
 
 "$1" "$2" "$3" "$4" "$5"
-

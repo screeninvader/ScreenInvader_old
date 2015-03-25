@@ -43,3 +43,5 @@ lounge:x:1000:
 messagebus:x:103:
 ntp:x:106:
 
+ssh:x:104:
+sunxi-fel:x:105:

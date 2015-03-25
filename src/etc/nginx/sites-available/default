@@ -19,6 +19,7 @@
 
 server {
 	listen 80 default_server;
+	client_max_body_size	4000M;
 
 	root /lounge/www/;
 	index index.html index.htm;
@@ -26,12 +27,18 @@ server {
 	# Make site accessible from http://localhost/
 	server_name 0.0.0.0;
 
+	add_header 'Access-Control-Allow-Origin' '*';
+	add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS, DELETE, PUT';
+	add_header 'Access-Control-Allow-Credentials' 'true';
+	add_header 'Access-Control-Allow-Headers' 'User-Agent,Keep-Alive,Content-Type';
+
 	location / {
 		# First attempt to serve request as file, then
 		# as directory, then fall back to displaying a 404.
 		try_files $uri $uri/ =404;
 		# Uncomment to enable naxsi on this location
 		# include /etc/nginx/naxsi.rules
+ 
 	}
 
 	# Only for nginx-naxsi used with nginx-naxsi-ui : process denied requests

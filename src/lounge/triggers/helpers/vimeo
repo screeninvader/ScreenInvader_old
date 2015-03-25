@@ -1,17 +1,21 @@
 #!/bin/bash
 
-VIMEO_ID=`echo "$1" | awk -F / '{print $NF}'`
+#VIMEO_ID=`echo "$1" | awk -F / '{print $NF}'`
 #USER_AGENT="Mozilla/5.0"
-USER_AGENT="Mplayer"
-VIDEO_CONFIG=`wget -U \"${USER_AGENT}\" -qO- http://player.vimeo.com/config/${VIMEO_ID}`
-SIGNATURE=`echo $VIDEO_CONFIG | sed 's/.*signature":"//g' | sed 's/",".*$//g'`
-TIMESTAMP=`echo $VIDEO_CONFIG | sed 's/.*timestamp"://g' | sed 's/,".*$//g'`
-TITLE=`echo $VIDEO_CONFIG | cut -d"," -f17 | cut -d'"' -f4`
+#USER_AGENT="Mplayer"
+#VIDEO_CONFIG=`wget -U \"${USER_AGENT}\" -qO- http://player.vimeo.com/config/${VIMEO_ID}`
+#SIGNATURE=`echo $VIDEO_CONFIG | sed 's/.*signature":"//g' | sed 's/",".*$//g'`
+#TIMESTAMP=`echo $VIDEO_CONFIG | sed 's/.*timestamp"://g' | sed 's/,".*$//g'`
+#TITLE=`echo $VIDEO_CONFIG | cut -d"," -f17 | cut -d'"' -f4`
 
-VIMEO_URL="http://player.vimeo.com/play_redirect?clip_id=${VIMEO_ID}&sig=${SIGNATURE}&time=${TIMESTAMP}&quality=sd&codecs=H264,VP8,VP6&type=moogaloop_local&embed_location="
+#VIMEO_URL="http://player.vimeo.com/play_redirect?clip_id=${VIMEO_ID}&sig=${SIGNATURE}&time=${TIMESTAMP}&quality=sd&codecs=H264,VP8,VP6&type=moogaloop_local&embed_location="
 
 # Has to be downloaded with the same User-agent string that was used to download configuration file
 # wget -U \"${USER_AGENT}\" $VIMEO_URL
+
+DATA="`youtube-dl --prefer-insecure -g -e "$1" | sed 's/^https/http/g'`"
+VIMEO_URL="`echo "$DATA" | tail -n1`"
+TITLE="`echo "$DATA" | head -n1`"
 
 echo $VIMEO_URL
 echo $TITLE

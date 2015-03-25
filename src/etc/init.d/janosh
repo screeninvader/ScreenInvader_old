@@ -15,7 +15,7 @@ PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 DAEMON="/lounge/bin/janosh"
 LOG_LOUNGE="/var/log/janosh-lounge.log"
 LOG_ROOT="/var/log/janosh-root.log"
-OPTS="-d"
+OPTS="-dvpm"
 DESC="janosh"
 NAME="janosh"
 
@@ -26,7 +26,7 @@ set -e
 case "$1" in
 	start)
 		echo -n "Starting $DESC: "
-		bash -c "sudo -u lounge $DAEMON $OPTS &> $LOG_LOUNGE &"
+		sudo -i -u lounge bash -c "$DAEMON $OPTS &> $LOG_LOUNGE" &
                 bash -c "export HOME=/root/; $DAEMON $OPTS &> $LOG_ROOT &"
 		echo "$NAME."
 		;;

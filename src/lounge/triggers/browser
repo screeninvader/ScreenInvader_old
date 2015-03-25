@@ -47,7 +47,11 @@ function open() {
 
 function close() {
   xdotool key alt+n  
-  killall -SIGSTOP midori
+  # Workaround for browser closing, replaced SIGSTOP with SIGKILL.
+  # I have no idea if this would break things in long terms, but it seems to
+  # work for now (and is better than ssh-ing and killing midori manually).
+  #   --Ben
+  bash -c "sleep 2; killall -SIGKILL midori"
   janosh -t set "/image/active" false "/browser/active" false "/animation/active" false
 }
 

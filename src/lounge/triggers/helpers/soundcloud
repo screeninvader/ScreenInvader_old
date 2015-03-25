@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# ScreenInvader - A content centered media center 
+# ScreenInvader - A content centered media center
 # Copyright (C) 2012 Amir Hassan <amir@viel-zu.org>
 #                    Bernd Forstner <red667@gmail.com>
 #
@@ -19,14 +19,16 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 
-url="$1"
-artist=`echo $url | cut -d'/' -f4`
-song=`echo $url | cut -d'/' -f5`
-title="$artist - $song"
 client_id="2dcf4e12afd6ed5119741f888260fc85"
-resolve="http://api.soundcloud.com/resolve.json?url=$url&client_id=$client_id"
-stream=`curl -v -L -o - "$resolve" | grep -Po '"stream_url":.*?[^\\\]",' | cut -d"\"" -f4`
-json=`curl -v -L -o - "$resolve"`
+
+url="$1"
+
+json=$(curl -L "http://api.soundcloud.com/resolve.json?url=$url&client_id=$client_id")
+
+stream=$(echo "$json" | grep -Po 'stream_url":"\K.*?(?="|$)' \
+	                  | sed -e 's/https\:/http\:/')
+artist=$(echo "$json" | grep -Po 'username":"\K.*?(?="|$)' | head -n1)
+title=$(echo "$json" | grep -Po 'title":"\K.*?(?="|$)' | tail -n1)
 
 echo "${stream}" | xargs -n1 -Ibla echo bla?client_id=${client_id}
-echo $title
+echo "$artist - $title"

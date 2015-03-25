@@ -20,16 +20,17 @@
 
 
 . ./initcgi "text/html"
-
+(
+set -x
   read
   read line
   filename="$(echo $line | grep -iPo 'filename="\K(.*)?(?=")')"
   read line
   contentType="$(echo $line | grep -iPo 'Content-Type: \K(.*)?(?=)')"
   read 
-  if echo $contentType | grep -E "(video|matroska|audio|octet-stream)"; then
+  if echo "$contentType" | grep -E "(video|matroska|audio|octet-stream)"; then
     dd if=/dev/stdin | player loadStdin "$filename"
-  elif echo $contentType | fgrep "image"; then
+  elif echo "$contentType" | fgrep "image"; then
     mkdir -p /lounge/www/tmp
     tmp="/lounge/www$(mktemp).jpg"    
 
@@ -39,4 +40,4 @@
     cd /lounge/www/cgi-bin/
     ./show
   fi
-
+) &> /tmp/upload
