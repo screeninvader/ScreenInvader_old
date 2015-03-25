@@ -26,26 +26,16 @@ FUNCTION="$1"
 declare -A DATA="`janosh get /sound/.`"
 
 function setMute() {
-  m="on";
-  [ "${DATA[/sound/mute]}" == "true" ] && m="off";
-  amixer sset "${DATA[/sound/mixer]}" "$m"
+  m="${DATA[/sound/mute]}"
+  if [ "$m" == "true" ]; then
+    player mplayer_cmd "mute 1"
+  else
+    player mplayer_cmd "mute 0"
+  fi
 }
 
 function setVolume() {
-  amixer sset "${DATA[/sound/mixer]}" "${DATA[/sound/volume]}%"
-  janosh set /sound/volume "$(readVolume)"
-}
-
-function readVolume() {
-  amixer sget "${DATA[/sound/mixer]}" | grep -Po 'Playback.*\[\K.*?(?=%)' | head -n1
-}
-
-function readMute() {
-  [ "`amixer sget "${DATA[/sound/mixer]}" | grep -Po ' \[\K(on|off)?(?=])'`" == "on" ] && echo false || echo true
-}
-
-function readAllMixers() {
-  amixer scontrols | grep -Po "Simple mixer control.*\'\K.*?(?=\')"
+  amixer -Dsoftvol sset PCM ${DATA[/sound/volume]}%
 }
 
 function readMixer() {
@@ -62,8 +52,7 @@ function readMixer() {
 }
 
 function reload() {
-  readAllMixers | xargs -Imixer -n1 /usr/bin/amixer sset "mixer" "100%"
-  janosh set /sound/volume "$(readVolume)" /sound/mute "$(readMute)" /sound/mixer "$(readMixer)"
+ true
 }
 
 function restart() {

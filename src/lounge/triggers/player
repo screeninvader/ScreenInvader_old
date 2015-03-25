@@ -18,6 +18,7 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 
+export VDPAU_DRIVER=sunxi
 . /lounge/triggers/functions.sh
 l_log $@
 
@@ -28,8 +29,10 @@ PLAYLIST_CACHE="$RUN_DIR/playlist_cache"
 MPLAYERSTDIN="$RUN_DIR/mplayerstdin"
 
 function open() {
+  set -x
   declare -A OBJ="$(janosh get /player/.)"
   url="${OBJ[/player/url]}"
+
   video_url=
   category="${OBJ[/player/category]}"
   t=
@@ -49,7 +52,7 @@ function open() {
       loadVideo "$line" "$i - $t" "$url"
       i=$[ $i + 1 ]
     done
-  else 
+  else
     [ -z "$video_urls" ] && video_urls="$url"
     loadVideo "$video_urls" "$t" "$url"
   fi
@@ -61,7 +64,8 @@ function close() {
 }
 
 function refresh() {
-  feh --bg-center /lounge/www/_inc/img/logo.png
+#  feh --bg-center /lounge/www/_inc/img/logo.png
+  return
 }
 
 function mplayer_start {
@@ -72,10 +76,14 @@ function mplayer_start {
   mkdir -p "$RUN_DIR"
   mkfifo "$CMD_FIFO";
   touch "$PLAYLIST_CACHE"
+  export http_proxy="http://localhost:1234/"
 
-  while [ 0 ]; do 
-    sleep 1; 
-    bash -c "/usr/bin/mplayer -idle -input file="$CMD_FIFO" 2>&1 | tee /tmp/mplayer | /lounge/bin/player callback"
+  while [ 0 ]; do
+    sleep 1;
+    set -m
+    bash -c "/usr/local/bin/mplayer -include /etc/mplayer/mplayer.conf -fs -vc ffh264vdpau,ffmpeg12vdpau, -idle -input file="$CMD_FIFO" 2>&1 | tee /tmp/mplayer | /lounge/bin/player callback"&
+    janosh -e setVolume
+    fg
  done
 }
 
@@ -100,17 +108,58 @@ function hideText() {
   ) 200>$CMD_LOCK
 }
 
+function index() {
+  {
+set -x
+  idx="`janosh -r get /playlist/index`"
+  PLLEN="$(janosh size /playlist/items/.)"
+  [ $idx -gt $PLLEN ] && idx=$PLLEN
+  file="$(janosh -r get /playlist/items/#${idx}/url)"
+  mplayer_cmd "pause"
+  janosh -t set /player/active true
+  mplayer_cmd "loadfile $file"
+  touch "$PLAYLIST_CACHE"
+} &> /tmp/index
+}
+
 function jump() {
   idx=$1
   PLLEN="$(janosh size /playlist/items/.)"
   [ $idx -gt $PLLEN ] && idx=$PLLEN
   file="$(janosh -r get /playlist/items/#${idx}/url)"
   mplayer_cmd "pause"
-  refresh
   janosh -t set /player/active true
   mplayer_cmd "loadfile $file"
   janosh set /playlist/index $idx
   touch "$PLAYLIST_CACHE"
+}
+
+function mute() {
+  m="`janosh -r get /sound/mute`"
+  if [ "$m" == "true" ]; then
+    m=false
+    mplayer_cmd "mute 0"
+  else
+    m=true
+    mplayer_cmd "mute 1"
+  fi
+
+  janosh set /sound/mute $m
+}
+
+function volume() {
+  v=$1
+
+  if [ $v -gt 100 ]; then
+    v=100;
+  elif [ $v -lt 0 ]; then
+    v=0;
+  fi
+
+  if [ "$v" -eq "$v" ] 2>/dev/null; then
+    mplayer_cmd "volume $v 1"
+    janosh set /sound/volume $v
+  fi
 }
 
 function isQueueMode() {
@@ -118,8 +167,8 @@ function isQueueMode() {
 }
 
 function playlistAdd() {
-# (
-#  set -x
+ (
+  set -x
   playlistEnqueue "$1" "$2" "$3"
   mode=post
   action=Playing
@@ -132,7 +181,7 @@ function playlistAdd() {
     items="`janosh size /playlist/items/.`"
     jump "$[ $items - 1]"
   fi
-# ) &> /tmp/playlistAdd
+ ) &> /tmp/playlistAdd
 }
 
 function playlistEnqueue() {
@@ -194,7 +243,7 @@ function next() {
 function forward() {
   (
     flock -x 200
-    mplayer_cmd "seek +10" 
+    mplayer_cmd "seek +10"
   ) 200>$CMD_LOCK
 }
 
@@ -208,7 +257,7 @@ function forwardMore() {
 function rewind() {
   (
     flock -x 200
-    mplayer_cmd "seek -10" 
+    mplayer_cmd "seek -10"
   ) 200>$CMD_LOCK
 }
 
@@ -228,10 +277,12 @@ function pause() {
 
 function stop() {
   (
+    set -x
     flock -x 200
     mplayer_cmd "pause"
     mplayer_cmd "stop"
     janosh -t set /player/active false
+    refresh
   ) 200>$CMD_LOCK
 }
 
@@ -245,7 +296,7 @@ function osd() {
 function subtitle() {
   (
     flock -x 200
-    mplayer_cmd "sub_visibility" 
+    mplayer_cmd "sub_visibility"
   ) 200>$CMD_LOCK
 }
 
@@ -254,6 +305,7 @@ function subtitle() {
 SOTRACK="DEMUXER: ==> Found"
 EOTRACK="GLOBAL: EOF code: 1"
 PATH_CHANGED="GLOBAL: ANS_path="
+CACHEEMPTY="Cache empty"
 
 function contains() {
   if [[ "$1" == *"$2"* ]]; then
@@ -264,7 +316,8 @@ function contains() {
 }
 
 function eotrack() {
-  (  
+  (
+    sleep 1:
     idx="$(janosh -r get /playlist/index)"
     [ -z "$idx" ] && idx=0
     len="$(janosh size /playlist/items/.)"
@@ -277,22 +330,27 @@ function eotrack() {
     fi
 
     mplayer_cmd "get_property path"
-  ) 
+  )
+  refresh
 }
 
 function sotrack() {
-  janosh -t set /player/active true  
-  refresh
+  janosh -t set /player/active true
   mplayer_cmd "get_property path"
   killall showip
+}
+
+
+function cache_empty() {
+  notify "Network Problem!"
 }
 
 function callback() {
   cat | while read line; do
     contains "$line" "$EOTRACK" && eotrack
     contains "$line" "$SOTRACK" && sotrack
+    contains "$line" "$CACHEEMPTY" && cache_empty
   done
 }
 
 "$1" "$2" "$3" "$4" "$5"
-

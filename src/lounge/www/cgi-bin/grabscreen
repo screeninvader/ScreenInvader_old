@@ -18,9 +18,9 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
 
-. /lounge/www/cgi-bin/initcgi "text/plain"
+. ./initcgi "image/png"
 
-sudo /lounge/bin/gainroot "apt-get update"
-sudo /lounge/bin/gainroot "apt-get -q -y --no-install-recommends --force-yes -f -o Dpkg::Options::=\"--force-all\" -o Dpkg::Options::=\"--force-confold\" install screeninvader-binaries screeninvader-config  screeninvader-core screeninvader-misc"
-
-
+f="`mktemp`"
+scrot "$f.png"
+cat "$f.png" 2>/dev/null
+rm "$f.png"

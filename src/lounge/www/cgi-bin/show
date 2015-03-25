@@ -20,18 +20,21 @@
 . ./initcgi "text/html"
 
 (
-#set -x
+set -x
 declare -A VIDEO_HOSTS="( \
+[grooveshark.com/]='youtube' \
 [youtube.com/]='youtube' \
 [youtu.be/]='youtube' \
+[vine.co/]='youtube' \
 [tvthek.orf.at/]='orf' \
 [videos.arte.tv/]='arte7' \
 [vimeo.com/]='vimeo' \
 [soundcloud.com/]='soundcloud' \
 [ted.com/]='ted' \
 [jamendo.com/]='jamendo' \
-[tindeck.com/]='tindeck' \
 [bandcamp.com/]='bandcamp' \
+[tindeck.com/]='tindeck' \
+[put.io/]='putio' \
 )"
 
 declare -A CATEGORY_MAP="( \
@@ -50,8 +53,10 @@ declare -A CATEGORY_MAP="( \
 [soundcloud]='player' \
 [ted]='player' \
 [jamendo]='player' \
-[tindeck]='player' \
 [bandcamp]='player' \
+[tindeck]='player' \
+[joker]='player' \
+[putio]='player' \
 )"
 
 declare -A CATEGORY_FIX="( \
@@ -63,10 +68,10 @@ declare -A CATEGORY_FIX="( \
 [audio/x-scpls]='radio' \
 [image/gif]='animation' \
 [application/ogg]='video' \
+[application/x-bittorrent]='joker' \
 )"
 
 function getCategory() {
- set -x
   url="$1"
   for host in "${!VIDEO_HOSTS[@]}"
   do
@@ -109,15 +114,16 @@ url="$QUERY_STRING"
 category="$(getCategory "$url")"
 handler="${CATEGORY_MAP[$category]}"
 
-if [ "$handler" == "browser" ]; then
-  video="`youtube-dl -g "$url"`"
-  if [ $? -eq 0 ]; then
-    url="$video"
-    category="video"
-    handler="player"
-  fi
-fi
+#if [ "$handler" == "browser" ]; then
+#  video="`youtube-dl -g "$url"`"
+#  if [ $? -eq 0 ]; then
+#   url="$video"
+#    category="video"
+#   handler="player"
+#  fi
+#fi
 
 [ -n "$handler" ] && /lounge/bin/janosh -t set "/$handler/url" "$url" "/$handler/category" "$category"
-) &>/dev/null &
+) &>/tmp/show &
 cat /lounge/www/close.html
+

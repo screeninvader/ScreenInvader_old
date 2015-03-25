@@ -21,4 +21,4 @@
 export DISPLAY=:0
 export PATH="$PATH:/lounge/bin"
 INTERFACE="$(sudo /lounge/bin/gainroot -c '/lounge/bin/janosh -r get /network/connection/interface')"
-/sbin/ifconfig $INTERFACE | grep -Po 'inet addr:\K.*?(?= )'
+/sbin/ifconfig $INTERFACE | grep -Po 'inet addr:\K.*?(?= )' | tail -n1
