@@ -217,8 +217,8 @@ function doCopy() {
   check "Copy debian packages" \
     "cp $BOOTSTRAP_DIR/packaging/*.deb $CHROOT_DIR/install/"
   
-  check "Install mplayer" \
-    "cd $BOOTSTRAP_DIR/third/MPlayer-1.1.1/; make DESTDIR=$CHROOT_DIR/ install"
+#  check "Install mplayer" \
+#    "cd $BOOTSTRAP_DIR/third/MPlayer-1.1.1/; make DESTDIR=$CHROOT_DIR/ install"
 
   #check "Install sunxi-mali" \
     #"cd $BOOTSTRAP_DIR/third/sunxi-mali/; make DESTDIR=$CHROOT_DIR/ install"
@@ -226,23 +226,23 @@ function doCopy() {
   #check "Install sunxi-tools" \
   #  "cd $BOOTSTRAP_DIR/third/sunxi-tools/; make DESTDIR=$CHROOT_DIR/ install"
 
-  check "Install libdri2" \
-    "cd $BOOTSTRAP_DIR/third/libdri2/; make DESTDIR=$CHROOT_DIR/ install"
+#  check "Install libdri2" \
+#    "cd $BOOTSTRAP_DIR/third/libdri2/; make DESTDIR=$CHROOT_DIR/ install"
 
-  check "Install xf86-video-fbturbo" \
-    "cd $BOOTSTRAP_DIR/third/xf86-video-fbturbo/; make DESTDIR=$CHROOT_DIR/ install"
+#  check "Install xf86-video-fbturbo" \
+#    "cd $BOOTSTRAP_DIR/third/xf86-video-fbturbo/; make DESTDIR=$CHROOT_DIR/ install"
 
-  check "Install libump" \
-    "cd $BOOTSTRAP_DIR/third/libump/; make DESTDIR=$CHROOT_DIR/ install"
+#  check "Install libump" \
+#    "cd $BOOTSTRAP_DIR/third/libump/; make DESTDIR=$CHROOT_DIR/ install"
   
-  check "Install libvdpau-sunxi" \
-    "cd $BOOTSTRAP_DIR/third/libvdpau-sunxi/; make DESTDIR=$CHROOT_DIR/ install"
+#  check "Install libvdpau-sunxi" \
+#    "cd $BOOTSTRAP_DIR/third/libvdpau-sunxi/; make DESTDIR=$CHROOT_DIR/ install"
  
-  check "Install janosh" \
-    "cd $BOOTSTRAP_DIR/third/Janosh/; make PREFIX=/lounge/bin DESTDIR=$CHROOT_DIR/ install"
+#  check "Install janosh" \
+#    "cd $BOOTSTRAP_DIR/third/Janosh/; make PREFIX=/lounge/bin DESTDIR=$CHROOT_DIR/ install"
  
-  check "install kernel package" \
-    "$CHRT dpkg -i /install/screeninvader-kernel-all.deb"
+ # check "install kernel package" \
+#    "$CHRT dpkg -i /install/screeninvader-kernel-all.deb"
 
   check "install core package" \
     "$CHRT dpkg -i /install/screeninvader-core-all.deb"
