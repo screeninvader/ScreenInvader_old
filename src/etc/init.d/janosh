@@ -1,0 +1,53 @@
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides:          janosh
+# Required-Start:
+# Required-Stop:
+# Should-Start:
+# Should-Stop:
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Starts the root and lounge janosh instances
+# Description:
+### END INIT INFO
+
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+DAEMON="/lounge/bin/janosh"
+LOG_LOUNGE="/var/log/janosh-lounge.log"
+LOG_ROOT="/var/log/janosh-root.log"
+OPTS="-dvpm"
+DESC="janosh"
+NAME="janosh"
+
+test -x $DAEMON || exit 1
+
+set -e
+
+case "$1" in
+	start)
+		echo -n "Starting $DESC: "
+		sudo -i -u lounge bash -c "$DAEMON $OPTS &> $LOG_LOUNGE" &
+                bash -c "export HOME=/root/; $DAEMON $OPTS &> $LOG_ROOT &"
+		echo "$NAME."
+		;;
+
+	stop)
+		echo -n "Stopping $DESC: "
+		killall -0 janosh && killall janosh
+		echo "$NAME."
+		;;
+
+	restart)
+		$0 stop
+		sleep 1
+		$0 start
+		;;
+
+	*)
+		N=/etc/init.d/$NAME
+		echo "Usage: $N {start|stop|restart}" >&2
+		exit 1
+		;;
+esac
+
+exit 0
