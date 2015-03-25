@@ -22,11 +22,11 @@ function getConf() {
   cat "$1" | tr "\n" " "
 }
 
-VIDEO_DRIVERS="`getConf config/video_drivers`"
-KEYRINGS="`getConf config/keyrings`"
+#KEYRINGS="`getConf config/keyrings`"
 PKG_WHITE="`getConf config/packages_white`"
 PKG_EXTRA="`getConf config/packages_extra`"
 PKG_BLACK="`getConf config/packages_black`" 
+PKG_BUILD="`getConf config/packages_build`"
 PKG_SID="`getConf config/packages_sid`"
 FILES_BLACK="`getConf config/files_black`"
 
@@ -35,8 +35,6 @@ export LC_ALL="C"
 APTNI="apt-get -q -y --no-install-recommends --force-yes -o Dpkg::Options::=\"--force-confdef\" -o Dpkg::Options::=\"--force-confold\" ";
 
 DEBIAN_MIRROR="http://ftp.at.debian.org/debian/"
-EMDEBIAN_MIRROR="http://ftp.at.debian.org/debian/"
-DEBIAN_MULTIMEDIA_MIRROR="http://www.deb-multimedia.org/"
 
 dir="`dirname $0`"
 BOOTSTRAP_DIR="`cd $dir; pwd`"
@@ -45,10 +43,10 @@ ARCH=armhf
 APTCACHER_PORT=
 NOINSTALL=
 NODEBOOT=
+NOCLEANUP=
 CHROOT_DIR=
 CHRT=
 DEBUG=
-GIDX=
 
 function printUsage() {
   cat 0>&2 <<EOUSAGE
@@ -57,7 +55,6 @@ Bootstrap a ScreenInvader file system.
 $0 [-a <arch>][-g <num>][-l <logfile>][-p <apt-cacher-port>][-c <configfile>][-i -d -u -x] <bootstrapdir>
 Options:
   -a <arch> Bootstrap a system of the given architecture
-  -g <num>  Build with selected graphics card
   -l <file> Specify the log file
   -p <port> Enables using apt-cacher-ng on the specified port
   -i        Don't configure and install packages
@@ -82,48 +79,9 @@ function absPath() {
   echo $absdir/$base
 }
 
-function printVideoDrivers() {
-  PAD=18
-  i=0
-
-  echo $VIDEO_DRIVERS | sed 's/ /\n/g' | cut -d"-" -f4| while read vd; do
-    LEN=$[ ${#i} + ${#vd} + 2 ]
-    echo -n "($i) $vd"
-  
-    for j in `seq 0 $[$PAD - $LEN]`; do echo -n " "; done
-    i=$[$i + 1]
-    if [ $[ $i % 3 ] -eq 0 ]; then
-      echo
-    fi
-  done  
-  echo
-}
-
-function askVideoDriver() {
-  NUM="`echo $VIDEO_DRIVERS | wc -w`"
-  echo -n "Please select a video driver (default=0):" 1>&2
-  DRIVER=""
-  while read idx; do
-    [ -z "$idx" ] && idx=0
-    if printf "%d" $idx > /dev/null 2>&1; then
-      if [ $idx -lt 0 -o $idx -ge $NUM ]; then
-	echo "Out of range: $idx." 1>&2
-      else
-	DRIVER="`echo $VIDEO_DRIVERS | sed 's/ /\n/g' | sed -n "$[ $idx + 1 ]p"`"
-	echo "Selected: $DRIVER" 1>&2
-	break
-      fi
-    else
-      echo "Invalid input: $idx. Please select the video driver by entering a number." 1>&2
-    fi
-    echo -n "Please select a video driver (default=0):" 1>&2
-  done
-  echo $DRIVER
-}
-
 function skip() {
   echo -n "$1: "
-  green "skipped\n"
+  yellow "skipped\n"
 }
 
 function doDebootstrap() {
@@ -136,8 +94,18 @@ function doDebootstrap() {
     HOST="`echo $BOOTSTRAP_MIRROR | sed 's/^http*:\/\///g' | sed 's/\/.*$//g'`"
     echo "http://127.0.0.1:$APTCACHER_PORT/$HOST/debian"
   )
- check "Bootstrap debian" \
-    "debootstrap --exclude="`echo $PKG_BLACK | sed 's/ /,/g'`" --arch $ARCH wheezy "$CHROOT_DIR" $BOOTSTRAP_MIRROR"
+
+  check "Bootstrap debian" \
+    "debootstrap  --foreign --variant=minbase --exclude="`echo $PKG_BLACK | sed 's/ /,/g'`" --arch $ARCH wheezy "$CHROOT_DIR" $BOOTSTRAP_MIRROR"
+
+  check "Copy qemu-static" \
+    "[ ! -f \"$CHROOT_DIR/usr/bin/qemu-arm-static\" ] && cp /usr/bin/qemu-arm-static \"$CHROOT_DIR/usr/bin\""
+
+  check "Boostrap second stage" \
+    "DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true LC_ALL=C LANGUAGE=C LANG=C chroot \"$CHROOT_DIR\" /debootstrap/debootstrap --second-stage"
+
+  check "Trigger post install" \
+    "DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true LC_ALL=C LANGUAGE=C LANG=C chroot \"$CHROOT_DIR\" dpkg --configure -a"
 }
 
 function doPackageConf() {
@@ -155,14 +123,14 @@ function doPackageConf() {
   check "Update Repositories" \
     "$CHRT $APTNI update"
 
-	check "Copy ScreenInvader repo key" \
+  check "Copy ScreenInvader repo key" \
     "cp $BOOTSTRAP_DIR/repo/ScreenInvaderRepoKey.gpg $CHROOT_DIR/tmp/"
 
   check "Add ScreenInvader repo key" \
     "$CHRT apt-key add /tmp/ScreenInvaderRepoKey.gpg"
 
-  check "Install keyrings" \
-    "$CHRT $APTNI install $KEYRINGS"
+#  check "Install keyrings" \
+#    "$CHRT $APTNI install $KEYRINGS"
 
   check "Update Repositories" \
     "$CHRT $APTNI update"
@@ -171,42 +139,75 @@ function doPackageConf() {
     "$CHRT bash -c 'touch /var/lib/apt/lists/*; apt-cache policy'"
 
   check "Install white packages" \
-    "$CHRT $APTNI install $PKG_WHITE"
+    "$CHRT $APTNI -t wheezy install $PKG_WHITE"
 
-  check "Install sid packages" \
-     "$CHRT $APTNI -t sid install $PKG_SID"
+ check "Install sid packages" \
+  "$CHRT $APTNI -t sid install $PKG_SID"
 
-  check "Upgrade packages" \
-    "$CHRT $APTNI upgrade"
+#  check "Upgrade packages" \
+#    "$CHRT $APTNI upgrade"
 
   check "Remove black listed packages" \
     "$CHRT $APTNI purge $PKG_BLACK"
 }
 
 function doBuild() {
-  check "build mplayer" \
-    "cd $BOOTSTRAP_DIR/third/; ./build_mplayer.sh"
+  check "Install build dependencies" \
+    "$CHRT $APTNI -t sid install $PKG_BUILD"
+
+  check "Clone dri2" \
+    "cd $BOOTSTRAP_DIR/third/; ./clone_dri2.sh"
+
+#  check "Clone janosh" \
+#    "cd $BOOTSTRAP_DIR/third/; ./clone_janosh.sh"
+
+#  check "Clone luajitrocks" \
+#    "cd $BOOTSTRAP_DIR/third/; ./clone_luajitrocks.sh"
+
+  check "Clone libvdpau" \
+    "cd $BOOTSTRAP_DIR/third/; ./clone_libvdpau-sunxi.sh"
+
+  check "Clone SimpleOSD" \
+    "cd $BOOTSTRAP_DIR/third/; ./clone_simpleosd.sh"
+
+  check "Clone sunxi-mali" \
+    "cd $BOOTSTRAP_DIR/third/; ./clone_sunxi-mali.sh"
+
+#  check "Clone sunxi-tools" \
+#   "cd $BOOTSTRAP_DIR/third/; ./clone_sunxi-tools.sh"
+
+  check "Clone libump" \
+    "cd $BOOTSTRAP_DIR/third/; ./clone_ump.sh"
+
+  check "Clone fbturbo" \
+    "cd $BOOTSTRAP_DIR/third/; ./clone_xf86-video-fbturbo.sh"
+
+  check "Copy third party" \
+    "cp -r $BOOTSTRAP_DIR/third/ \"$CHROOT_DIR\""
 
   check "build dri2" \
-    "cd $BOOTSTRAP_DIR/third/; ./build_dri2.sh"
+    "$CHRT /third/build_dri2.sh"
 
   check "build sunxi-mali" \
-    "cd $BOOTSTRAP_DIR/third/; ./build_sunxi-mali.sh"
+    "$CHRT /third//build_sunxi-mali.sh"
 
-  check "build sunxi-tools" \
-    "cd $BOOTSTRAP_DIR/third/; ./build_sunxi-tools.sh"
-
-  check "build u-boot-sunxi" \
-    "cd $BOOTSTRAP_DIR/third/; ./build_u-boot-sunxi.sh"
+#  check "build sunxi-tools" \
+#    "$CHRT /third/build_sunxi-tools.sh"
 
   check "build xf86-video-fbturbo" \
-    "cd $BOOTSTRAP_DIR/third/; ./build_xf86-video-fbturbo.sh"
+    "$CHRT /third/build_xf86-video-fbturbo.sh"
 
   check "build libvdpau-sunxi" \
-    "cd $BOOTSTRAP_DIR/third/; ./build_libvdpau-sunxi.sh"
+    "$CHRT /third/build_libvdpau-sunxi.sh"
 
-  check "build janosh" \
-    "cd $BOOTSTRAP_DIR/third/; ./build_janosh.sh"
+#  check "build janosh" \
+#    "$CHRT /third/build_janosh.sh"
+
+  check "build SimpleOSD" \
+    "$CHRT /third/build_simpleosd.sh"
+
+  check "remove build dependencies" \
+    "$CHRT $APTNI remove $PKG_BUILD"
 }
 
 function doCopy() {
@@ -306,7 +307,7 @@ function doPrepareChroot() {
     "\"$BOOTSTRAP_DIR/templates/apt_preferences\" > \"$CHROOT_DIR/etc/apt/preferences.d/prefere_em_squeeze\""
 
   check "Make apt sources list" \
-    "\"$BOOTSTRAP_DIR/templates/sources_list\" \"$EMDEBIAN_MIRROR\" \"$DEBIAN_MIRROR\" \"$DEBIAN_MULTIMEDIA_MIRROR\" > \"$CHROOT_DIR/etc/apt/sources.list\""
+    "\"$BOOTSTRAP_DIR/templates/sources_list\" \"$DEBIAN_MIRROR\" > \"$CHROOT_DIR/etc/apt/sources.list\""
 
   if [ -n "$APTCACHER_PORT" ]; then
     # use apt-cacher-ng to cache packages during install
@@ -323,6 +324,7 @@ function doPrepareChroot() {
 
   check "Fix policy-rd.d permissions" \
       "chmod 755 \"$CHROOT_DIR/usr/sbin/policy-rc.d\""
+
 }
 
 function doFreeChroot() {
@@ -373,7 +375,7 @@ EOHTML
 
 ###### main
 
-while getopts 'a:l:p:g:c:iduxb' c
+while getopts 'a:l:p:g:c:iduxbz' c
 do
   case $c in
     a) ARCH="$OPTARG";;
@@ -381,9 +383,9 @@ do
     l) BOOTSTRAP_LOG="`absPath $OPTARG`";;
     p) APTCACHER_PORT="$OPTARG";;
     i) NOINSTALL="YES";;
-    g) GIDX="$OPTARG";;
     d) NODEBOOT="YES";;
-    u) NOINSTALL="YES"; NODEBOOT="YES";;
+    z) NOCLEANUP="YES";;
+    u) NOINSTALL="YES"; NODEBOOT="YES"; NOCLEANUP="YES";;
     x) INSTALL_EXTRA="YES";;
     b) DONT_REBUILD="YES";;
     \?) printUsage;;
@@ -404,14 +406,6 @@ else
 
   doCheckPreCond
 
-  printVideoDrivers
-  
-  if [ -z "$GIDX" ]; then
-    PKG_WHITE="$PKG_WHITE $(askVideoDriver)"
-  else
-    DRIVER="`echo $VIDEO_DRIVERS | sed 's/ /\n/g' | sed -n "$[ $GIDX + 1 ]p"`"
-    PKG_WHITE="$PKG_WHITE $DRIVER"
-  fi
   [ -n "$INSTALL_EXTRA" ] && PKG_WHITE="$PKG_WHITE $PKG_EXTRA" 
 
   if [ -z "$NODEBOOT" ]; then 
@@ -430,9 +424,19 @@ else
     skip "package configuration"
   fi
 
-  doCleanupPackages
+  if [ -z "$NOCLEANUP" ]; then
+    doCleanupPackages
+  else
+    skip "cleanup packages"
+  fi
+
+  if [ -z "$DONT_REBUILD" ]; then 
+    doBuild
+  else
+    skip "build"
+  fi
+
   doCleanupFiles
-  [ -z "$DONT_REBUILD" ] && doBuild
   doCopy
   doCreateBuildHtml
 fi

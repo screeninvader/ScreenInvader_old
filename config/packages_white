@@ -31,4 +31,17 @@ libvdpau1
 vdpauinfo
 libxxf86dga1
 libboost-program-options1.49.0
+dpkg
+libc6
+libstdc++6
+multiarch-support
+xserver-xorg
+xserver-xorg-input-kbd
+xserver-xorg-input-mouse
+x11-xserver-utils
+midori
+fcgiwrap
+nginx
+dpkg-sig
+ca-certificates
 

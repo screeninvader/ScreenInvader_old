@@ -2,20 +2,8 @@
 
 cat <<EOFPIN
 Package: *
-Pin: release n=squeeze,l=EmdebianGrip
+Pin: release n=wheezy
 Pin-Priority: 989
-
-Package: *
-Pin: release n=squeeze,l=Unofficial Multimedia Packages
-Pin-Priority: 987
-
-Package: *
-Pin: release n=squeeze,l=Debian
-Pin-Priority: 986 
-
-Package: *
-Pin: release a=unstable-grip,l=EmdebianGrip
-Pin-Priority: 985
 
 Package: *
 Pin: release n=sid,l=Debian
