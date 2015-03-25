@@ -1,0 +1,6 @@
+#!/bin/bash
+
+cat <<EOSOURCES
+deb $1 wheezy main non-free
+EOSOURCES
+
