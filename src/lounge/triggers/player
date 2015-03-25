@@ -81,7 +81,7 @@ function mplayer_start {
   while [ 0 ]; do
     sleep 1;
     set -m
-    bash -c "/usr/local/bin/mplayer -include /etc/mplayer/mplayer.conf -fs -vc ffh264vdpau,ffmpeg12vdpau, -idle -input file="$CMD_FIFO" 2>&1 | tee /tmp/mplayer | /lounge/bin/player callback"&
+    bash -c "/usr/bin/mplayer -include /lounge/mplayer.conf -fs -vc ffh264vdpau,ffmpeg12vdpau, -idle -input file="$CMD_FIFO" 2>&1 | tee /tmp/mplayer | /lounge/bin/player callback"&
     janosh -e setVolume
     fg
  done
